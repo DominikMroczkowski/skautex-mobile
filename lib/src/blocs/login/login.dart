@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'validate.dart';
 import 'package:rxdart/rxdart.dart';
 import 'provider.dart';
 export 'provider.dart';
+
 
 class LoginBloc with Validate {
 	final _email = BehaviorSubject<String>();

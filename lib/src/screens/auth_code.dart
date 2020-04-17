@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../blocs/login/login.dart';
+import '../blocs/auth_code/auth_code.dart';
 
-class Login extends StatelessWidget {
+class AuthCode extends StatelessWidget {
 
 	Widget build(context) {
 		final bloc = Provider.of(context);
@@ -11,7 +11,7 @@ class Login extends StatelessWidget {
 		);
 	}
 
-	Widget mainNode(LoginBloc bloc) {
+	Widget mainNode(AuthCodeBloc bloc) {
 		return Container(
       			decoration: BoxDecoration(color: Colors.grey[100]),
 			padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
@@ -21,13 +21,12 @@ class Login extends StatelessWidget {
 				constraints: BoxConstraints(maxHeight: 320),
 				child: Column(
 					children: [
-						emailField(bloc),
-						passwordField(bloc),
+						codeField(bloc),
 						Expanded(
 							child: Container(margin: EdgeInsets.only(top: 20.0))
 						),
 						submitButton(bloc),
-						forgetPassword()
+						noDevice(bloc)
 					]
 				),
       				decoration: BoxDecoration(
@@ -38,16 +37,16 @@ class Login extends StatelessWidget {
 		);
 	}
 
-	Widget emailField(LoginBloc bloc) {
+	Widget codeField(AuthCodeBloc bloc) {
 		return StreamBuilder(
-			stream: bloc.email,
+			stream: bloc.code,
 			builder: (context, snapshot) {
 				return TextField(
-					onChanged: bloc.changeEmail,
-					keyboardType: TextInputType.emailAddress,
+					onChanged: bloc.changeCode,
+					keyboardType: TextInputType.number,
 					decoration: InputDecoration(
-						hintText: 'simple@example.com',
-						labelText: 'Email',
+						hintText: '123456',
+						labelText: 'Kod',
 						errorText: snapshot.error
 					)
 				);
@@ -55,46 +54,28 @@ class Login extends StatelessWidget {
 		);
 	}
 
-	Widget passwordField(LoginBloc bloc) {
-		return StreamBuilder(
-			stream: bloc.password,
-			builder: (context, snapshot) {
-				return TextField(
-					onChanged: bloc.changePassword,
-					obscureText: true,
-					decoration: InputDecoration(
-						hintText: '********',
-						labelText: 'Hasło',
-						errorText: snapshot.error
-					)
-				);
-			}
-
-		);
-	}
-
-	Widget submitButton(LoginBloc bloc) {
+	Widget submitButton(AuthCodeBloc bloc) {
 		return StreamBuilder(
 			stream: bloc.submitValid,
 			builder: (context, snapshot) {
 				return RaisedButton(
 					child: Text('Zaloguj'),
 					color: Colors.blue,
-					onPressed:
-						snapshot.hasData ? () { bloc.submit(); Navigator.pushNamed(context, '/auth_code');} : null
+					onPressed: snapshot.hasData ? bloc.submit : null
 				);
 			}
 		);
 	}
 
-	Widget forgetPassword() {
+	Widget noDevice(AuthCodeBloc bloc) {
 		return InkWell(
   			onTap: () {
      			},
      			child: new Text(
-				"Przypomnij hasło",
+				"Nie mam urządzenia",
 				style: TextStyle(color: Colors.blue)
 			)
  		);
 	}
+
 }
