@@ -4,7 +4,7 @@ import 'provider.dart';
 import 'validate.dart';
 export 'provider.dart';
 
-class AuthCodeBloc with Validate {
+class Bloc with Validate {
 	final _code = BehaviorSubject<String>();
 
 	Stream<String> get code => _code.stream.transform(validateCode);

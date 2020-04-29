@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import '../blocs/login/login.dart';
+import '../blocs/login/bloc.dart' as login;
+import '../blocs/session/bloc.dart' as session;
 
 class Login extends StatelessWidget {
 
 	Widget build(context) {
-		final bloc = Provider.of(context);
+		final l = login.Provider.of(context);
+		final s = session.Provider.of(context);
 
 		return SafeArea(
-			child: mainNode(bloc)
+			child: mainNode(l, s, context)
 		);
 	}
 
-	Widget mainNode(LoginBloc bloc) {
+	Widget mainNode(login.Bloc l, session.Bloc s, BuildContext c) {
 		return Container(
       			decoration: BoxDecoration(color: Colors.grey[100]),
 			padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
@@ -21,13 +23,13 @@ class Login extends StatelessWidget {
 				constraints: BoxConstraints(maxHeight: 320),
 				child: Column(
 					children: [
-						emailField(bloc),
-						passwordField(bloc),
+						emailField(l),
+						passwordField(l),
 						Expanded(
 							child: Container(margin: EdgeInsets.only(top: 20.0))
 						),
-						submitButton(bloc),
-						forgetPassword()
+						submitButton(l, s),
+						forgetPassword(c)
 					]
 				),
       				decoration: BoxDecoration(
@@ -38,12 +40,13 @@ class Login extends StatelessWidget {
 		);
 	}
 
-	Widget emailField(LoginBloc bloc) {
+	Widget emailField(login.Bloc l) {
 		return StreamBuilder(
-			stream: bloc.email,
+			stream: l.email,
 			builder: (context, snapshot) {
-				return TextField(
-					onChanged: bloc.changeEmail,
+				return TextFormField(
+					onChanged: l.changeEmail,
+					initialValue: l.getEmailValue(),
 					keyboardType: TextInputType.emailAddress,
 					decoration: InputDecoration(
 						hintText: 'simple@example.com',
@@ -55,12 +58,12 @@ class Login extends StatelessWidget {
 		);
 	}
 
-	Widget passwordField(LoginBloc bloc) {
+	Widget passwordField(login.Bloc l) {
 		return StreamBuilder(
-			stream: bloc.password,
+			stream: l.password,
 			builder: (context, snapshot) {
 				return TextField(
-					onChanged: bloc.changePassword,
+					onChanged: l.changePassword,
 					obscureText: true,
 					decoration: InputDecoration(
 						hintText: '********',
@@ -69,27 +72,27 @@ class Login extends StatelessWidget {
 					)
 				);
 			}
-
 		);
 	}
 
-	Widget submitButton(LoginBloc bloc) {
+	Widget submitButton(login.Bloc l, session.Bloc s) {
 		return StreamBuilder(
-			stream: bloc.submitValid,
+			stream: l.submitValid,
 			builder: (context, snapshot) {
 				return RaisedButton(
 					child: Text('Zaloguj'),
 					color: Colors.blue,
 					onPressed:
-						snapshot.hasData ? () { bloc.submit(); Navigator.pushNamed(context, '/auth_code');} : null
+						snapshot.hasData ? () { l.submit(s.changeToken); Navigator.pushNamed(context, '/auth_code');} : null
 				);
 			}
 		);
 	}
 
-	Widget forgetPassword() {
+	Widget forgetPassword(BuildContext c) {
 		return InkWell(
   			onTap: () {
+				Navigator.pushNamed(c, '/change_password');
      			},
      			child: new Text(
 				"Przypomnij hasło",

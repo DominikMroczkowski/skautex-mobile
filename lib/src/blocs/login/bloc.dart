@@ -5,8 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'provider.dart';
 export 'provider.dart';
 
-
-class LoginBloc with Validate {
+class Bloc with Validate {
 	final _email = BehaviorSubject<String>();
 	final _password = BehaviorSubject<String>();
 
@@ -17,9 +16,13 @@ class LoginBloc with Validate {
 	Function(String) get changeEmail => _email.sink.add;
 	Function(String) get changePassword => _password.sink.add;
 
-	submit() {
+	submit(Function(String) session) {
 		final validEmail = _email.value;
 		final validPassword = _password.value;
+	}
+
+	getEmailValue() {
+		return _email.value;
 	}
 
 	dispose() {
