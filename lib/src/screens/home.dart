@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../blocs/login/bloc.dart' as login;
 import '../blocs/session/bloc.dart' as session;
 
-class Login extends StatelessWidget {
+class Home extends StatelessWidget {
 
 	Widget build(context) {
 		final l = login.Provider.of(context);

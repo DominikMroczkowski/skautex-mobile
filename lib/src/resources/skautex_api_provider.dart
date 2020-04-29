@@ -5,6 +5,7 @@ import 'dart:async';
 import 'repository.dart';
 
 final _root = 'https://skautex.azurewebsites.net/';
+final _api_key = 'd7LWtheU.zJgq5SF1zfiqbMXWBaRCDzQhuWYdrpiF';
 
 class SkautexApiProvider implements Source {
 	SecurityContext clientContext = new SecurityContext()

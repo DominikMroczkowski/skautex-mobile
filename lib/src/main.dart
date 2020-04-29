@@ -20,7 +20,7 @@ class App extends StatelessWidget {
 	}
 
 	Route routes(RouteSettings settings) {
-		if (settings.name == "/") {
+		if (settings.name == "/login") {
 			return MaterialPageRoute(
 				builder: (context) {
 					return Scaffold(
