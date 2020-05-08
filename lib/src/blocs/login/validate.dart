@@ -3,7 +3,7 @@ import 'dart:async';
 class Validate {
 	final validateEmail = StreamTransformer<String, String>.fromHandlers(
 		handleData: (email, sink) {
-			RegExp exp = new RegExp(r"(\w+@\w+)");
+			RegExp exp = new RegExp(r"(.{6,})");
 			Iterable<RegExpMatch> matches = exp.allMatches(email);
 
 			if (1 == matches.length) {
@@ -16,7 +16,7 @@ class Validate {
 
 	final validatePassword = StreamTransformer<String, String>.fromHandlers(
 		handleData: (password, sink) {
-			RegExp exp = new RegExp(r"(.{8,})");
+			RegExp exp = new RegExp(r"(.{6,})");
 			Iterable<RegExpMatch> matches = exp.allMatches(password);
 
 			if (1 == matches.length) {

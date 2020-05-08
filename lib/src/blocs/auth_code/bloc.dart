@@ -13,8 +13,8 @@ class Bloc with Validate {
 
 	Function(String) get changeCode => _code.sink.add;
 
-	submit() {
-		final validCode = _code.value;
+	getCode() {
+		return _code.value;
 	}
 
 	dispose() {

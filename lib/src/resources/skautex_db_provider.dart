@@ -21,7 +21,9 @@ class NewsDbProvider implements Source, Cache {
 			onCreate: (Database newDb, int version) {
 				newDb.execute("""
 					CREATE TABLE Items (
-						id INTEGER PRIMARY KEY
+						id INTEGER PRIMARY KEY,
+						refresh String,
+						access String,
 					);
 				""");
 			}
@@ -33,7 +35,7 @@ class NewsDbProvider implements Source, Cache {
 		return null;
 	}
 
-	Future<ItemModel> fetchItem(int id) async {
+	Future<ItemModel> fetchJWT(int id) async {
 		final maps = await db.query(
 			"Items",
 			columns: null,

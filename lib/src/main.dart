@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/login.dart' as screens;
-import 'screens/auth_code.dart' as screens;
-import 'screens/change_password.dart' as screens;
+
 import 'blocs/login/bloc.dart' as login;
-import 'blocs/auth_code/bloc.dart' as auth_code;
 import 'blocs/session/bloc.dart' as session;
+
+import 'router.dart';
 
 class App extends StatelessWidget {
 
@@ -13,37 +12,9 @@ class App extends StatelessWidget {
 			child: login.Provider (
 				child: MaterialApp(
 					title: 'Skautex',
-					onGenerateRoute: routes
+					onGenerateRoute: Router.generateRoute
 				)
 			)
 		);
-	}
-
-	Route routes(RouteSettings settings) {
-		if (settings.name == "/login") {
-			return MaterialPageRoute(
-				builder: (context) {
-					return Scaffold(
-						body: screens.Login()
-					);
-				}
-			);
-		} else if (settings.name == "/auth_code") {
-			return MaterialPageRoute(
-				builder: (context) {
-					return Scaffold(
-						body: auth_code.Provider(child: screens.AuthCode())
-					);
-				}
-			);
-		} else if (settings.name == "/change_password") {
-			return MaterialPageRoute(
-				builder: (context) {
-					return Scaffold(
-						body: screens.ChangePassword()
-					);
-				}
-			);
-		}
 	}
 }

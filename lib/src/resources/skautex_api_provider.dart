@@ -1,29 +1,33 @@
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
-import '../models/item_model.dart';
+import '../models/jwt.dart';
 import 'dart:async';
 import 'repository.dart';
+import '../helpers/credentials.dart';
 
-final _root = 'https://skautex.azurewebsites.net/';
-final _api_key = 'd7LWtheU.zJgq5SF1zfiqbMXWBaRCDzQhuWYdrpiF';
+final _root = 'skautex.azurewebsites.net';
+final _api_key = 'iyJey6vU.wJcLiDkHrHDRhNQ24KIlaY3mCFR1IucG';
 
 class SkautexApiProvider implements Source {
-	SecurityContext clientContext = new SecurityContext()
-    		..setTrustedCertificates(file: 'CA.pem');
-	Client client = Client(context: clientContext);
+	Client client = Client();
 
-	Future<List<int>> fetchToken() async {
-		final response = await client.post('$_root/jwt/');
-		final token = json.decode(response.body);
+	Future<JWT> fetchJWT(Credentials creds) async {
+		final response = await client.post(
+			Uri.https(_root, 'jwt/'),
+			body: json.encode(<String, String> {
+				"username" : creds.user,
+				"password" : creds.password
+			}),
+			headers: {
+				"api-key" : _api_key,
+				"accept" : "application/json",
+				"content-type" : "application/json"
+			},
+		);
 
-		return List<int>.from(ids);
-	}
+		print('${response.body}');
 
-
-	Future<ItemModel> fetchItem(int id) async {
-		final response = await  client.get('$_root/item/$id.json');
 		final parsedJson = json.decode(response.body);
-
-		return ItemModel.fromJson(parsedJson);
+		return JWT.fromJson(parsedJson);
 	}
 }
