@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import '../blocs/auth_code/auth_code.dart';
+import '../blocs/login/bloc.dart' as login;
 
-class AuthCode extends StatelessWidget {
+class ChangePassword extends StatelessWidget {
 
 	Widget build(context) {
-		final bloc = Provider.of(context);
+		final l = login.Provider.of(context);
 
-		return SafeArea(
-			child: mainNode(bloc)
+		return Scaffold(
+			body:  SafeArea(
+				child: mainNode(l)
+			),
+			appBar: AppBar(
+				title: Text('Podaj email')
+			),
 		);
 	}
 
-	Widget mainNode(AuthCodeBloc bloc) {
+	Widget mainNode(login.Bloc l) {
 		return Container(
       			decoration: BoxDecoration(color: Colors.grey[100]),
 			padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
@@ -21,12 +26,11 @@ class AuthCode extends StatelessWidget {
 				constraints: BoxConstraints(maxHeight: 320),
 				child: Column(
 					children: [
-						codeField(bloc),
+						emailField(l),
 						Expanded(
 							child: Container(margin: EdgeInsets.only(top: 20.0))
 						),
-						submitButton(bloc),
-						noDevice(bloc)
+						submitButton(l),
 					]
 				),
       				decoration: BoxDecoration(
@@ -37,16 +41,18 @@ class AuthCode extends StatelessWidget {
 		);
 	}
 
-	Widget codeField(AuthCodeBloc bloc) {
+	Widget emailField(login.Bloc l) {
 		return StreamBuilder(
-			stream: bloc.code,
+			stream: l.email,
 			builder: (context, snapshot) {
-				return TextField(
-					onChanged: bloc.changeCode,
-					keyboardType: TextInputType.number,
+				return TextFormField(
+					onChanged: l.changeEmail,
+					initialValue: l.getEmailValue(),
+					keyboardType: TextInputType.emailAddress,
 					decoration: InputDecoration(
-						hintText: '123456',
-						labelText: 'Kod',
+						hintText: 'simple@example.com',
+						labelText: 'Email',
+						border: new OutlineInputBorder(),
 						errorText: snapshot.error
 					)
 				);
@@ -54,28 +60,17 @@ class AuthCode extends StatelessWidget {
 		);
 	}
 
-	Widget submitButton(AuthCodeBloc bloc) {
+	Widget submitButton(login.Bloc l) {
 		return StreamBuilder(
-			stream: bloc.submitValid,
+			stream: l.email,
 			builder: (context, snapshot) {
 				return RaisedButton(
-					child: Text('Zaloguj'),
+					child: Text('Przypomnij'),
 					color: Colors.blue,
-					onPressed: snapshot.hasData ? bloc.submit : null
+					onPressed:
+						snapshot.hasData ? () {Navigator.pushNamed(context, '/');} : null
 				);
 			}
 		);
 	}
-
-	Widget noDevice(AuthCodeBloc bloc) {
-		return InkWell(
-  			onTap: () {
-     			},
-     			child: new Text(
-				"Nie mam urządzenia",
-				style: TextStyle(color: Colors.blue)
-			)
- 		);
-	}
-
 }

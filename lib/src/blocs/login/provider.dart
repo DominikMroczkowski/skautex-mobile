@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import 'bloc.dart';
 
 class Provider extends InheritedWidget {
-	final login = LoginBloc();
+	final login = Bloc();
 
 	Provider({Key key, Widget child})
 		: super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;
 
-	static LoginBloc of(BuildContext context) {
+	static Bloc of(BuildContext context) {
 		return (context.inheritFromWidgetOfExactType(Provider) as Provider).login;
 	}
 
