@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../blocs/login/bloc.dart' as login;
-import '../blocs/session/bloc.dart' as session;
+import '../../blocs/login/bloc.dart' as login;
+import '../../blocs/session/bloc.dart' as session;
 
 class Login extends StatelessWidget {
 

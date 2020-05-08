@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../blocs/login/bloc.dart' as login;
+import '../../blocs/login/bloc.dart' as login;
 
 class ChangePassword extends StatelessWidget {
 

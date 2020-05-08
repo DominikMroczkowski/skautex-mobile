@@ -19,11 +19,6 @@ class Player extends StatelessWidget {
 	}
 
 	Widget _playerList(session.Bloc s) {
-		return StreamBuilder(
-			stream: s.players,
-			builder: (context, snapshot) {
-
-			},
-		);
+		return Container();
 	}
 }

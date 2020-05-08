@@ -17,6 +17,10 @@ class Bloc with Validate {
 		return _code.value;
 	}
 
+// Just inject steam from session bloc for code
+	submit() {
+	}
+
 	dispose() {
 		_code.close();
 	}

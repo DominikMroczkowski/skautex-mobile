@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../blocs/auth_code/bloc.dart';
+import '../../blocs/auth_code/bloc.dart';
 
 class AuthCode extends StatelessWidget {
 
