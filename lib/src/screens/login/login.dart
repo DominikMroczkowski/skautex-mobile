@@ -101,11 +101,42 @@ class Login extends StatelessWidget {
 			stream: l.submitValid,
 			builder: (context, snapshot) {
 				return RaisedButton(
-					child: Text('Zaloguj'),
+					child: indicator(s, l),
 					color: Colors.blue,
 					onPressed:
-						snapshot.hasData ? () { l.submit(s); Navigator.pushNamed(context, '/auth_code');} : null
+						snapshot.hasData ? () {l.submit(s);} : null
 				);
+			}
+		);
+	}
+
+	Widget indicator(session.Bloc s, login.Bloc l) {
+		return  StreamBuilder(
+			stream: s.jwt,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, snapshot) {
+							if (!snapshot.hasData) {
+								return Center(
+									child: Container(
+										height: 20,
+										width: 20,
+										margin: EdgeInsets.all(5),
+										child: CircularProgressIndicator(
+											strokeWidth: 2.0,
+											valueColor : AlwaysStoppedAnimation(Colors.white),
+										),
+									)
+								);
+							}
+							return Text('Zaloguj');
+						}
+					);
+
+				}
+				return Text('Zaloguj');
 			}
 		);
 	}

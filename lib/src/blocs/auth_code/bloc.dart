@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
+import '../session/bloc.dart' as session;
 import 'provider.dart';
 import 'validate.dart';
 export 'provider.dart';
@@ -17,8 +18,9 @@ class Bloc with Validate {
 		return _code.value;
 	}
 
-// Just inject steam from session bloc for code
-	submit() {
+	submit(session.Bloc s) {
+		final code = _code.value;
+		s.fetchOTP(code);
 	}
 
 	dispose() {

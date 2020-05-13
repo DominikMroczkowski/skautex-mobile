@@ -10,7 +10,9 @@ class Provider extends InheritedWidget {
 	bool updateShouldNotify(_) => true;
 
 	static Bloc of(BuildContext context) {
-		return (context.inheritFromWidgetOfExactType(Provider) as Provider).session;
+		var b = (context.inheritFromWidgetOfExactType(Provider) as Provider).session;
+		b.setContext(context);
+		return b;
 	}
 
 }

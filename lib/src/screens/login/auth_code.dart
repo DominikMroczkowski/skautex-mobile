@@ -70,11 +70,12 @@ class AuthCode extends StatelessWidget {
 				return RaisedButton(
 					child: Text('Zaloguj'),
 					color: Colors.blue,
-					onPressed: snapshot.hasData ? () {bloc.submit(); Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/'));} : null
+					onPressed: snapshot.hasData ? () { Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/'));} : null
 				);
 			}
 		);
 	}
+
 
 	Widget noDevice(Bloc bloc) {
 		return InkWell(

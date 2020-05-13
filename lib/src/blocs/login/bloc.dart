@@ -10,6 +10,7 @@ class Bloc with Validate {
 	final _email = BehaviorSubject<String>();
 	final _password = BehaviorSubject<String>();
 	final _obscure = BehaviorSubject<bool>();
+	bool buttonPressed = false;
 
 	Stream<String> get email => _email.stream.transform(validateEmail);
 	Stream<String> get password => _password.stream.transform(validatePassword);
@@ -22,6 +23,7 @@ class Bloc with Validate {
 	Function(bool) get changeObscure => _obscure.sink.add;
 
 	submit(session.Bloc s) {
+		buttonPressed = true;
 		final validEmail = _email.value;
 		final validPassword = _password.value;
 		s.fetchJWT(Credentials(user: validEmail, password: validPassword));

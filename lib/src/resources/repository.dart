@@ -15,6 +15,11 @@ class Repository {
 		return sources[0].fetchJWT(creds);
 	}
 
+	Future<JWT> fetchJWT2(Future<JWT> j, String code) {
+		return sources[0].fetchJWT2(j, code);
+	}
+
+
 	clearCache() async {
 		for (var cache in caches) {
 			await cache.clear();
@@ -24,6 +29,7 @@ class Repository {
 
 abstract class Source {
 	Future<JWT> fetchJWT(Credentials creds);
+	Future<JWT> fetchJWT2(Future<JWT> jwt, String code);
 }
 
 abstract class Cache {
