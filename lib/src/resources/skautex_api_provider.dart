@@ -28,9 +28,9 @@ class SkautexApiProvider implements Source {
 		print('${response.body}');
 
 		if (json.decode(response.body).toString().contains('detail')) {
-			print('Ugabuga');
 			return Future<JWT>.error('Logowanie nie powiodło się');
 		}
+
 		final parsedJson = json.decode(response.body);
 		return JWT.fromJson(parsedJson);
 	}
@@ -38,19 +38,25 @@ class SkautexApiProvider implements Source {
 	Future<JWT> fetchJWT2(Future<JWT> jwt, String code) async {
 		JWT jwtC = await jwt;
 		String access = jwtC.access;
+
 		final response = await client.post(
-			Uri.https(_root, 'otp/totp/$code'),
+			Uri.https(_root, '/api/v1/otp/verify/$code/'),
 			body: json.encode(<String, String> {
 			}),
 			headers: {
 				"api-key" : _API_KEY,
-				"accept" : "application/json",
-				"content-type" : "application/json",
-				"authorizaiton" : "Bearer $access"
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
 			},
 		);
 
+		print('${response.request.headers}');
 		print('${response.body}');
+
+		if (json.decode(response.body).toString().contains('detail')) {
+			return Future<JWT>.error('Logowanie nie powiodło się');
+		}
 
 		final parsedJson = json.decode(response.body);
 		return JWT.fromJson(parsedJson);

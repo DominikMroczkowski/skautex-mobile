@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../blocs/auth_code/bloc.dart';
+import '../../blocs/auth_code/bloc.dart' as auth_code;
+import '../../blocs/session/bloc.dart' as session;
 
 class AuthCode extends StatelessWidget {
 
 	Widget build(context) {
-		final bloc = Provider.of(context);
+		final a = auth_code.Provider.of(context);
+		final s = session.Provider.of(context);
 
 		return Scaffold(
-			body: SafeArea( child: mainNode(bloc)),
+			body: SafeArea( child: mainNode(a, s)),
 			appBar: AppBar(
 				title: Text('Podaj kod')
 			),
 		);
 	}
 
-	Widget mainNode(Bloc bloc) {
+	Widget mainNode(a, s) {
 		return Container(
       			decoration: BoxDecoration(color: Colors.grey[100]),
 			padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
@@ -24,15 +26,15 @@ class AuthCode extends StatelessWidget {
 				constraints: BoxConstraints(maxHeight: 320),
 				child: Column(
 					children: [
-						codeField(bloc),
+						codeField(a),
 						Expanded(
 							child: Container(margin: EdgeInsets.only(top: 20.0))
 						),
 						Row(
 							children: [
-								noDevice(bloc),
+								noDevice(a),
 								Expanded( child: Container()),
-								submitButton(bloc),
+								submitButton(a, s),
 							]
 						)
 					]
@@ -45,7 +47,7 @@ class AuthCode extends StatelessWidget {
 		);
 	}
 
-	Widget codeField(Bloc bloc) {
+	Widget codeField(auth_code.Bloc bloc) {
 		return StreamBuilder(
 			stream: bloc.code,
 			builder: (context, snapshot) {
@@ -63,21 +65,54 @@ class AuthCode extends StatelessWidget {
 		);
 	}
 
-	Widget submitButton(Bloc bloc) {
+	Widget submitButton(auth_code.Bloc a, session.Bloc s) {
 		return StreamBuilder(
-			stream: bloc.submitValid,
+			stream: a.submitValid,
 			builder: (context, snapshot) {
 				return RaisedButton(
-					child: Text('Zaloguj'),
+					child: indicator(s, a),
 					color: Colors.blue,
-					onPressed: snapshot.hasData ? () { Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/'));} : null
+					onPressed:
+						snapshot.hasData ? () {a.submit(s);} : null
 				);
 			}
 		);
 	}
 
+	Widget indicator(session.Bloc s, auth_code.Bloc a) {
+		return  StreamBuilder(
+			stream: s.otp,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, snapshot) {
+							if (!snapshot.hasData) {
+								return Center(
+									child: Container(
+										height: 20,
+										width: 20,
+										margin: EdgeInsets.all(5),
+										child: CircularProgressIndicator(
+											strokeWidth: 2.0,
+											valueColor : AlwaysStoppedAnimation(Colors.white),
+										),
+									)
+								);
+							}
+							return Text('Zaloguj');
+						}
+					);
 
-	Widget noDevice(Bloc bloc) {
+				}
+				return Text('Zaloguj');
+			}
+		);
+	}
+
+
+
+	Widget noDevice(auth_code.Bloc bloc) {
 		return InkWell(
      			onTap: (){},
      			child: new Text(
