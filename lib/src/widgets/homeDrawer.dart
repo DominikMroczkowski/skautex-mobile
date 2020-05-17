@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatelessWidget {
-
 	Widget build(context) {
 		return Drawer(
 			child: ListView(
       				padding: EdgeInsets.all(0.0),
           			children: <Widget> [
 					_header(),
-					_tools()
+					_tools(context)
           			],
         		),
 		);
@@ -69,21 +68,21 @@ class HomeDrawer extends StatelessWidget {
 			);
 	}
 
-	Widget _tools() {
+	Widget _tools(BuildContext c) {
 		return Column(
 			children: [
-				_element('Strona główna', Icons.home, '/home'),
-				_element('Zawodnicy', Icons.person_pin, '/players'),
-				_element('Rekomendacje', Icons.favorite, '/players'),
-				_element('Kalendarz', Icons.event, '/players'),
-				_element('Zadania', Icons.check, '/players'),
-				_element('Wydatki', Icons.poll, '/players'),
-				_element('Rezerwacje', Icons.save, '/players'),
+				_element('Strona główna', Icons.home, '/home', c),
+				_element('Zawodnicy', Icons.person_pin, '/player', c),
+				_element('Rekomendacje', Icons.favorite, '/players', c),
+				_element('Kalendarz', Icons.event, '/players', c),
+				_element('Zadania', Icons.check, '/players', c),
+				_element('Wydatki', Icons.poll, '/players', c),
+				_element('Rezerwacje', Icons.save, '/players', c),
 				Divider(),
 				_dynamicContent(),
 				Divider(),
-				_element('Użytkownicy', Icons.person_outline, '/home'),
-				_element('Opcje', Icons.tune, '/players'),
+				_element('Użytkownicy', Icons.person_outline, '/home', c),
+				_element('Opcje', Icons.tune, '/players', c),
 
 			]
 		);
@@ -93,7 +92,7 @@ class HomeDrawer extends StatelessWidget {
 		return Container();
 	}
 
-	Widget _element(String text, IconData icon, String path) {
+	Widget _element(String text, IconData icon, String path, BuildContext c) {
 		return ListTile(
        			title: Text(text, style: TextStyle(color: Colors.grey[700])),
 			leading: Icon(
@@ -102,6 +101,7 @@ class HomeDrawer extends StatelessWidget {
     			),
 			dense: true,
         	      	onTap: () {
+				Navigator.of(c).pushNamed(path);
         	      	},
         	);
 	}

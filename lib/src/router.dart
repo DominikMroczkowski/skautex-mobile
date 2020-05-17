@@ -8,6 +8,7 @@ import 'screens/home/home.dart';
 import 'screens/home/player.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
+import 'blocs/players/bloc.dart' as player;
 
 class Router {
    	static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -21,7 +22,7 @@ class Router {
 		case '/home':
         		return MaterialPageRoute(builder: (_) => Home());
 		case '/player':
-        		return MaterialPageRoute(builder: (_) => Player());
+        		return MaterialPageRoute(builder: (_) => player.Provider(child: Player()));
       		default:
         		return MaterialPageRoute(
         			builder: (_) => Scaffold(

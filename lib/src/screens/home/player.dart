@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../widgets/homeDrawer.dart';
+import '../../widgets/playerTile.dart';
 
-import '../../blocs/session/bloc.dart' as session;
+import '../../blocs/players/bloc.dart' as player;
 
 class Player extends StatelessWidget {
 
 	Widget build(context) {
-		final s = session.Provider.of(context);
+		final p = player.Provider.of(context);
+		p.fetchTopUris();
+
 		return Scaffold(
-			body: SafeArea(
-				child: _playerList(s),
-			),
+			body: _playerList(p),
 			appBar: AppBar(
 				title: Text('Skautex')
 			),
@@ -18,7 +19,27 @@ class Player extends StatelessWidget {
 		);
 	}
 
-	Widget _playerList(session.Bloc s) {
-		return Container();
+	Widget _playerList(player.Bloc p) {
+		return StreamBuilder(
+			stream: p.topUris,
+			builder: (context, snapshot) {
+				if (!snapshot.hasData) {
+					return Center(
+						child: CircularProgressIndicator()
+					);
+				}
+
+				return ListView.builder(
+						itemCount: snapshot.data.length,
+						itemBuilder: (context, int index) {
+							p.fetchPlayer(snapshot.data[index]);
+
+							return PlayerTile(
+								uri: snapshot.data[index]
+							);
+						}
+				);
+			}
+		);
 	}
 }

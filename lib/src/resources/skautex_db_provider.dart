@@ -63,4 +63,3 @@ class NewsDbProvider implements Source, Cache {
 	}
 }
 
-f
