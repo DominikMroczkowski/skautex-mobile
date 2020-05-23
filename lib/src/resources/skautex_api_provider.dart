@@ -105,6 +105,7 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
+		print(response.body);
 		if (json.decode(response.body).toString().contains('detail')) {
 			return Future<List<String>>.error('Pobranie identyfikatorów zawodników nie powiodło się');
 		}
@@ -184,7 +185,6 @@ class SkautexApiProvider implements Source {
 			},
 		);
 	}
-
 
 	Future<User> fetchUser(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;

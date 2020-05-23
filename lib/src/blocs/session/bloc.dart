@@ -103,6 +103,7 @@ class Bloc {
 					},
 				);
 				sink.add(fetched);
+				_refresh();
 			}
 		);
 	}
