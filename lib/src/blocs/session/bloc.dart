@@ -14,17 +14,15 @@ class Bloc {
 	final _repository = Repository();
 	BuildContext context = null;
 
-
-	final _JWTOutput  = BehaviorSubject<Future<JWT>>();
-	final _JWTFetcher = BehaviorSubject<Credentials>();
-	final _OTPOutput  = BehaviorSubject<Future<JWT>>();
-	final _OTPFetcher = BehaviorSubject<CreadsWithCode>();
-	final _access     = BehaviorSubject<String>();
+	final _JWTOutput     = BehaviorSubject<Future<JWT>>();
+	final _JWTFetcher    = BehaviorSubject<Credentials>();
+	final _OTPOutput     = BehaviorSubject<Future<JWT>>();
+	final _OTPFetcher    = BehaviorSubject<CreadsWithCode>();
 	final _refreshTokens = BehaviorSubject<Future<JWT>>();
+	final _dbTokenLoader = BehaviorSubject<Future<JWT>>();
 
 	Stream<Future<JWT>> get jwt    => _JWTOutput.stream;
 	Stream<Future<JWT>> get otp    => _OTPOutput.stream;
-	Stream<String> get access      => _access.stream;
 
 	Function(Credentials) get fetchJWT => _JWTFetcher.sink.add;
 
@@ -34,8 +32,11 @@ class Bloc {
 
 	Bloc() {
 		_JWTFetcher.stream.transform(_JWTTransformer()).pipe(_JWTOutput);
-		_OTPOutput.stream.transform(_accessTransformer()).pipe(_access);
-		MergeStream([_OTPFetcher.stream.transform(_OTPTransformer()), _refreshTokens.stream]).pipe(_OTPOutput);
+		MergeStream<Future<JWT>>([
+			_OTPFetcher.stream.transform(_OTPTransformer()),
+			_refreshTokens.stream,
+			_dbTokenLoader.stream.transform(_dbLoaderTransform())
+		]).pipe(_OTPOutput);
 	}
 
 	_JWTTransformer() {
@@ -69,36 +70,41 @@ class Bloc {
 				Future<JWT> jWT =_repository.fetchJWT2(code.jwt, code.code);
 				jWT.then(
 					(_) {
-						Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/'));
 					},
-					onError: (error) {
-						print('$error');
-					}
 				);
-				_refresh();
 				sink.add(jWT);
+				_refresh();
 			}
 		);
 	}
 
-	_refresh() {
-		Timer(Duration(minutes: 0, seconds: 30), () {
+	_refresh() async {
+		Timer(Duration(minutes: 4, seconds: 30), () {
 			_refreshTokens.sink.add(_repository.refetchJWT2(_OTPOutput.value));
 			_refresh();
 		});
 	}
 
-	_accessTransformer() {
-		return StreamTransformer<Future<JWT>, String>.fromHandlers(
-			handleData: (jWT, sink) async {
-				JWT jwt = await jWT;
-				sink.add(jwt.access);
-			}
-		);
-	}
-
 	sendCodeOnEmail() {
 		_repository.sendCodeOnEmail(_JWTOutput.value);
+	}
+
+	void triggerDbLoader() {
+		return _dbTokenLoader.sink.add(Future.value(JWT('access', 'refresh')));
+	}
+
+	_dbLoaderTransform() {
+		return StreamTransformer<Future<JWT>, Future<JWT>>.fromHandlers(
+			handleData: (Future<JWT> jWT, sink) {
+				Future<JWT> fetched = _repository.refetchJWT2(jWT);
+				fetched.then(
+					(_) {
+						Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/'));
+					},
+				);
+				sink.add(fetched);
+			}
+		);
 	}
 
 	dispose() {
@@ -106,7 +112,8 @@ class Bloc {
 		_JWTFetcher.close();
 		_OTPOutput.close();
 		_OTPFetcher.close();
-		_access.close();
+		_refreshTokens.close();
+		_dbTokenLoader.close();
 	}
 
 	setContext(context) {

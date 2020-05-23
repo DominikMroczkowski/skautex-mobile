@@ -15,7 +15,7 @@ class Provider extends InheritedWidget {
 		s.setContext(context);
 
 		var p = (context.inheritFromWidgetOfExactType(Provider) as Provider).players;
-		p.setAccess(s.access);
+		p.setAccess(s.otp);
 
 		return p;
 	}

@@ -1,36 +1,81 @@
 import 'package:flutter/material.dart';
+import '../helpers/navCard.dart';
+
+import '../models/permissions.dart';
+import '../models/user.dart';
+
+import '../blocs/user/bloc.dart' as user;
 
 class HomeDrawer extends StatelessWidget {
-	Widget build(context) {
+	Widget build(c) {
+		final u = user.Provider.of(c);
+
 		return Drawer(
-			child: ListView(
-      				padding: EdgeInsets.all(0.0),
-          			children: <Widget> [
-					_header(),
-					_tools(context)
-          			],
-        		),
+			child: StreamBuilder(
+				stream: u.permissions,
+				builder: (context, snapshot) {
+					if (snapshot.hasData) {
+						return FutureBuilder(
+							future: snapshot.data,
+							builder: (context, snapshot) {
+								if (snapshot.hasData) {
+									List<Widget> toShow = [];
+									List<Widget> tmp = [];
+									<List<DashCard>>[Data.main(), Data.role(), Data.options()].forEach(
+										(i) { i.forEach( (j) {
+											if ((snapshot.data as Permissions).XOR(j == null ? Permissions.toXOR() : j.perms)) {
+												tmp.add(_element(j, context));
+											}
+											}
+										);
+										if (tmp.isNotEmpty) {
+											tmp.add(Divider());
+											toShow = toShow + tmp;
+										}
+										tmp = [];
+										}
+									);
+
+									Widget column;
+									column = Column(children: toShow);
+
+									if (toShow.length == 0) {
+										return Container(width: 0.0, height: 0.0);
+									}
+
+									return ListView(
+      										padding: EdgeInsets.all(0.0),
+          									children: <Widget> [
+											_header(c),
+											column
+          									],
+        								);
+								}
+								return Container(height: 0.0, width: 0.0);
+							}
+						);
+					}
+					return Container(height: 0.0, width: 0.0);
+				}
+			)
 		);
 	}
 
-	Widget _header() {
+	Widget _header(BuildContext c) {
 		return Container(child: DrawerHeader(
               		child: Row(children: [
 				Container(
 					height: 70.0,
 					width: 70.0,
-                    			decoration: new BoxDecoration(
-                        			shape: BoxShape.circle,
-                        			image: new DecorationImage(
-                            				fit: BoxFit.cover,
-							image: NetworkImage('https://images2.minutemediacdn.com/image/upload/c_crop,h_1414,w_2101,x_20,y_0/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg?itok=Le7nMAZH')
-                    					)
-						)
+                    			child: CircleAvatar(
+						child: _initials(c),
+						radius: 7.0
+					)
 				),
 				Container(
 					width: 10
 				),
-				_names()
+				_nameHeader(c)
 			]
 			),
 
@@ -38,71 +83,173 @@ class HomeDrawer extends StatelessWidget {
                 		color: Colors.white,
               		),
             		),
-                    	height: 120.0,);
-	}
-
-	Widget _names() {
-		return Expanded(
-				child: Container( child: Column(
-					children: [
-
-			Align(
-				alignment: Alignment.centerLeft,
-				child: FittedBox(
-    fit: BoxFit.scaleDown, child: Text(
-							'Jan Kowalski',
-							overflow: TextOverflow.ellipsis,
-							maxLines: 1,
-							style: TextStyle( fontSize: 20)
-						)
-			)),
-
-			Align(
-				alignment: Alignment.centerLeft,
-				child: Text(
-							'Dyrektor',
-							style: TextStyle( fontSize: 15)
-						))
-					]
-				))
-			);
-	}
-
-	Widget _tools(BuildContext c) {
-		return Column(
-			children: [
-				_element('Strona główna', Icons.home, '/home', c),
-				_element('Zawodnicy', Icons.person_pin, '/player', c),
-				_element('Rekomendacje', Icons.favorite, '/players', c),
-				_element('Kalendarz', Icons.event, '/players', c),
-				_element('Zadania', Icons.check, '/players', c),
-				_element('Wydatki', Icons.poll, '/players', c),
-				_element('Rezerwacje', Icons.save, '/players', c),
-				Divider(),
-				_dynamicContent(),
-				Divider(),
-				_element('Użytkownicy', Icons.person_outline, '/home', c),
-				_element('Opcje', Icons.tune, '/players', c),
-
-			]
+                    	height: 120.0,
 		);
 	}
 
-	Widget _dynamicContent() {
-		return Container();
+	Widget _initials(BuildContext c) {
+		final u = user.Provider.of(c);
+		final double fontSize = 20;
+
+		return StreamBuilder(
+			stream: u.me,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, snapshot) {
+							if (snapshot.hasData) {
+								User u = (snapshot.data as User);
+								String first = u.firstName ?? '';
+								String last = u.lastName ?? '';
+								String name;
+
+								if (first != '' && last != '') {
+									name = first[0] + last[0];
+								} else if (first != '' && last == '') {
+									name = first[0];
+								} else if (first == '' && last != '') {
+									name = last[0];
+								} else {
+									name = '';
+								}
+								return Text(name, style: TextStyle( fontSize: fontSize));
+
+							}
+							return Text('');
+						}
+					);
+				}
+				return Text('');
+			}
+		);
+
 	}
 
-	Widget _element(String text, IconData icon, String path, BuildContext c) {
+	Widget _nameHeader(BuildContext c) {
+		return Expanded(
+			child: Container(
+				child: Column(
+					children: [
+						Align(
+							alignment: Alignment.centerLeft,
+							child: FittedBox(
+		    						fit: BoxFit.scaleDown,
+								child: _name(c)
+							)
+						),
+						Align(
+							alignment: Alignment.centerLeft,
+							child: FittedBox(
+								fit: BoxFit.scaleDown,
+								child: _group(c)
+							)
+						)
+					]
+				)
+			)
+		);
+	}
+
+	Widget _name(BuildContext context) {
+		final u = user.Provider.of(context);
+		final double fontSize = 20;
+
+		return StreamBuilder(
+			stream: u.me,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, snapshot) {
+							if (snapshot.hasData) {
+								User u = (snapshot.data as User);
+								String first = u.firstName ?? '';
+								String last = u.lastName ?? '';
+								String name;
+
+								if (first != '' && last != '') {
+									name = first + ' ' + last;
+								} else if (first != '' && last == '') {
+									name = first;
+								} else if (first == '' && last != '') {
+									name = last;
+								} else {
+									name = "Brak imienia";
+								}
+
+								return _textHeader(
+									name,
+									fontSize
+								);
+							}
+							return _textHeader("Ładowanie", fontSize);
+						}
+					);
+				}
+				return _textHeader("Oczekiwanie na dane", fontSize);
+			}
+		);
+	}
+
+	Widget _group(BuildContext context) {
+		final u = user.Provider.of(context);
+		final double fontSize = 15;
+
+		return StreamBuilder(
+			stream: u.groups,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder<List<String>>(
+						future: snapshot.data,
+						builder: (context, snapshot) {
+							if (snapshot.hasData) {
+								List<String> data = snapshot.data;
+								return _textHeader(
+									data == null || data.isEmpty ? "Brak grupy" : data[0],
+									fontSize
+								);
+							}
+							return _textHeader("Ładowanie", fontSize);
+						}
+					);
+				}
+				return _textHeader("Oczekiwanie na dane", fontSize);
+			}
+		);
+	}
+
+	Widget _textHeader(String text, double fontSize) {
+		return Text(
+			text,
+			overflow: TextOverflow.ellipsis,
+			maxLines: 1,
+			style: TextStyle( fontSize: fontSize)
+		);
+	}
+
+	Widget _element(DashCard i, BuildContext c) {
 		return ListTile(
-       			title: Text(text, style: TextStyle(color: Colors.grey[700])),
+       			title: Text(i.text, style: TextStyle(color: _currentRouteEquals(c, i.path) ? Colors.black : Colors.grey[700])),
 			leading: Icon(
-      				icon,
+      				i.icon,
       				color: Colors.grey[700],
     			),
 			dense: true,
+			enabled: !_currentRouteEquals(c, i.path),
         	      	onTap: () {
-				Navigator.of(c).pushNamed(path);
+				Navigator.of(c).pushNamed(i.path);
         	      	},
         	);
+	}
+
+	bool _currentRouteEquals(context, String path) {
+ 		var p;
+		Navigator.of(context).popUntil((route) {
+			p = route.settings.name;
+			return true;
+		});
+
+    		return p == path;
 	}
 }

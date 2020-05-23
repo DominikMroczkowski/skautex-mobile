@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:skautex_mobile/src/widgets/permsWatcher.dart';
 import '../../widgets/homeDrawer.dart';
 import '../../widgets/playerTile.dart';
 
 import '../../blocs/players/bloc.dart' as player;
+import '../../blocs/user/bloc.dart' as user;
+
+import '../../models/permissions.dart';
 
 class Player extends StatelessWidget {
 
@@ -10,12 +14,17 @@ class Player extends StatelessWidget {
 		final p = player.Provider.of(context);
 		p.fetchTopUris();
 
-		return Scaffold(
-			body: _playerList(p),
-			appBar: AppBar(
-				title: Text('Skautex')
-			),
-			drawer: HomeDrawer()
+		final u = user.Provider.of(context);
+
+		return PermsWatcher.watcher(context,
+			Scaffold(
+				body: _playerList(p),
+				appBar: AppBar(
+					title: Text('Skautex')
+				),
+				drawer: HomeDrawer(),
+				floatingActionButton: _addButton(u),
+			)
 		);
 	}
 
@@ -39,6 +48,32 @@ class Player extends StatelessWidget {
 							);
 						}
 				);
+			}
+		);
+	}
+
+	Widget _addButton(user.Bloc u) {
+		return StreamBuilder(
+			stream: u.permissions,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, futureSnap) {
+							if (!futureSnap.hasData || !(futureSnap.data as Permissions).deleteAuditentry) {
+								return Container();
+							}
+
+							return FloatingActionButton(
+     								onPressed: () {
+      								},
+      								child: Icon(Icons.navigation),
+      								backgroundColor: Colors.blue,
+    							);
+						}
+					);
+				}
+				return Container();
 			}
 		);
 	}

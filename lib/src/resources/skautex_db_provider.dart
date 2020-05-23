@@ -1,65 +1,54 @@
+import 'package:skautex_mobile/src/models/jwt.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'dart:async';
-import 'repository.dart';
 
-class NewsDbProvider implements Source, Cache {
-	Database db;
+class SkautexDbProvider {
+	Future<Database> db;
 
-	NewsDbProvider() {
-	  init();
+	SkautexDbProvider() {
+	  db = init();
 	}
 
-	void init() async {
+	Future<Database> init() async {
 		Directory documents = await getApplicationDocumentsDirectory();
-		final path = join(documents.path, "item.db");
-		db = await openDatabase(
+		final path = join(documents.path, "refresh.db");
+		print('$path');
+		return openDatabase(
 			path,
 			version: 1,
-			onCreate: (Database newDb, int version) {
+			onCreate: (Database newDb, int version) async {
 				newDb.execute("""
-					CREATE TABLE Items (
-						id INTEGER PRIMARY KEY,
-						refresh String,
-						access String,
+					CREATE TABLE Refresh (
+						refresh String
 					);
 				""");
 			}
 		);
 	}
 
-	// Todo - store and fetch top ids
-	Future<List<int>> fetch() {
-		return null;
-	}
-
-	Future<ItemModel> fetchJWT(int id) async {
-		final maps = await db.query(
-			"Items",
-			columns: null,
-			where: "id = ?",
-			whereArgs: [id]
+	Future<String> getRefresh() async {
+		print((await db).isOpen);
+		var rows = await (await db).query(
+			"Refresh"
 		);
-
-		if (maps.length > 0) {
-			return ItemModel.fromDb(maps.first);
+		if (rows.isEmpty) {
+			return "refresh";
 		}
-
-		return null;
+		return (rows[0]['refresh'] as String);
 	}
 
-	/*
-	 * Todo: create model with toMapForDb()
-	 *
-	Future<int> addItem(ItemModel item) {
-		return db.insert("Items", item.toMapForDb());
+	setRefresh(Future<JWT> jwt) async {
+		await clear();
+		JWT jwtC = await jwt;
+		(await db).insert("Refresh", {'refresh' : jwtC.refresh});
 	}
-	*/
 
-	Future<int> clear() {
-		return db.delete("Items");
+	Future<int> clear() async {
+		return (await db).delete("Refresh");
 	}
 }
 
+final SkautexDbProvider skautexDbProvider = SkautexDbProvider();

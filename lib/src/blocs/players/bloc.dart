@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
+import 'package:skautex_mobile/src/models/jwt.dart';
 import '../../resources/repository.dart';
 import '../../models/player.dart';
 
@@ -11,7 +12,7 @@ class Bloc {
 	final _topPlayers     = PublishSubject<List<String>>();
 	final _playersOutput  = BehaviorSubject<Map<String, Future<Player>>>();
 	final _playersFetcher = PublishSubject<String>();
-	BehaviorSubject<String> _access;
+	BehaviorSubject<Future<JWT>> _access;
 
 	get topUris => _topPlayers.stream;
 	get player => _playersOutput.stream;
@@ -39,7 +40,7 @@ class Bloc {
 		);
 	}
 
-	setAccess(BehaviorSubject<String> _access) {
+	setAccess(BehaviorSubject<Future<JWT>> _access) {
 		this._access = _access;
 	}
 

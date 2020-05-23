@@ -87,7 +87,7 @@ class AuthCode extends StatelessWidget {
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (context, snapshot) {
-							if (!snapshot.hasData) {
+							if (!snapshot.hasData && !snapshot.hasError) {
 								return Center(
 									child: Container(
 										height: 20,
