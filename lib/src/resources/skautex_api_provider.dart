@@ -141,13 +141,6 @@ class SkautexApiProvider implements Source {
 		}
 
 		final parsedJson = json.decode(Utf8Decoder().convert(response.bodyBytes));
-
-		final team = parsedJson['team'];
-		parsedJson['team'] = await fetchName(access, team);
-
-		final league = parsedJson['league'];
-		parsedJson['league'] = await fetchName(access, league);
-
 		return Player.fromJson(parsedJson);
 	}
 

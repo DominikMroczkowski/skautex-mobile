@@ -53,10 +53,10 @@ class Data {
 
 		Permissions perms = Permissions.toXOR();
 		perms.viewUser = true;
-		toRet.add(DashCard('Użytkownicy', Icons.person_outline, '/home', perms));
+		toRet.add(DashCard('Użytkownicy', Icons.person_outline, '/users', perms));
 		perms = Permissions.toXOR();
 		perms.viewTotpdevice = true;
-		toRet.add(DashCard('Opcje', Icons.tune, '/players', perms));
+		toRet.add(DashCard('Opcje', Icons.tune, '/options', perms));
 		return toRet;
 	}
 
