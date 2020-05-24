@@ -10,4 +10,8 @@ To run this project you need:
 - [Flutter](https://flutter.dev/docs/get-started/install)
 
 After clonning repository run:
+	
+	flutter pub get
+Then
+
 	flutter run
