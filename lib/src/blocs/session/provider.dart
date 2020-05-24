@@ -4,8 +4,10 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final session = Bloc();
 
-	Provider({Key key, Widget child})
-		: super(key: key, child: child);
+	Provider({Key key, Widget child}) :
+		super(key: key, child: child) {
+			session.triggerDbLoader();
+		}
 
 	bool updateShouldNotify(_) => true;
 
@@ -14,5 +16,4 @@ class Provider extends InheritedWidget {
 		b.setContext(context);
 		return b;
 	}
-
 }

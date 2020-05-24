@@ -8,27 +8,42 @@ import 'screens/home/home.dart';
 import 'screens/home/player.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
+import 'blocs/players/bloc.dart' as player;
+import 'blocs/user/bloc.dart' as user;
 
 class Router {
+	static RegExp home = new RegExp(r"^/home");
+
    	static Route<dynamic> generateRoute(RouteSettings settings) {
-  		switch (settings.name) {
-      		case '/':
-        		return MaterialPageRoute(builder: (_) => Login());
-      		case '/auth_code':
-        		return MaterialPageRoute(builder: (_) => auth_code.Provider(child: AuthCode()));
-		case '/change_password':
-        		return MaterialPageRoute(builder: (_) => ChangePassword());
-		case '/home':
-        		return MaterialPageRoute(builder: (_) => Home());
-		case '/player':
-        		return MaterialPageRoute(builder: (_) => Player());
-      		default:
-        		return MaterialPageRoute(
-        			builder: (_) => Scaffold(
-          				body: Center(
-              				child: Text('No route defined for ${settings.name}')),
-        			)
+		if ('/' == settings.name)
+    	return MaterialPageRoute(builder: (_) => Login(), 	settings: settings);
+    	if ('/auth_code' == settings.name)
+    		return MaterialPageRoute(builder: (_) => auth_code.Provider(child: AuthCode()), 	settings: settings);
+		if ('/change_password' == settings.name)
+    	return MaterialPageRoute(builder: (_) => ChangePassword(),
+				settings: settings);
+		if (0 < home.allMatches(settings.name).length)
+        return MaterialPageRoute(
+					builder: (context) {
+						return user.Provider(child: _loggedInRoutes(settings.name), context: context);
+					},
+					settings: settings
+				);
+    return MaterialPageRoute(
+    	builder: (_) => Scaffold(
+     		body: Center(
+     	 		child: Text('No route defined for ${settings.name}')),
+     		),
+				settings: settings
 			);
-    		}
   	}
+
+	static Widget _loggedInRoutes(String route) {
+		switch (route) {
+		case '/home/player':
+        		return player.Provider(child: Player());
+		default:
+			return Home();
+		}
+	}
 }

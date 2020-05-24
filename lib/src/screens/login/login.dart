@@ -5,17 +5,37 @@ import '../../blocs/session/bloc.dart' as session;
 
 class Login extends StatelessWidget {
 
-	Widget build(context) {
-		final l = login.Provider.of(context);
-		final s = session.Provider.of(context);
-
+	Widget build(BuildContext context) {
 		return Scaffold(
 			body: SafeArea(
-				child: mainNode(l, s, context)
+				child: body(context)
 			),
 			appBar: AppBar(
 				title: Text('Logowanie')
 			),
+		);
+	}
+
+	Widget body(c) {
+		final s = session.Provider.of(c);
+		final l = login.Provider.of(c);
+
+		return StreamBuilder(
+			stream: s.otp,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, snapshot) {
+							if (snapshot.hasError) {
+								return mainNode(l, s, c);
+							}
+							return Center(child: CircularProgressIndicator());
+						}
+					);
+				}
+				return mainNode(l, s, c);
+			}
 		);
 	}
 

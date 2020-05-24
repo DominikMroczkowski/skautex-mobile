@@ -32,7 +32,7 @@ class AuthCode extends StatelessWidget {
 						),
 						Row(
 							children: [
-								noDevice(a),
+								noDevice(s),
 								Expanded( child: Container()),
 								submitButton(a, s),
 							]
@@ -87,7 +87,7 @@ class AuthCode extends StatelessWidget {
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (context, snapshot) {
-							if (!snapshot.hasData) {
+							if (!snapshot.hasData && !snapshot.hasError) {
 								return Center(
 									child: Container(
 										height: 20,
@@ -112,9 +112,11 @@ class AuthCode extends StatelessWidget {
 
 
 
-	Widget noDevice(auth_code.Bloc bloc) {
-		return InkWell(
-     			onTap: (){},
+	Widget noDevice(session.Bloc s) {
+		return FlatButton(
+     			onPressed: () {
+				s.sendCodeOnEmail();
+			},
      			child: new Text(
 				"Nie mam urządzenia",
 				style: TextStyle(color: Colors.blue)
