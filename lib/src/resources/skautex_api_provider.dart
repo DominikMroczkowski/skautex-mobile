@@ -229,4 +229,26 @@ class SkautexApiProvider implements Source {
 		return toRet;
 	}
 
+	Future<Player> addPlayer(Future<JWT> jwt, Player player) async {
+		String access = (await jwt).access;
+		final response = await client.post(
+			Uri.https(_root,  '/api/v1/players/'),
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+			body: json.encode(player.toJson())
+		);
+
+		print("I am the spirit of the night" + response.body);
+		print("I am the spirit of the night" + response.request.toString());
+
+		if (response.statusCode != 201) {
+			return Future<Player>.error('Niepowodzenie');
+		}
+
+		return Player.fromJson(json.decode(response.body));
+	}
 }

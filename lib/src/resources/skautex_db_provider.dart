@@ -15,7 +15,6 @@ class SkautexDbProvider {
 	Future<Database> init() async {
 		Directory documents = await getApplicationDocumentsDirectory();
 		final path = join(documents.path, "refresh.db");
-		print('$path');
 		return openDatabase(
 			path,
 			version: 1,
@@ -30,7 +29,6 @@ class SkautexDbProvider {
 	}
 
 	Future<String> getRefresh() async {
-		print((await db).isOpen);
 		var rows = await (await db).query(
 			"Refresh"
 		);

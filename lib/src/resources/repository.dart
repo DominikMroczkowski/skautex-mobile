@@ -65,6 +65,9 @@ class Repository {
 		return sources[0].fetchGroups(access, uri);
 	}
 
+	Future<Player> addPlayer(Future<JWT> access, Player player) {
+		return sources[0].addPlayer(access, player);
+	}
 
 
 	clearCache() async {
@@ -86,6 +89,8 @@ abstract class Source {
 	Future<User> fetchUser(Future<JWT> access, String uri);
 	Future<Permissions> fetchPermissions(Future<JWT> access, String uri);
 	Future<List<String>> fetchGroups(Future<JWT> access, String uri);
+
+	Future<Player> addPlayer(Future<JWT> access, Player player);
 }
 
 abstract class Cache {

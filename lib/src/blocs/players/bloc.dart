@@ -45,9 +45,9 @@ class Bloc {
 	}
 
 	dispose() {
-                _topPlayers.close();
-                _playersOutput.close();
-	        _playersFetcher.close();
+  	_topPlayers.close();
+  	_playersOutput.close();
+		_playersFetcher.close();
 		_access.close();
 	}
 }

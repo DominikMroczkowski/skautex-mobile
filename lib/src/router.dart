@@ -6,42 +6,62 @@ import 'screens/login/change_password.dart';
 
 import 'screens/home/home.dart';
 import 'screens/home/player.dart';
+import 'screens/home/add_player.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
 import 'blocs/players/bloc.dart' as player;
 import 'blocs/user/bloc.dart' as user;
+import 'blocs/add_player/bloc.dart' as addPlayer;
 
 class Router {
 	static RegExp home = new RegExp(r"^/home");
 
    	static Route<dynamic> generateRoute(RouteSettings settings) {
 		if ('/' == settings.name)
-    	return MaterialPageRoute(builder: (_) => Login(), 	settings: settings);
-    	if ('/auth_code' == settings.name)
-    		return MaterialPageRoute(builder: (_) => auth_code.Provider(child: AuthCode()), 	settings: settings);
+    	return MaterialPageRoute(
+				builder: (_) => Login(),
+				settings: settings
+			);
+
+    if ('/auth_code' == settings.name)
+    	return MaterialPageRoute(
+				builder: (_) =>
+					auth_code.Provider(
+					child: AuthCode()
+				),
+				settings: settings
+			);
+
 		if ('/change_password' == settings.name)
     	return MaterialPageRoute(builder: (_) => ChangePassword(),
 				settings: settings);
+
 		if (0 < home.allMatches(settings.name).length)
-        return MaterialPageRoute(
-					builder: (context) {
-						return user.Provider(child: _loggedInRoutes(settings.name), context: context);
-					},
-					settings: settings
-				);
+      return MaterialPageRoute(
+				builder: (context) {
+					return user.Provider(
+						child: _loggedInRoutes(settings.name, context),
+						context: context
+					);
+				},
+				settings: settings
+			);
+
     return MaterialPageRoute(
     	builder: (_) => Scaffold(
      		body: Center(
      	 		child: Text('No route defined for ${settings.name}')),
-     		),
-				settings: settings
-			);
-  	}
+     	),
+			settings: settings
+		);
+  }
 
-	static Widget _loggedInRoutes(String route) {
+	static Widget _loggedInRoutes(String route, BuildContext context) {
 		switch (route) {
 		case '/home/player':
-        		return player.Provider(child: Player());
+    	return player.Provider(child: Player());
+		case '/home/player/addPlayer':
+    	return addPlayer.Provider(child: AddPlayer(), context: context);
 		default:
 			return Home();
 		}

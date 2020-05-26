@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../blocs/login/bloc.dart' as login;
 import '../../blocs/session/bloc.dart' as session;
 
+import '../../widgets/circular_indicator.dart';
+
 class Login extends StatelessWidget {
 
 	Widget build(BuildContext context) {
@@ -139,17 +141,7 @@ class Login extends StatelessWidget {
 						future: snapshot.data,
 						builder: (context, snapshot) {
 							if (!snapshot.hasData) {
-								return Center(
-									child: Container(
-										height: 20,
-										width: 20,
-										margin: EdgeInsets.all(5),
-										child: CircularProgressIndicator(
-											strokeWidth: 2.0,
-											valueColor : AlwaysStoppedAnimation(Colors.white),
-										),
-									)
-								);
+								CircularIndicator();
 							}
 							return Text('Zaloguj');
 						}

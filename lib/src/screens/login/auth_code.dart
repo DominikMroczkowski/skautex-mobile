@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../blocs/auth_code/bloc.dart' as auth_code;
 import '../../blocs/session/bloc.dart' as session;
+import '../../widgets/circular_indicator.dart';
 
 class AuthCode extends StatelessWidget {
 
@@ -39,7 +40,7 @@ class AuthCode extends StatelessWidget {
 						)
 					]
 				),
-      				decoration: BoxDecoration(
+      		decoration: BoxDecoration(
 					color: Colors.white,
 					borderRadius: BorderRadius.circular(10.0)
 				),
@@ -87,18 +88,8 @@ class AuthCode extends StatelessWidget {
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (context, snapshot) {
-							if (!snapshot.hasData && !snapshot.hasError) {
-								return Center(
-									child: Container(
-										height: 20,
-										width: 20,
-										margin: EdgeInsets.all(5),
-										child: CircularProgressIndicator(
-											strokeWidth: 2.0,
-											valueColor : AlwaysStoppedAnimation(Colors.white),
-										),
-									)
-								);
+							if (!snapshot.hasData) {
+								return CircularIndicator();
 							}
 							return Text('Zaloguj');
 						}
@@ -109,8 +100,6 @@ class AuthCode extends StatelessWidget {
 			}
 		);
 	}
-
-
 
 	Widget noDevice(session.Bloc s) {
 		return FlatButton(
