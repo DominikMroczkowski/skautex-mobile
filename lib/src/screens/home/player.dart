@@ -39,14 +39,14 @@ class Player extends StatelessWidget {
 				}
 
 				return ListView.builder(
-						itemCount: snapshot.data.length,
-						itemBuilder: (context, int index) {
-							p.fetchPlayer(snapshot.data[index]);
+					itemCount: snapshot.data.length,
+					itemBuilder: (context, int index) {
+						p.fetchPlayer(snapshot.data[index]);
 
-							return PlayerTile(
-								uri: snapshot.data[index]
-							);
-						}
+						return PlayerTile(
+							uri: snapshot.data[index]
+						);
+					}
 				);
 			}
 		);
@@ -60,16 +60,17 @@ class Player extends StatelessWidget {
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (context, futureSnap) {
-							if (!futureSnap.hasData || !(futureSnap.data as Permissions).deleteAuditentry) {
+							if (!futureSnap.hasData || !(futureSnap.data as Permissions).addUser) {
 								return Container();
 							}
 
 							return FloatingActionButton(
-     								onPressed: () {
-      								},
-      								child: Icon(Icons.navigation),
-      								backgroundColor: Colors.blue,
-    							);
+     						onPressed: () {
+									Navigator.of(context).pushNamed('/home/player/addPlayer');
+      					},
+      					child: Icon(Icons.add),
+      					backgroundColor: Colors.blue,
+    					);
 						}
 					);
 				}

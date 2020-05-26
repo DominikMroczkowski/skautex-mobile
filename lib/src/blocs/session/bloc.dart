@@ -70,6 +70,7 @@ class Bloc {
 				Future<JWT> jWT =_repository.fetchJWT2(code.jwt, code.code);
 				jWT.then(
 					(_) {
+						Navigator.of(context).pushNamedAndRemoveUntil('/home', (r) => false);
 					},
 				);
 				sink.add(jWT);
@@ -99,7 +100,7 @@ class Bloc {
 				Future<JWT> fetched = _repository.refetchJWT2(jWT);
 				fetched.then(
 					(_) {
-						Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/'));
+						Navigator.of(context).pushNamedAndRemoveUntil('/home', (r) => false);
 					},
 				);
 				sink.add(fetched);
