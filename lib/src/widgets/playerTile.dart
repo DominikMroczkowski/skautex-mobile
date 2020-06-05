@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/player.dart';
-import '../blocs/players/bloc.dart';
+import '../blocs/players/bloc.dart' as players;
+import '../blocs/session/bloc.dart' as session;
 
 import 'dart:async';
 
@@ -12,20 +13,20 @@ class PlayerTile extends StatelessWidget {
 	PlayerTile({this.uri});
 
 	Widget build(context) {
-		final bloc = Provider.of(context);
+		final ps = players.Provider.of(context);
 
 		return StreamBuilder(
-			stream: bloc.player,
+			stream: ps.player,
 			builder: (context, AsyncSnapshot<Map<String, Future<Player>>> snapshot) {
 				if (!snapshot.hasData) {
-					return LoadingContainer();
+					return LoadingContainer.lineCount(2);
 				}
 
 				return FutureBuilder(
 					future: snapshot.data[uri],
 					builder: (context, AsyncSnapshot<Player> playerSnap) {
 						if (!playerSnap.hasData) {
-							return LoadingContainer();
+							return LoadingContainer.lineCount(2);
 						}
 
 						return Container(
@@ -47,7 +48,7 @@ class PlayerTile extends StatelessWidget {
 						children: [
 							Align(
 								child: Text(
-									'${player.name} ${player.surname}',
+									'${player.name} ${player.surname}' ?? 'Brak',
 									style: TextStyle(
 										fontSize: 18,
 									)
@@ -57,7 +58,7 @@ class PlayerTile extends StatelessWidget {
 							Container(margin: EdgeInsets.only(top: 10.0)),
 							Row(children: <Widget>[
 								Text(
-									player.position,
+									player.position ?? 'Brak',
 									style: TextStyle(
 										color: Colors.grey[700],
 									)
@@ -73,7 +74,7 @@ class PlayerTile extends StatelessWidget {
 
 								Expanded(child: Container()),
 								Text(
-									player.team,
+									player.team[0] ?? 'Brak',
 									style: TextStyle(
 										color: Colors.grey[700],
 									)
@@ -82,9 +83,9 @@ class PlayerTile extends StatelessWidget {
 							),
 							Container(margin: EdgeInsets.only(top: 10.0)),
 							Row(children: <Widget>[
-								_playerStatus('Okej'),
+								_playerStatus(player.status ?? 'Brak'),
 								Expanded(child: Container()),
-								Text(player.city),
+								Text(player.city ?? 'Brak'),
 								],
 							),
 						]
@@ -92,7 +93,9 @@ class PlayerTile extends StatelessWidget {
 					padding: EdgeInsets.all(20.0),
 				),
 			onTap: () {
-					// Navigator.pushNamed(context, '/${player.uri}');
+				final s = session.Provider.of(context);
+				s.changeClicked(uri);
+				Navigator.pushNamed(context, '/home/player');
 			}),
 			color: Colors.white,
 		);

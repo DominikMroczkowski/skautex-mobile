@@ -4,15 +4,15 @@ import '../helpers/navCard.dart';
 import '../models/permissions.dart';
 import '../models/user.dart';
 
-import '../blocs/user/bloc.dart' as user;
+import '../blocs/info/bloc.dart' as info;
 
 class HomeDrawer extends StatelessWidget {
 	Widget build(c) {
-		final u = user.Provider.of(c);
+		final infoBloc = info.Provider.of(c);
 
 		return Drawer(
 			child: StreamBuilder(
-				stream: u.permissions,
+				stream: infoBloc.permissions,
 				builder: (context, snapshot) {
 					if (snapshot.hasData) {
 						return FutureBuilder(
@@ -88,11 +88,11 @@ class HomeDrawer extends StatelessWidget {
 	}
 
 	Widget _initials(BuildContext c) {
-		final u = user.Provider.of(c);
+		final infoBloc = info.Provider.of(c);
 		final double fontSize = 20;
 
 		return StreamBuilder(
-			stream: u.me,
+			stream: infoBloc.me,
 			builder: (context, snapshot) {
 				if (snapshot.hasData) {
 					return FutureBuilder(
@@ -152,11 +152,11 @@ class HomeDrawer extends StatelessWidget {
 	}
 
 	Widget _name(BuildContext context) {
-		final u = user.Provider.of(context);
+		final infoBloc = info.Provider.of(context);
 		final double fontSize = 20;
 
 		return StreamBuilder(
-			stream: u.me,
+			stream: infoBloc.me,
 			builder: (context, snapshot) {
 				if (snapshot.hasData) {
 					return FutureBuilder(
@@ -193,11 +193,11 @@ class HomeDrawer extends StatelessWidget {
 	}
 
 	Widget _group(BuildContext context) {
-		final u = user.Provider.of(context);
+		final infoBloc = info.Provider.of(context);
 		final double fontSize = 15;
 
 		return StreamBuilder(
-			stream: u.groups,
+			stream: infoBloc.groups,
 			builder: (context, snapshot) {
 				if (snapshot.hasData) {
 					return FutureBuilder<List<String>>(

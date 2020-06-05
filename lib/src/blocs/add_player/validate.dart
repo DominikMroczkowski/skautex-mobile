@@ -14,14 +14,4 @@ class Validate {
 			}
 		}
 	);
-
-	final isPosition = StreamTransformer<Positions, Positions>.fromHandlers(
-		handleData: (i, sink) {
-			if (Positions.values.indexOf(i) != -1) {
-				sink.add(i);
-			} else {
-				sink.addError('Wybierz pozycje');
-			}
-		}
-	);
 }

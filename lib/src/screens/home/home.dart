@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/widgets/permsWatcher.dart';
-import '../../blocs/user/bloc.dart' as user;
+import '../../blocs/info/bloc.dart' as info;
 import '../../models/user.dart';
 import '../../models/permissions.dart';
 import '../../helpers/navCard.dart';
@@ -13,28 +11,25 @@ enum _Headers {
 class Home extends StatelessWidget {
 
 	Widget build(context) {
-		return PermsWatcher.watcher(
-			context,
-			Scaffold(
-				body: SafeArea(
-					child: ListView(
-						children: <Widget>[
-							_gridSegment(Data.main(), context, _Headers.main),
-							_gridSegment(Data.role(), context, _Headers.role),
-							_gridSegment(Data.options(), context, _Headers.options)
-						],
-						padding: EdgeInsets.all(10.0)
-					)
-				),
-				appBar: AppBar(
-					title: Text('Skautex')
+		return Scaffold(
+			body: SafeArea(
+				child: ListView(
+					children: <Widget>[
+						_gridSegment(Data.main(), context, _Headers.main),
+						_gridSegment(Data.role(), context, _Headers.role),
+						_gridSegment(Data.options(), context, _Headers.options)
+					],
+					padding: EdgeInsets.all(10.0)
 				)
+			),
+			appBar: AppBar(
+				title: Text('Skautex')
 			)
 		);
 	}
 
 	Widget _roleHeader(BuildContext c) {
-		final u = user.Provider.of(c);
+		final u = info.Provider.of(c);
 
 		return StreamBuilder(
 			stream: u.me,
@@ -80,7 +75,7 @@ class Home extends StatelessWidget {
 	}
 
 	Widget _gridSegment(List<DashCard> l, BuildContext c, _Headers header) {
-		final p = user.Provider.of(c);
+		final p = info.Provider.of(c);
 		return StreamBuilder(
 			stream: p.permissions,
 			builder: (context, snapshot) {

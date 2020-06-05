@@ -70,6 +70,31 @@ class Repository {
 	}
 
 
+
+	Future<List<List<String>>> fetchTeams(Future<JWT> jwt) {
+		return sources[0].fetchTeams(jwt);
+	}
+
+	Future<List<List<String>>> fetchLeagues(Future<JWT> jwt) {
+		return sources[0].fetchLeagues(jwt);
+	}
+
+
+
+	Future<Player> updatePlayer(Future<JWT> jwt, Player player) {
+		return sources[0].updatePlayer(jwt, player);
+	}
+
+
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt) {
+		return sources[0].fetchUris<T>(jwt);
+	}
+
+	Future<T> fetchItem<T>(Future<JWT> jwt, String uri) {
+		return sources[0].fetchItem<T>(jwt, uri);
+	}
+
+
 	clearCache() async {
 		for (var cache in caches) {
 			await cache.clear();
@@ -91,6 +116,15 @@ abstract class Source {
 	Future<List<String>> fetchGroups(Future<JWT> access, String uri);
 
 	Future<Player> addPlayer(Future<JWT> access, Player player);
+
+
+	Future<List<List<String>>> fetchTeams(Future<JWT> jwt);
+	Future<List<List<String>>> fetchLeagues(Future<JWT> jwt);
+
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt);
+	Future<T> fetchItem<T>(Future<JWT> jwt, String uri);
+
+	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
 }
 
 abstract class Cache {

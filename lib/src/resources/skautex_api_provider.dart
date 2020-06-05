@@ -11,7 +11,7 @@ import '../models/user.dart';
 import '../models/permissions.dart';
 
 final _root = 'skautex.azurewebsites.net';
-const _API_KEY = 'wLGT1Js1.z17BjKPWsTlTB8Mqxdu5E82xYXLtyG5a';
+const _API_KEY = 'JpXVIVAD.G3UnUx61FYLVVUNLJV2HWlNGkOW2n6VL';
 
 class SkautexApiProvider implements Source {
 	Client client = Client();
@@ -80,13 +80,13 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		print(response.body);
 
 		if (json.decode(response.body).toString().contains('detail')) {
 			return Future<JWT>.error('Odświeżenie nie powiodło się');
 		}
 
 		final parsedJson = json.decode(response.body);
+		print(parsedJson['access']);
 		var newJwt = JWT.fromJson(parsedJson);
 		newJwt.refresh = jwtC.refresh;
 		return newJwt;
@@ -105,7 +105,6 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		print(response.body);
 		if (json.decode(response.body).toString().contains('detail')) {
 			return Future<List<String>>.error('Pobranie identyfikatorów zawodników nie powiodło się');
 		}
@@ -117,7 +116,7 @@ class SkautexApiProvider implements Source {
 
 		parsedJson['results'].forEach(
 			(playersJson) {
-				return uris.add(Player.fromJson(playersJson).uri);
+				return uris.add(playersJson['url']);
 			}
 		);
 
@@ -126,6 +125,7 @@ class SkautexApiProvider implements Source {
 
 	Future<Player> fetchPlayer(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
+
 		var response = await client.get(
 			uri,
 			headers: {
@@ -136,11 +136,14 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		if (json.decode(response.body).toString().contains('detail')) {
+		print(response.body);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<Player>.error('Pobranie danych zawodnika nie powiodło się');
 		}
 
-		final parsedJson = json.decode(Utf8Decoder().convert(response.bodyBytes));
+		String stringJson = Utf8Decoder().convert(response.bodyBytes);
+		final parsedJson = json.decode(stringJson);
 		return Player.fromJson(parsedJson);
 	}
 
@@ -214,7 +217,7 @@ class SkautexApiProvider implements Source {
 	Future<List<String>> fetchGroups(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
 		final response = await client.get(
-			Uri.https(_root,  '/api/v1/users/me/groups/'),
+			Uri.https(_root, '/api/v1/users/me/groups/'),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -230,7 +233,9 @@ class SkautexApiProvider implements Source {
 	}
 
 	Future<Player> addPlayer(Future<JWT> jwt, Player player) async {
+
 		String access = (await jwt).access;
+
 		final response = await client.post(
 			Uri.https(_root,  '/api/v1/players/'),
 			headers: {
@@ -242,13 +247,154 @@ class SkautexApiProvider implements Source {
 			body: json.encode(player.toJson())
 		);
 
-		print("I am the spirit of the night" + response.body);
-		print("I am the spirit of the night" + response.request.toString());
-
-		if (response.statusCode != 201) {
+		print(response.body);
+		if (response.statusCode < 200 || response.statusCode > 299)
 			return Future<Player>.error('Niepowodzenie');
-		}
 
 		return Player.fromJson(json.decode(response.body));
+	}
+
+	Future<List<List<String>>> fetchTeams(Future<JWT> jwt) async {
+		String access = (await jwt).access;
+
+		final response = await client.get(
+			Uri.https(_root,  '/api/v1/teams/', {"limit" : "none"}),
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			}
+		);
+
+		final parsedJson = json.decode(response.body);
+		List<List<String>> names = List<List<String>>();
+
+		parsedJson['results'].forEach(
+			(playersJson) {
+				return names.add([playersJson['name'], playersJson['url']]);
+			}
+		);
+		return names;
+
+	}
+
+	Future<List<List<String>>> fetchLeagues(Future<JWT> jwt) async {
+		String access = (await jwt).access;
+
+		final response = await client.get(
+			Uri.https(_root,  '/api/v1/leagues/', {"limit" : "none"}),
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			}
+		);
+
+		final parsedJson = json.decode(response.body);
+
+		List<List<String>> names = List<List<String>>();
+
+		parsedJson['results'].forEach(
+			(playersJson) {
+				return names.add([playersJson['name'], playersJson['url']]);
+			}
+		);
+		return names;
+	}
+
+
+	Future<Player> updatePlayer(Future<JWT> jwt, Player player) async {
+		String access = (await jwt).access;
+
+		final response = await client.put(
+			player.uri,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+			body: json.encode(
+				player.toJson()
+			)
+		);
+
+
+		final parsedJson = json.decode(response.body);
+
+		return Player.fromJson(parsedJson);
+	}
+
+
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt) async {
+		String access = (await jwt).access;
+
+		final _uris = <Type, String>{
+			User : 'https://skautex.azurewebsites.net/api/v1/users/'
+		};
+
+		String _getUri<T>() {
+		  return _uris[T];
+		}
+
+		String uri = _getUri<T>();
+		final response = await client.get(
+			Uri.https(_root, uri,  {"limit" : "none"}),
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+		);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<List<String>>.error('Pobranie adressów url dla uri: $uri nie powiodło się');
+		}
+
+		final parsedJson = json.decode(response.body);
+
+		// Quick fix becouse api isn't in any means stable
+		List<String> uris = List<String>();
+
+		parsedJson['results'].forEach(
+			(i) {
+				return uris.add(i['url']);
+			}
+		);
+
+		return uris;
+	}
+
+	Future<T> fetchItem<T>(Future<JWT> jwt, String uri) async {
+		String access = (await jwt).access;
+
+		final _objects = <Type, Function>{
+			User : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson)
+		};
+
+		T _fromJson<T>(Map<String, dynamic> parsedJson) {
+		  return _objects[T](parsedJson);
+		}
+
+		final response = await client.get(
+			uri,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access',
+			}
+		);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<T>.error('Zapytanie GET dla URL: $uri nie powiodło się');
+		}
+
+		String stringJson = Utf8Decoder().convert(response.bodyBytes);
+		final parsedJson = json.decode(stringJson);
+		return _fromJson<T>(parsedJson);
 	}
 }

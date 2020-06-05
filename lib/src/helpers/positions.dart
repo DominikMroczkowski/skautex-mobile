@@ -1,8 +1,4 @@
-enum Positions {
-	GK, SW, LB, CB, RB, LWB, RWB, DM, LM, CM, RM, AM, LW, SS, RW, CF
-}
-
-List<String> positionsNames = <String>[
+List<String> positionInterface = <String>[
 	"Raz", "Dwa",
 	"2az", "2wa",
 	"3az", "3wa",
@@ -13,4 +9,4 @@ List<String> positionsNames = <String>[
 	"8az", "8wa"
 ];
 
-List<String> positionsToRequest = <String>['GK', 'SW', 'LB', 'CB', 'RB', 'LWB', 'RWB', 'DM', 'LM', 'CM', 'RM', 'AM', 'LW', 'SS', 'RW', 'CF'];
+List<String> positionRequest = <String>['GK', 'SW', 'LB', 'CB', 'RB', 'LWB', 'RWB', 'DM', 'LM', 'CM', 'RM', 'AM', 'LW', 'SS', 'RW', 'CF'];

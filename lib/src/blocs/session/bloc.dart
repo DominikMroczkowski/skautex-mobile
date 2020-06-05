@@ -116,9 +116,14 @@ class Bloc {
 		_OTPFetcher.close();
 		_refreshTokens.close();
 		_dbTokenLoader.close();
+		_clicked.close();
 	}
 
 	setContext(context) {
 		this.context = context;
 	}
+
+	final BehaviorSubject<String> _clicked = BehaviorSubject<String>();
+	get clicked => _clicked.stream;
+	Function(String) get changeClicked => _clicked.sink.add;
 }

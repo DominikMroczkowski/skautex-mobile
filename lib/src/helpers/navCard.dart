@@ -22,7 +22,7 @@ class Data {
 
 		Permissions perms = Permissions.toXOR();
 		perms.viewAuditentry = true;
-		toRet.add(DashCard('Zawodnicy', Icons.person_pin, '/home/player', perms));
+		toRet.add(DashCard('Zawodnicy', Icons.person_pin, '/home/players', perms));
 		perms = Permissions.toXOR();
 
 		toRet.add(DashCard('Rekomendacje', Icons.favorite, '/home/recommended', perms));
@@ -53,7 +53,7 @@ class Data {
 
 		Permissions perms = Permissions.toXOR();
 		perms.viewUser = true;
-		toRet.add(DashCard('Użytkownicy', Icons.person_outline, '/users', perms));
+		toRet.add(DashCard('Użytkownicy', Icons.person_outline, '/home/users', perms));
 		perms = Permissions.toXOR();
 		perms.viewTotpdevice = true;
 		toRet.add(DashCard('Opcje', Icons.tune, '/options', perms));
