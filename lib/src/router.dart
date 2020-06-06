@@ -97,7 +97,9 @@ class Router {
 	static Widget _usersRoutes(String route, BuildContext context) {
 		switch (route) {
 		case '/home/user/addUser':
-			return User();
+			return user.Provider(child: User(), context: context);
+		case '/home/user':
+			return user.Provider(child: User(), context: context);
 		default:
 			return users.Provider(child: Users(), context: context);
 		}

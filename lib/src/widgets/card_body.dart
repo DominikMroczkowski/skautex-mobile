@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CardBody {
+class CardBody extends StatelessWidget{
 	final List<Widget> children;
 
 	CardBody({this.children});

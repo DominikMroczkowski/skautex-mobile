@@ -14,4 +14,13 @@ class User {
    	lastName  = parsedJson['last_name'] ?? '',
    	email     = parsedJson['email'],
    	isActive  = parsedJson['is_active'] ?? false;
+
+	List<List<String>> toList() {
+		return [
+			['Nazwa', username],
+			['Imię', firstName],
+			['Nazwisko', lastName],
+		];
+
+	}
 }

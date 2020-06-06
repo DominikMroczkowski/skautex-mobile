@@ -6,7 +6,7 @@ class ItemList<T> with Access {
 	final _repository = Repository();
 
 	final _uris       = PublishSubject<List<String>>();
-	final _output     = PublishSubject<Map<String, Future<T>>>();
+	final _output     = BehaviorSubject<Map<String, Future<T>>>();
 	final _input      = PublishSubject<String>();
 
 	get uris      => _uris.stream;
