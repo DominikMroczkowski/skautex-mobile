@@ -88,7 +88,7 @@ class AuthCode extends StatelessWidget {
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (context, snapshot) {
-							if (!snapshot.hasData) {
+							if (!snapshot.hasData && !snapshot.hasError) {
 								return CircularIndicator();
 							}
 							return Text('Zaloguj');

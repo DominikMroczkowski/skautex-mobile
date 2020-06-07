@@ -11,6 +11,8 @@ import 'screens/home/add_player.dart';
 import 'screens/home/edit_player.dart';
 import 'screens/home/users.dart';
 import 'screens/home/user.dart';
+import 'screens/home/edit_user.dart';
+import 'screens/home/add_user.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
 import 'blocs/players/bloc.dart' as players;
@@ -20,6 +22,8 @@ import 'blocs/add_player/bloc.dart' as addPlayer;
 import 'blocs/edit_player/bloc.dart' as editPlayer;
 import 'blocs/info/bloc.dart' as info;
 import 'blocs/users/bloc.dart' as users;
+import 'blocs/edit_user/bloc.dart' as editUser;
+import 'blocs/add_user/bloc.dart' as addUser;
 
 class Router {
 		static RegExp home = new RegExp(r"^/home");
@@ -97,7 +101,9 @@ class Router {
 	static Widget _usersRoutes(String route, BuildContext context) {
 		switch (route) {
 		case '/home/user/addUser':
-			return user.Provider(child: User(), context: context);
+			return addUser.Provider(child: AddUser(), context: context);
+		case '/home/user/editUser':
+			return editUser.Provider(child: EditUser(), context: context);
 		case '/home/user':
 			return user.Provider(child: User(), context: context);
 		default:

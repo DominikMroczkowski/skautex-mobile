@@ -3,23 +3,23 @@ import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/resources/repository.dart';
 import 'acess.dart';
 
-class Item<T> with Access {
+class Update<T> with Access {
 	final _repository = Repository();
 
-	final _output = BehaviorSubject<Future<T>>();
-	final _input  = BehaviorSubject<String>();
+	final _output     = PublishSubject<Future<T>>();
+	final _input      = PublishSubject<T>();
 
-	get fetchItem => _input.sink.add;
+	Function(T) get updateItem => _input.sink.add;
 	Stream<Future<T>> get item => _output.stream;
 
-	Item() {
+	Update() {
 		_input.transform(_fetch()).pipe(_output);
 	}
 
 	_fetch() {
-		return StreamTransformer<String, Future<T>>.fromHandlers(
-			handleData: (String uri, sink) {
-				sink.add(_repository.fetchItem<T>(otp, uri));
+		return StreamTransformer<T, Future<T>>.fromHandlers(
+			handleData: (T item, sink) {
+				sink.add(_repository.updateItem<T>(otp, item));
 			}
 		);
 	}

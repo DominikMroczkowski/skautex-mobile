@@ -136,8 +136,6 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		print(response.body);
-
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<Player>.error('Pobranie danych zawodnika nie powiodło się');
 		}
@@ -247,7 +245,6 @@ class SkautexApiProvider implements Source {
 			body: json.encode(player.toJson())
 		);
 
-		print(response.body);
 		if (response.statusCode < 200 || response.statusCode > 299)
 			return Future<Player>.error('Niepowodzenie');
 
@@ -328,16 +325,16 @@ class SkautexApiProvider implements Source {
 	}
 
 
-	Future<List<String>> fetchUris<T>(Future<JWT> jwt) async {
-		String access = (await jwt).access;
-
+	String _getUri<T>() {
 		final _uris = <Type, String>{
 			User : 'https://skautex.azurewebsites.net/api/v1/users/'
 		};
 
-		String _getUri<T>() {
-		  return _uris[T];
-		}
+	  return _uris[T];
+	}
+
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt) async {
+		String access = (await jwt).access;
 
 		String uri = _getUri<T>();
 		final response = await client.get(
@@ -368,16 +365,17 @@ class SkautexApiProvider implements Source {
 		return uris;
 	}
 
-	Future<T> fetchItem<T>(Future<JWT> jwt, String uri) async {
-		String access = (await jwt).access;
-
+	T _fromJson<T>(Map<String, dynamic> parsedJson) {
 		final _objects = <Type, Function>{
 			User : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson)
 		};
 
-		T _fromJson<T>(Map<String, dynamic> parsedJson) {
-		  return _objects[T](parsedJson);
-		}
+	  return _objects[T](parsedJson);
+	}
+
+	Future<T> fetchItem<T>(Future<JWT> jwt, String uri) async {
+		String access = (await jwt).access;
+
 
 		final response = await client.get(
 			uri,
@@ -397,4 +395,95 @@ class SkautexApiProvider implements Source {
 		final parsedJson = json.decode(stringJson);
 		return _fromJson<T>(parsedJson);
 	}
+
+
+	_toJson<T>(T item) {
+		final _objects = <Type, Function>{
+			User : (User user) => user.toJson()
+		};
+
+	  return _objects[T](item);
+	}
+
+	Future<T> updateItem<T>(Future<JWT> jwt, T item) async {
+		String access = (await jwt).access;
+
+		var jsonToEncode = _toJson(item);
+		print(jsonToEncode['url']);
+		final response = await client.put(
+			jsonToEncode['url'],
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+			body: json.encode(
+				jsonToEncode
+			)
+		);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<T>.error('Zapytanie PUT dla URL: ${jsonToEncode['uri']} nie powiodło się');
+		}
+
+		String stringJson = Utf8Decoder().convert(response.bodyBytes);
+		final parsedJson = json.decode(stringJson);
+		return _fromJson<T>(parsedJson);
+	}
+
+	_toPost<T>(T item) {
+		final _objects = <Type, Function>{
+			User : (User user) => user.toPost()
+		};
+
+	  return _objects[T](item);
+	}
+
+	Future<T> addItem<T>(Future<JWT> jwt, T item) async {
+		String access = (await jwt).access;
+
+		final response = await client.post(
+			_getUri<T>(),
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+			body: json.encode(_toPost(item))
+		);
+
+		print(response.body);
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<T>.error('Zapytanie POST dla URL: ${_getUri<T>()} nie powiodło się');
+		}
+
+		String stringJson = Utf8Decoder().convert(response.bodyBytes);
+		final parsedJson = json.decode(stringJson);
+		return _fromJson<T>(parsedJson);
+	}
+
+	Future<Object> deleteItem(Future<JWT> jwt, String url) async {
+		String access = (await jwt).access;
+
+		final response = await client.delete(
+			url,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			}
+		);
+
+		print(response.body);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<Object>.error('Zapytanie DELETE dla URL: $url nie powiodło się');
+		}
+
+		return Future<Object>.value(Object());
+	}
+
 }

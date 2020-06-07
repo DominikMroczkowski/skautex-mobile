@@ -40,7 +40,6 @@ class Data {
 		List<DashCard> toRet = [];
 
 		Permissions perms = Permissions.toXOR();
-
 		toRet.add(DashCard('Raporty', Icons.person_outline, '/home', perms));
 		toRet.add(DashCard('Testy', Icons.tune, '/players', perms));
 		toRet.add(DashCard('Rankingi', Icons.tune, '/players',  perms));

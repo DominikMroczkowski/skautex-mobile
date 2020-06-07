@@ -5,14 +5,24 @@ import 'package:flutter/material.dart';
 
 class ViewItemList extends StatelessWidget {
 	final List<List<String>> item;
+	final List<Widget> widget;
 
-	ViewItemList(this.item);
+	ViewItemList(this.item):
+			widget = null;
+
+	ViewItemList.withCustomWidget(this.item, List<Widget> widget):
+			widget = widget;
 
 	build(BuildContext context) {
 		List<Widget> items = [];
-		item.forEach(
-			(i) {
-				items.add(_goldenRow(i[0], _header(i[1], Alignment.centerLeft)));
+		item.asMap().forEach(
+			(index, value) {
+				items.add(
+					_goldenRow(
+						value[0],
+						widget == null ? _header(value[1], Alignment.centerLeft) : widget[index]
+					)
+				);
 			}
 		);
 
