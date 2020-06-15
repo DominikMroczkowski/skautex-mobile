@@ -13,6 +13,10 @@ import 'screens/home/users.dart';
 import 'screens/home/user.dart';
 import 'screens/home/edit_user.dart';
 import 'screens/home/add_user.dart';
+import 'screens/home/reports.dart';
+import 'screens/home/report.dart';
+import 'screens/home/add_report.dart';
+import 'screens/home/edit_report.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
 import 'blocs/players/bloc.dart' as players;
@@ -24,6 +28,9 @@ import 'blocs/info/bloc.dart' as info;
 import 'blocs/users/bloc.dart' as users;
 import 'blocs/edit_user/bloc.dart' as editUser;
 import 'blocs/add_user/bloc.dart' as addUser;
+import 'blocs/reports/bloc.dart' as reports;
+import 'blocs/add_report/bloc.dart' as addReport;
+import 'blocs/report/bloc.dart' as report;
 
 class Router {
 		static RegExp home = new RegExp(r"^/home");
@@ -74,11 +81,14 @@ class Router {
 	static Widget _loggedInRoutes(String route, BuildContext context) {
 		RegExp playerREGEX = new RegExp(r"^/home/player");
 		RegExp userREGEX   = new RegExp(r"^/home/user");
+		RegExp reportREGEX   = new RegExp(r"^/home/report");
 
 		if (0 < playerREGEX.allMatches(route).length)
 			return players.Provider(child: _playersRoutes(route, context), context: context);
 		if (0 < userREGEX.allMatches(route).length)
 			return _usersRoutes(route, context);
+		if (0 < reportREGEX.allMatches(route).length)
+			return _reportRoutes(route, context);
 		return Home();
 	}
 
@@ -108,6 +118,19 @@ class Router {
 			return user.Provider(child: User(), context: context);
 		default:
 			return users.Provider(child: Users(), context: context);
+		}
+	}
+
+	static Widget _reportRoutes(String route, BuildContext context) {
+		switch (route) {
+		case '/home/report/addReport':
+			return addReport.Provider(child: AddReport(), context: context);
+		case '/home/report/editReport':
+			return EditReport();
+		case '/home/report':
+			return report.Provider(child: Report(), context: context);
+		default:
+			return reports.Provider(child: Reports(), context: context);
 		}
 	}
 }

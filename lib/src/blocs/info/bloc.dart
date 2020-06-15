@@ -21,7 +21,6 @@ class Bloc with Access {
 	final _userFetcher = BehaviorSubject<String>();
 	final _groupsOutput  = BehaviorSubject<Future<List<String>>>();
 
-
 	get permissions => _permsOutput.stream;
 	get me => _userOutput.stream;
 	get groups => _groupsOutput.stream;

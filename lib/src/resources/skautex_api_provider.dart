@@ -8,6 +8,7 @@ import '../helpers/credentials.dart';
 import '../models/jwt.dart';
 import '../models/player.dart';
 import '../models/user.dart';
+import '../models/report.dart';
 import '../models/permissions.dart';
 
 final _root = 'skautex.azurewebsites.net';
@@ -208,6 +209,11 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<Permissions>.error("Couldn't fetch Permissions");
+		}
+
+
 		final parsedJson = json.decode(response.body);
 		return Permissions.fromJson(parsedJson);
 	}
@@ -223,6 +229,11 @@ class SkautexApiProvider implements Source {
 				"authorization" : 'Bearer $access'
 			},
 		);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<List<String>>.value(['']);
+		}
+
 
 		final Map<String, dynamic> parsedJson = json.decode(response.body);
 		List<String> toRet = [];
@@ -327,18 +338,23 @@ class SkautexApiProvider implements Source {
 
 	String _getUri<T>() {
 		final _uris = <Type, String>{
-			User : 'https://skautex.azurewebsites.net/api/v1/users/'
+			User : 'https://skautex.azurewebsites.net/api/v1/users/',
+			Report : 'https://skautex.azurewebsites.net/api/v1/reports/',
+			Player: '/api/v1/players/'
 		};
 
 	  return _uris[T];
 	}
 
-	Future<List<String>> fetchUris<T>(Future<JWT> jwt) async {
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where}) async {
 		String access = (await jwt).access;
+
+		where ??= {};
+		where["limit"] = "none";
 
 		String uri = _getUri<T>();
 		final response = await client.get(
-			Uri.https(_root, uri,  {"limit" : "none"}),
+			Uri.https(_root, uri,  where),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -367,7 +383,9 @@ class SkautexApiProvider implements Source {
 
 	T _fromJson<T>(Map<String, dynamic> parsedJson) {
 		final _objects = <Type, Function>{
-			User : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson)
+			User   : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson),
+			Report : (Map<String, dynamic> parsedJson) => Report.fromJson(parsedJson),
+			Player : (Map<String, dynamic> parsedJson) => Player.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -387,6 +405,7 @@ class SkautexApiProvider implements Source {
 			}
 		);
 
+		print(response.body);
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie GET dla URL: $uri nie powiodło się');
 		}
@@ -434,7 +453,8 @@ class SkautexApiProvider implements Source {
 
 	_toPost<T>(T item) {
 		final _objects = <Type, Function>{
-			User : (User user) => user.toPost()
+			User : (User user) => user.toPost(),
+			Report: (Report report) => report.toPost(),
 		};
 
 	  return _objects[T](item);
@@ -486,4 +506,43 @@ class SkautexApiProvider implements Source {
 		return Future<Object>.value(Object());
 	}
 
+	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where}) async {
+		String access = (await jwt).access;
+
+		where = {};
+		where["limit"] = "none";
+
+		String uri = _getUri<T>();
+
+		print(Uri.https(_root, 'player', where).toString());
+
+		final response = await client.get(
+			Uri.https(_root, uri, where),
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+		);
+
+		print(response.body);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<List<T>>.error('Pobranie adressów url dla uri: $uri nie powiodło się');
+		}
+
+		String stringJson = Utf8Decoder().convert(response.bodyBytes);
+		final parsedJson = json.decode(stringJson);
+
+		List<T> items = List<T>();
+
+		parsedJson['results'].forEach(
+			(i) {
+				return items.add(_fromJson<T>(i));
+			}
+		);
+
+		return items;
+	}
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../blocs/login/bloc.dart' as login;
 import '../../blocs/session/bloc.dart' as session;
-
 import '../../widgets/circular_indicator.dart';
 
 class Login extends StatelessWidget {
@@ -122,11 +121,13 @@ class Login extends StatelessWidget {
 		return StreamBuilder(
 			stream: l.submitValid,
 			builder: (context, snapshot) {
+				bool submitValid = false;
+				if (snapshot.hasData)
+					submitValid = snapshot.data;
 				return RaisedButton(
 					child: indicator(s, l),
 					color: Colors.blue,
-					onPressed:
-						snapshot.hasData ? () {l.submit(s);} : null
+					onPressed: submitValid ? () {l.submit(s);} : null
 				);
 			}
 		);

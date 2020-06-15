@@ -21,13 +21,9 @@ class Data {
 		List<DashCard> toRet = [];
 
 		Permissions perms = Permissions.toXOR();
-		perms.viewAuditentry = true;
+		perms.viewGroup = true;
 		toRet.add(DashCard('Zawodnicy', Icons.person_pin, '/home/players', perms));
-		perms = Permissions.toXOR();
-
 		toRet.add(DashCard('Rekomendacje', Icons.favorite, '/home/recommended', perms));
-		perms = Permissions.toXOR();
-
 		toRet.add(DashCard('Kalendarz', Icons.event, '/home/calendar', perms));
 		toRet.add(DashCard('Zadania', Icons.check, '/home/task', perms));
 		toRet.add(DashCard('Wydatki', Icons.poll, '/home/expenses', perms));
@@ -40,9 +36,10 @@ class Data {
 		List<DashCard> toRet = [];
 
 		Permissions perms = Permissions.toXOR();
-		toRet.add(DashCard('Raporty', Icons.person_outline, '/home', perms));
-		toRet.add(DashCard('Testy', Icons.tune, '/players', perms));
-		toRet.add(DashCard('Rankingi', Icons.tune, '/players',  perms));
+		perms.viewGroup = true;
+		toRet.add(DashCard('Raporty', Icons.person_outline, '/home/reports', perms));
+		toRet.add(DashCard('Testy', Icons.tune, '/players/tests', perms));
+		toRet.add(DashCard('Rankingi', Icons.tune, '/players/rankings',  perms));
 
 		return toRet;
 	}

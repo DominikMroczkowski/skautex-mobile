@@ -86,8 +86,8 @@ class Repository {
 	}
 
 
-	Future<List<String>> fetchUris<T>(Future<JWT> jwt) {
-		return sources[0].fetchUris<T>(jwt);
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where}) {
+		return sources[0].fetchUris<T>(jwt, where: where);
 	}
 
 	Future<T> fetchItem<T>(Future<JWT> jwt, String uri) {
@@ -104,6 +104,10 @@ class Repository {
 
 	Future<Object> deleteItem(Future<JWT> jwt, String url) {
 		return sources[0].deleteItem(jwt, url);
+	}
+
+	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where}) {
+		return sources[0].fetchItems<T>(jwt, where: where);
 	}
 
 
@@ -135,12 +139,13 @@ abstract class Source {
 	Future<List<List<String>>> fetchTeams(Future<JWT> jwt);
 	Future<List<List<String>>> fetchLeagues(Future<JWT> jwt);
 
-	Future<List<String>> fetchUris<T>(Future<JWT> jwt);
+	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where});
 	Future<T> fetchItem<T>(Future<JWT> jwt, String uri);
 	Future<T> updateItem<T>(Future<JWT> jwt, T item);
 	Future<T> addItem<T>(Future<JWT> jwt, T item);
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
 
+	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where});
 	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
 }
 
