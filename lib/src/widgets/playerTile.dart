@@ -1,42 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/player.dart';
-import '../blocs/players/bloc.dart' as players;
 import '../blocs/session/bloc.dart' as session;
 
-import 'dart:async';
-
-import 'loading_container.dart';
-
 class PlayerTile extends StatelessWidget {
-	final String uri;
+	final Player player;
 
-	PlayerTile({this.uri});
+	PlayerTile({this.player});
 
 	Widget build(context) {
-		final ps = players.Provider.of(context);
-
-		return StreamBuilder(
-			stream: ps.player,
-			builder: (context, AsyncSnapshot<Map<String, Future<Player>>> snapshot) {
-				if (!snapshot.hasData) {
-					return LoadingContainer.lineCount(2);
-				}
-
-				return FutureBuilder(
-					future: snapshot.data[uri],
-					builder: (context, AsyncSnapshot<Player> playerSnap) {
-						if (!playerSnap.hasData) {
-							return LoadingContainer.lineCount(2);
-						}
-
-						return Container(
-							child: buildTile(context, playerSnap.data),
-							padding: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
-						);
-
-					}
-				);
-			}
+		return Container(
+			child: buildTile(context, player),
+			padding: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
 		);
 	}
 
@@ -94,7 +68,7 @@ class PlayerTile extends StatelessWidget {
 				),
 			onTap: () {
 				final s = session.Provider.of(context);
-				s.changeClicked(uri);
+				s.changeClicked(player.uri);
 				Navigator.pushNamed(context, '/home/player');
 			}),
 			color: Colors.white,

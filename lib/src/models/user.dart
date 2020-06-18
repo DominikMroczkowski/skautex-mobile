@@ -48,6 +48,8 @@ class User {
 			['Nazwa', username],
 			['Imię', firstName],
 			['Nazwisko', lastName],
+			['Email', email],
+			['Aktywny', !isActive ? 'Nie' : 'Tak'],
 		];
 	}
 }

@@ -106,10 +106,9 @@ class Repository {
 		return sources[0].deleteItem(jwt, url);
 	}
 
-	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where}) {
-		return sources[0].fetchItems<T>(jwt, where: where);
+	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {String uri, Map<String, String> where}) {
+		return sources[0].fetchItems<T>(jwt, where: where, uriOpt: uri);
 	}
-
 
 
 
@@ -145,7 +144,7 @@ abstract class Source {
 	Future<T> addItem<T>(Future<JWT> jwt, T item);
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
 
-	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where});
+	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where, String uriOpt});
 	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
 }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
+import 'package:skautex_mobile/src/models/player_report.dart';
 import 'dart:async';
 
 import 'repository.dart';
@@ -340,7 +341,7 @@ class SkautexApiProvider implements Source {
 		final _uris = <Type, String>{
 			User : 'https://skautex.azurewebsites.net/api/v1/users/',
 			Report : 'https://skautex.azurewebsites.net/api/v1/reports/',
-			Player: '/api/v1/players/'
+			Player: 'https://skautex.azurewebsites.net/api/v1/players/'
 		};
 
 	  return _uris[T];
@@ -386,6 +387,7 @@ class SkautexApiProvider implements Source {
 			User   : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson),
 			Report : (Map<String, dynamic> parsedJson) => Report.fromJson(parsedJson),
 			Player : (Map<String, dynamic> parsedJson) => Player.fromJson(parsedJson),
+			PlayerReport: (Map<String, dynamic> parsedJson) => PlayerReport.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -409,9 +411,9 @@ class SkautexApiProvider implements Source {
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie GET dla URL: $uri nie powiodło się');
 		}
-
 		String stringJson = Utf8Decoder().convert(response.bodyBytes);
 		final parsedJson = json.decode(stringJson);
+
 		return _fromJson<T>(parsedJson);
 	}
 
@@ -506,15 +508,13 @@ class SkautexApiProvider implements Source {
 		return Future<Object>.value(Object());
 	}
 
-	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where}) async {
+	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
 		String access = (await jwt).access;
 
 		where = {};
 		where["limit"] = "none";
 
-		String uri = _getUri<T>();
-
-		print(Uri.https(_root, 'player', where).toString());
+		String uri = uriOpt ?? _getUri<T>();
 
 		final response = await client.get(
 			Uri.https(_root, uri, where),
@@ -539,10 +539,9 @@ class SkautexApiProvider implements Source {
 
 		parsedJson['results'].forEach(
 			(i) {
-				return items.add(_fromJson<T>(i));
+				items.add(_fromJson<T>(i));
 			}
 		);
-
 		return items;
 	}
 }

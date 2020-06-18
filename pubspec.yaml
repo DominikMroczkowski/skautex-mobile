@@ -30,6 +30,8 @@ dependencies:
   path_provider: any
   date_format: any
   searchable_dropdown: any
+  intl: any
+  table_calendar: any
 
 dev_dependencies:
   flutter_test:

@@ -123,7 +123,7 @@ class AddReport extends StatelessWidget {
 								);
 							return SearchableDropdown.single(
 								items: items,
-								onChanged: r.addPlayer,
+								onChanged: (Player i) {i != null ?  r.addPlayer(i) : null;},
 								isExpanded: true,
 								displayClearIcon: false
 							);
@@ -132,7 +132,7 @@ class AddReport extends StatelessWidget {
 
 				return SearchableDropdown<Player>(
 					items: items,
-					onChanged: r.addPlayer,
+					onChanged: (Player i) {i != null ?  r.addPlayer(i) : null;},
 					isExpanded: true,
 					displayClearIcon: false
 				);

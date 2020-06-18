@@ -17,6 +17,12 @@ import 'screens/home/reports.dart';
 import 'screens/home/report.dart';
 import 'screens/home/add_report.dart';
 import 'screens/home/edit_report.dart';
+import 'screens/home/calendar.dart';
+import 'screens/home/expenses.dart';
+import 'screens/home/recommended.dart';
+import 'screens/home/test.dart';
+import 'screens/home/booked.dart';
+import 'screens/home/ranking.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
 import 'blocs/players/bloc.dart' as players;
@@ -55,6 +61,7 @@ class Router {
     	return MaterialPageRoute(builder: (_) => ChangePassword(),
 				settings: settings);
 
+
 		if (0 < home.allMatches(settings.name).length)
       return MaterialPageRoute(
 				builder: (context) {
@@ -82,6 +89,24 @@ class Router {
 		RegExp playerREGEX = new RegExp(r"^/home/player");
 		RegExp userREGEX   = new RegExp(r"^/home/user");
 		RegExp reportREGEX   = new RegExp(r"^/home/report");
+
+		if ('/home/calendar' == route)
+    	return Calendar();
+
+		if ('/home/booked' == route)
+    	return Booked();
+
+		if ('/home/recommended' == route)
+    	return Recommended();
+
+		if ('/home/expenses' == route)
+    	return Expenses();
+
+		if ('/home/ranking' == route)
+    	return Ranking();
+
+		if ('/home/test' == route)
+    	return Test();
 
 		if (0 < playerREGEX.allMatches(route).length)
 			return players.Provider(child: _playersRoutes(route, context), context: context);

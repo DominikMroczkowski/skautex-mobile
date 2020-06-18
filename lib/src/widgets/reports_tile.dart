@@ -1,42 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/report.dart';
-import '../blocs/reports/bloc.dart' as reports;
 import '../blocs/session/bloc.dart' as session;
 
-import 'dart:async';
-
-import 'loading_container.dart';
 import 'tile.dart';
 
 class ReportsTile extends StatelessWidget {
-	final String uri;
+	final Report report;
 
-	ReportsTile({this.uri});
+	ReportsTile({this.report});
 
 	Widget build(context) {
-		final u = reports.Provider.of(context);
-
-		return StreamBuilder(
-			stream: u.watcher,
-			builder: (context, AsyncSnapshot<Map<String, Future<Report>>> snapshot) {
-				if (!snapshot.hasData) {
-					return LoadingContainer.lineCount(2);
-				}
-
-				return FutureBuilder(
-					future: snapshot.data[uri],
-					builder: (context, AsyncSnapshot<Report> snapshot) {
-						if (!snapshot.hasData) {
-							return LoadingContainer.lineCount(2);
-						}
-
-						return Container(
-							child: buildTile(context, snapshot.data),
-							padding: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
-						);
-					}
-				);
-			}
+		return Container(
+			child: buildTile(context, report),
+			padding: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
 		);
 	}
 
@@ -81,9 +57,9 @@ class ReportsTile extends StatelessWidget {
 		);
 	}
 
-	onTileTap(context)	{
+	onTileTap(BuildContext context)	{
 		final s = session.Provider.of(context);
-		s.changeClicked(uri);
+		s.changeClicked(report.uri);
 		Navigator.pushNamed(context, '/home/report');
 	}
 }

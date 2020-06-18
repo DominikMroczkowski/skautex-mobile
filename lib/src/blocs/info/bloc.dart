@@ -22,7 +22,7 @@ class Bloc with Access {
 	final _groupsOutput  = BehaviorSubject<Future<List<String>>>();
 
 	get permissions => _permsOutput.stream;
-	get me => _userOutput.stream;
+	Stream<Future<User>> get me => _userOutput.stream;
 	get groups => _groupsOutput.stream;
 
 	Stream<Future<List<List<String>>>> get teams   => _teamsOutput.stream;

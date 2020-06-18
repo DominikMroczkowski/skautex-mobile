@@ -1,39 +1,37 @@
 import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 import 'package:skautex_mobile/src/resources/repository.dart';
 import 'acess.dart';
 
 class ItemList<T> with Access {
 	final _repository = Repository();
 
-	final _uris       = PublishSubject<List<String>>();
-	final _output     = BehaviorSubject<Map<String, Future<T>>>();
-	final _input      = PublishSubject<String>();
+	final _output = BehaviorSubject<Future<List<T>>>();
+	final _input  = BehaviorSubject<String>();
 
-	get uris      => _uris.stream;
-	get fetchItem => _input.sink.add;
-	get watcher   => _output.stream;
+	Function({String uri}) get fetch   =>
+			({String uri}) {
+				_input.sink.add(uri ?? '');
+			};
+
+	get watcher => _output.stream;
 
 	ItemList() {
 		_input.transform(_fetch()).pipe(_output);
 	}
 
-	fetchUris() async {
-		final uris = await _repository.fetchUris<T>(otp);
-		_uris.sink.add(uris);
-	}
-
 	_fetch() {
-		return ScanStreamTransformer<String, Map<String, Future<T>>>(
-			(Map<String, Future<T>> map, String uri, _) {
-				map[uri] = _repository.fetchItem<T>(otp, uri);
-				return map;
-			},
-			<String, Future<T>> {}
+		return StreamTransformer<String, Future<List<T>>>.fromHandlers(
+			handleData: (String uri, sink) {
+				if (uri == '')
+					uri = null;
+				Future<List<T>> list = _repository.fetchItems<T>(otp, uri: uri);
+				sink.add(list);
+			}
 		);
 	}
 
 	dispose() {
-		_uris.close();
 		_output.close();
 		_input.close();
 	}

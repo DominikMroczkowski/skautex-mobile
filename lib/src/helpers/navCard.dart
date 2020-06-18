@@ -38,8 +38,8 @@ class Data {
 		Permissions perms = Permissions.toXOR();
 		perms.viewGroup = true;
 		toRet.add(DashCard('Raporty', Icons.person_outline, '/home/reports', perms));
-		toRet.add(DashCard('Testy', Icons.tune, '/players/tests', perms));
-		toRet.add(DashCard('Rankingi', Icons.tune, '/players/rankings',  perms));
+		toRet.add(DashCard('Testy', Icons.tune, '/home/test', perms));
+		toRet.add(DashCard('Rankingi', Icons.tune, '/home/rankings',  perms));
 
 		return toRet;
 	}
