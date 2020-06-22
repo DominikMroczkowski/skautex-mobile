@@ -23,6 +23,8 @@ import 'screens/home/recommended.dart';
 import 'screens/home/test.dart';
 import 'screens/home/booked.dart';
 import 'screens/home/ranking.dart';
+import 'screens/home/task.dart';
+import 'screens/home/options.dart';
 
 import 'blocs/auth_code/bloc.dart' as auth_code;
 import 'blocs/players/bloc.dart' as players;
@@ -102,11 +104,19 @@ class Router {
 		if ('/home/expenses' == route)
     	return Expenses();
 
-		if ('/home/ranking' == route)
+		if ('/home/rankings' == route)
     	return Ranking();
 
 		if ('/home/test' == route)
     	return Test();
+
+		if ('/home/task' == route)
+    	return Task();
+
+		if ('/home/options' == route)
+    	return Options();
+
+
 
 		if (0 < playerREGEX.allMatches(route).length)
 			return players.Provider(child: _playersRoutes(route, context), context: context);

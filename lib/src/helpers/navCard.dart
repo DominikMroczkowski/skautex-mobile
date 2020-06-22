@@ -22,7 +22,7 @@ class Data {
 
 		Permissions perms = Permissions.toXOR();
 		perms.viewGroup = true;
-		toRet.add(DashCard('Zawodnicy', Icons.person_pin, '/home/players', perms));
+		toRet.add(DashCard('Zawodnicy', Icons.person_pin_circle, '/home/players', perms));
 		toRet.add(DashCard('Rekomendacje', Icons.favorite, '/home/recommended', perms));
 		toRet.add(DashCard('Kalendarz', Icons.event, '/home/calendar', perms));
 		toRet.add(DashCard('Zadania', Icons.check, '/home/task', perms));
@@ -37,9 +37,9 @@ class Data {
 
 		Permissions perms = Permissions.toXOR();
 		perms.viewGroup = true;
-		toRet.add(DashCard('Raporty', Icons.person_outline, '/home/reports', perms));
-		toRet.add(DashCard('Testy', Icons.tune, '/home/test', perms));
-		toRet.add(DashCard('Rankingi', Icons.tune, '/home/rankings',  perms));
+		toRet.add(DashCard('Raporty', Icons.place, '/home/reports', perms));
+		toRet.add(DashCard('Testy', Icons.visibility, '/home/test', perms));
+		toRet.add(DashCard('Rankingi', Icons.star, '/home/rankings',  perms));
 
 		return toRet;
 	}
@@ -52,7 +52,7 @@ class Data {
 		toRet.add(DashCard('Użytkownicy', Icons.person_outline, '/home/users', perms));
 		perms = Permissions.toXOR();
 		perms.viewTotpdevice = true;
-		toRet.add(DashCard('Opcje', Icons.tune, '/options', perms));
+		toRet.add(DashCard('Opcje', Icons.tune, '/home/options', perms));
 		return toRet;
 	}
 

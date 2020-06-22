@@ -37,7 +37,7 @@ class _State extends State<Recommended> {
 	Widget build(context) {
 		return Scaffold(
 			appBar: AppBar(
-				title: Text('Wydatki')
+				title: Text('Polecenia')
 			),
 			drawer: HomeDrawer(),
 			body: SizedBox.expand(

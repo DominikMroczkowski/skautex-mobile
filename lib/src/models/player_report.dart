@@ -17,7 +17,7 @@ class PlayerReport {
 	PlayerReport.fromJson(Map<String, dynamic> parsedJson) :
 		uri         = parsedJson['url'] ?? '',
     report      = parsedJson['report'] ?? '',
-		player      = parsedJson['player'] ?? '',
+		player      = parsedJson['player']['name'] ?? '',
    	rating      = parsedJson['rating'] ?? 0,
    	description = parsedJson['description'] ?? '',
    	status      = parsedJson['status'] ?? '';

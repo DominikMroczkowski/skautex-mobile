@@ -78,7 +78,6 @@ class HomeDrawer extends StatelessWidget {
 				_nameHeader(c)
 			]
 			),
-
               		decoration: BoxDecoration(
                 		color: Colors.white,
               		),
@@ -230,17 +229,24 @@ class HomeDrawer extends StatelessWidget {
 
 	Widget _element(DashCard i, BuildContext c) {
 		return ListTile(
-       			title: Text(i.text, style: TextStyle(color: _currentRouteEquals(c, i.path) ? Colors.black : Colors.grey[700])),
+      title: Text(i.text, style: TextStyle(color: _currentRouteEquals(c, i.path) ? Colors.black : Colors.grey[700])),
 			leading: Icon(
-      				i.icon,
-      				color: Colors.grey[700],
-    			),
+      	i.icon,
+      	color: Colors.grey[700],
+    	),
 			dense: true,
 			enabled: !_currentRouteEquals(c, i.path),
-        	      	onTap: () {
-				Navigator.of(c).pushNamed(i.path);
-        	      	},
-        	);
+      onTap: () {
+				Navigator.of(c).pushNamedAndRemoveUntil(
+					i.path,
+					(Route r) {
+						if (r.settings.name == '/home')
+							return true;
+						return false;
+					}
+				);
+      },
+    );
 	}
 
 	bool _currentRouteEquals(context, String path) {
@@ -249,7 +255,6 @@ class HomeDrawer extends StatelessWidget {
 			p = route.settings.name;
 			return true;
 		});
-
-    		return p == path;
+    return p == path;
 	}
 }

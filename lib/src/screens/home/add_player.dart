@@ -146,7 +146,7 @@ class AddPlayer extends StatelessWidget {
 							(i) {
 								return DropdownMenuItem(
 									value: i,
-									child: Text(i)
+									child: SizedBox(child: Text(i, overflow: TextOverflow.ellipsis)),
 								);
 							}
 						).toList();
@@ -161,6 +161,7 @@ class AddPlayer extends StatelessWidget {
 				return DropdownButton<String>(
 						value: value,
 						items: items,
+						isExpanded: true,
 						onChanged: (String i) { p.changePosition(positionRequest[positionInterface.indexOf(i)]);},
 						underline:
 								Container(

@@ -48,7 +48,16 @@ class Bloc {
 						Navigator.of(context).pushNamed('/auth_code');
 					},
 					onError: (error) {
-						print('$error');
+						showDialog(
+							context: context,
+							child: AlertDialog(
+								title: Text('Błąd'),
+								content: Text(error),
+								actions: <Widget>[
+									FlatButton(onPressed: Navigator.of(context).pop, child: Text('Ok'))
+								]
+							)
+						);
 					}
 				);
 				sink.add(jWT);

@@ -19,7 +19,7 @@ class Tile extends StatelessWidget {
 					child: Column (
 						children: widgets
 					),
-					padding: EdgeInsets.all(20.0),
+					padding: EdgeInsets.all(15.0),
 				),
 				onTap: () {
 					Function.apply(func, positionalArgs, namedArgs);

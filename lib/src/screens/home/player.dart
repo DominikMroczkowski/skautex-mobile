@@ -83,7 +83,7 @@ class Player extends StatelessWidget {
 						color: Colors.blue,
 						child: Text('Edytuj'),
 						onPressed: () {
-							Navigator.of(context).pushNamed('/home/user/editUser');
+							Navigator.of(context).pushNamed('/home/player/editPlayer');
 					}) : Container(),
 				],
 			),

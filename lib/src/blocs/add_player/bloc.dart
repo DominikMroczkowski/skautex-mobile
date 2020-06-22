@@ -40,16 +40,14 @@ class Bloc with Validate {
 	Stream<String> get birthData  	=> birthDateTM.stream;
 	Stream<String> get country      => countryTM.stream;
 	Stream<String> get city         => cityTM.stream;
-	Stream<List<String>> get team         => teamTM.stream;
-	Stream<List<String>> get league       => leagueTM.stream;
+	Stream<List<String>> get team   => teamTM.stream;
+	Stream<List<String>> get league => leagueTM.stream;
 	Stream<bool>   get submitValid  => Rx.combineLatest([name, surname, position, birthData, country, city, team, league], (List<Object> _) { return true;});
 
 	Stream<Future<Player>> get response => _response.stream;
 
-	// Becouse dart doesnt have protected and private members this thing is for extending for edit player
-	// Todo : create helpers mixins
-	 get repository => _repository;
-	 get access => _jwt;
+	get repository => _repository;
+	get access => _jwt;
 
 	Function(String) get changeName => nameTM.sink.add;
 	Function(String) get changeSurname => surnameTM.sink.add;

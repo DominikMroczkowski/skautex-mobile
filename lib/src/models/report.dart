@@ -19,9 +19,9 @@ class Report {
 	Report.fromJson(Map<String, dynamic> parsedJson) :
 		uri         = parsedJson['url'] ?? '',
     title       = parsedJson['title'] ?? '',
-		owner       = parsedJson['owner'] ?? '',
-   	openDate    = parsedJson['open_date'] ?? '',
-   	closeDate   = parsedJson['close_date'] ?? '',
+		owner       = parsedJson['owner']['username'] ?? '',
+   	openDate    = parsedJson['open_date']?.toString()?.substring(0, 10) ?? '1970-01-01',
+   	closeDate   = parsedJson['close_date']?.toString()?.substring(0, 10) ?? '1970-01-01',
    	description = parsedJson['description'] ?? '';
 
 	toJson() {
