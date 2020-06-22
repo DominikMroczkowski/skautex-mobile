@@ -56,10 +56,22 @@ class _State extends State<Calendar> {
 	}
 
 	_list() {
-		return ListView(
+		return Column(
 			children: selected.map(
 				(i) {
-					return ListTile(leading: Text(i));
+					return Card(
+						child: Container(
+							child: Column (
+								children: [
+									Row( children: [
+										Expanded(child:Text(i),)
+									]
+									)
+								]
+							),
+							padding: EdgeInsets.all(15.0),
+						),
+					);
 				}
 			).toList()
 		);

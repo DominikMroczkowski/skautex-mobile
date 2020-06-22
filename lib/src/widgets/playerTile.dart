@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/player.dart';
 import '../blocs/session/bloc.dart' as session;
+import 'package:date_format/date_format.dart';
 
 class PlayerTile extends StatelessWidget {
 	final Player player;
@@ -10,7 +11,7 @@ class PlayerTile extends StatelessWidget {
 	Widget build(context) {
 		return Container(
 			child: buildTile(context, player),
-			padding: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
+			padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
 		);
 	}
 

@@ -19,7 +19,7 @@ class Home extends StatelessWidget {
 						_gridSegment(Data.role(), context, _Headers.role),
 						_gridSegment(Data.options(), context, _Headers.options)
 					],
-					padding: EdgeInsets.all(10.0)
+					padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
 				)
 			),
 			appBar: AppBar(
