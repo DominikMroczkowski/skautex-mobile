@@ -48,30 +48,37 @@ class Permissions {
 	bool addTotpdevice = false;
 	bool changeOwnTotpdevices = false;
 	bool changeTotpdevice = false;
+
 	bool deleteOwnTotpdevices = false;
 	bool deleteTotpdevice = false;
 	bool viewOwnTotpdevices = false;
 	bool viewTotpdevice = false;
+
 	bool addLeague = false;
 	bool changeLeague = false;
 	bool deleteLeague = false;
 	bool viewLeague = false;
+
 	bool addPlayer = false;
 	bool changePlayer = false;
 	bool deletePlayer = false;
 	bool viewPlayer = false;
+
 	bool addPlayerstatus = false;
 	bool changePlayerstatus = false;
 	bool deletePlayerstatus = false;
 	bool viewPlayerstatus = false;
+
 	bool addTeam = false;
 	bool changeTeam = false;
 	bool deleteTeam = false;
 	bool viewTeam = false;
+
 	bool addBlacklistedtoken = false;
 	bool changeBlacklistedtoken = false;
 	bool deleteBlacklistedtoken = false;
 	bool viewBlacklistedtoken = false;
+
 	bool addOutstandingtoken = false;
 	bool changeOutstandingtoken = false;
 	bool deleteOutstandingtoken = false;

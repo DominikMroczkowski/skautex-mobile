@@ -32,6 +32,7 @@ dependencies:
   searchable_dropdown: any
   intl: any
   table_calendar: any
+  smooth_star_rating: any
   flutter_localizations:
     sdk: flutter
 

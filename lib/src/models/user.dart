@@ -6,7 +6,7 @@ class User {
 	String email;
 	String password;
 	bool isActive;
-	String groups = "ToImplement";
+	String groups = "Brak Grupy";
 
 	User({String uri, String username, String firstName, String lastName, String email, bool isActive, String password}) :
 		uri       = uri ?? '',

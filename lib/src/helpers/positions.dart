@@ -1,21 +1,21 @@
 List<String> positionInterface = <String>[
 	'Bramkarz',
-	'Lewy Środkowy Obrońca',
-	'Prawy Środkowy Obrońca',
-	'Lewy Obrońca',
-	'Pomocnik',
-	'Prawy Obrońca',
-	'Lewy Pomocnik',
-	'Prawy Pomocnik',
-	'Napastnik'
-
-	'Napastnik'
-	'Napastnik'
-	'Napastnik'
-	'Napastnik'
-	'Napastnik'
-	'Napastnik'
+	'Środkowy Obrońca',
+	'Obrońca Boczny',
+	'Obrońca',
+	'Środkowy Pomocnik',
+	'Pomocnik Atak',
+	'Skrzydłowy',
 	'Napastnik'
 ];
 
-List<String> positionRequest = <String>['GK', 'SW', 'LB', 'CB', 'RB', 'LWB', 'RWB', 'DM', 'LM', 'CM', 'RM', 'AM', 'LW', 'SS', 'RW', 'CF'];
+List<String> positionRequest = [
+  "GOALKEEPER",
+  "CENTRAL_DEFENDER",
+  "SIDE_DEFENDER",
+  "DEFENSIVE_HELP",
+  "MIDDLE_HELP",
+  "OFFENSIVE_HELP",
+  "WINGER",
+  "ATTACKER"
+];

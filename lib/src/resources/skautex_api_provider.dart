@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'dart:async';
@@ -11,10 +12,12 @@ import '../models/player.dart';
 import '../models/user.dart';
 import '../models/report.dart';
 import '../models/permissions.dart';
+import '../models/cost.dart';
+import '../models/booking.dart';
+import '../models/booking_reservation.dart';
 
 final _root = 'skautex.azurewebsites.net';
-const _API_KEY = 'JpXVIVAD.G3UnUx61FYLVVUNLJV2HWlNGkOW2n6VL';
-
+const _API_KEY =  '9QDNEqx5.E3fdjJcev3zDIYT0bQaZu6j01dFmQHDC';
 class SkautexApiProvider implements Source {
 	Client client = Client();
 
@@ -256,6 +259,7 @@ class SkautexApiProvider implements Source {
 			},
 			body: json.encode(player.toJson())
 		);
+		print(response.body);
 
 		if (response.statusCode < 200 || response.statusCode > 299)
 			return Future<Player>.error('Niepowodzenie');
@@ -336,12 +340,14 @@ class SkautexApiProvider implements Source {
 		return Player.fromJson(parsedJson);
 	}
 
-
-	String _getUri<T>() {
+	String _getSubURL<T>() {
 		final _uris = <Type, String>{
-			User : 'https://skautex.azurewebsites.net/api/v1/users/',
-			Report : 'https://skautex.azurewebsites.net/api/v1/reports/',
-			Player: 'https://skautex.azurewebsites.net/api/v1/players/'
+			User :   '/api/v1/users/',
+			Report : '/api/v1/reports/',
+			Player:  '/api/v1/players/',
+			Cost:    '/api/v1/users/me/cost_recording/',
+			Booking: '/api/v1/booking/objects/',
+			BookingReservation: '/api/v1/booking/reservations/'
 		};
 
 	  return _uris[T];
@@ -353,7 +359,7 @@ class SkautexApiProvider implements Source {
 		where ??= {};
 		where["limit"] = "none";
 
-		String uri = _getUri<T>();
+		String uri = _getSubURL<T>();
 		final response = await client.get(
 			Uri.https(_root, uri,  where),
 			headers: {
@@ -384,10 +390,13 @@ class SkautexApiProvider implements Source {
 
 	T _fromJson<T>(Map<String, dynamic> parsedJson) {
 		final _objects = <Type, Function>{
-			User   : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson),
-			Report : (Map<String, dynamic> parsedJson) => Report.fromJson(parsedJson),
-			Player : (Map<String, dynamic> parsedJson) => Player.fromJson(parsedJson),
-			PlayerReport: (Map<String, dynamic> parsedJson) => PlayerReport.fromJson(parsedJson),
+			User         : (Map<String, dynamic> parsedJson) => User.fromJson(parsedJson),
+			Report       : (Map<String, dynamic> parsedJson) => Report.fromJson(parsedJson),
+			Player       : (Map<String, dynamic> parsedJson) => Player.fromJson(parsedJson),
+			PlayerReport : (Map<String, dynamic> parsedJson) => PlayerReport.fromJson(parsedJson),
+			Cost         : (Map<String, dynamic> parsedJson) => Cost.fromJson(parsedJson),
+			Booking      : (Map<String, dynamic> parsedJson) => Booking.fromJson(parsedJson),
+			BookingReservation : (Map<String, dynamic> parsedJson) => BookingReservation.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -395,7 +404,6 @@ class SkautexApiProvider implements Source {
 
 	Future<T> fetchItem<T>(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
-
 
 		final response = await client.get(
 			uri,
@@ -420,7 +428,9 @@ class SkautexApiProvider implements Source {
 
 	_toJson<T>(T item) {
 		final _objects = <Type, Function>{
-			User : (User user) => user.toJson()
+			User : (User user) => user.toJson(),
+			PlayerReport : (PlayerReport report) => report.toJson(),
+			Cost : (Cost cost) => cost.toJson()
 		};
 
 	  return _objects[T](item);
@@ -457,6 +467,7 @@ class SkautexApiProvider implements Source {
 		final _objects = <Type, Function>{
 			User : (User user) => user.toPost(),
 			Report: (Report report) => report.toPost(),
+			Cost: (Cost cost) => cost.toPost(),
 		};
 
 	  return _objects[T](item);
@@ -466,7 +477,7 @@ class SkautexApiProvider implements Source {
 		String access = (await jwt).access;
 
 		final response = await client.post(
-			_getUri<T>(),
+			Uri.https(_root, _getSubURL<T>(), {}),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -478,7 +489,7 @@ class SkautexApiProvider implements Source {
 
 		print(response.body);
 		if (response.statusCode < 200 || response.statusCode > 299) {
-			return Future<T>.error('Zapytanie POST dla URL: ${_getUri<T>()} nie powiodło się');
+			return Future<T>.error('Zapytanie POST dla URL: ${_getSubURL<T>()} nie powiodło się');
 		}
 
 		String stringJson = Utf8Decoder().convert(response.bodyBytes);
@@ -488,6 +499,10 @@ class SkautexApiProvider implements Source {
 
 	Future<Object> deleteItem(Future<JWT> jwt, String url) async {
 		String access = (await jwt).access;
+
+		if (url == null) {
+			return Future<Object>.error('Zapytanie DELETE nie powiodło się: url == null');
+		}
 
 		final response = await client.delete(
 			url,
@@ -514,10 +529,8 @@ class SkautexApiProvider implements Source {
 		where = {};
 		where["limit"] = "none";
 
-		String uri = uriOpt ?? _getUri<T>();
-
 		final response = await client.get(
-			Uri.https(_root, uri, where),
+			uriOpt ?? Uri.https(_root, _getSubURL<T>(), where),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -526,10 +539,10 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		print(response.body);
+		debugPrint(response.body);
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
-			return Future<List<T>>.error('Pobranie adressów url dla uri: $uri nie powiodło się');
+			return Future<List<T>>.error('Pobranie adressów url dla uri: ${Uri.https(_root, _getSubURL<T>(), where)} nie powiodło się');
 		}
 
 		String stringJson = Utf8Decoder().convert(response.bodyBytes);
