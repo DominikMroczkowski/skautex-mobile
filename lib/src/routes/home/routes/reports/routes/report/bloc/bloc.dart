@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'provider.dart';
 export 'provider.dart';
-import '../session/bloc.dart' as session;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
-import '../../models/report.dart';
-import '../../models/player_report.dart';
-import '../mixins/item.dart';
-import '../mixins/item_list.dart';
 
+import 'package:skautex_mobile/src/helpers/blocs/item.dart';
+import 'package:skautex_mobile/src/models/report.dart';
+import 'package:skautex_mobile/src/models/player_report.dart';
+
+import 'package:skautex_mobile/src/helpers/blocs/item.dart';
+import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
+
+
+/* The biggest problem which breaks all the conventions
+ * is edit_report
+ */
 class Bloc {
 	final report = Item<Report>();
 	final playerReports = ItemList<PlayerReport>();

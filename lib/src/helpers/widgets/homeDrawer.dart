@@ -3,6 +3,7 @@ import '../navCard.dart';
 import 'package:skautex_mobile/src/models/user.dart';
 import 'package:skautex_mobile/src/models/permissions.dart';
 import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/helpers/others/home_navigator_key.dart';
 
 class HomeDrawer extends StatelessWidget {
 	Widget build(c) {
@@ -247,7 +248,7 @@ class HomeDrawer extends StatelessWidget {
 			dense: true,
 			enabled: !_currentRouteEquals(c, i.path),
       onTap: () {
-				Navigator.of(c).pushNamedAndRemoveUntil(
+				homeNavigatorKey(c).currentState.pushNamedAndRemoveUntil(
 					i.path,
 					(Route r) {
 						if (r.settings.name == '/home')

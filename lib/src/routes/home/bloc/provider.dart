@@ -4,8 +4,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final home;
 
-	Provider({Key key, Widget child, BuildContext context})
-		: home = Bloc(context),
+	Provider({Key key, Widget child, BuildContext context, homeNavigatorKey})
+		: home = Bloc(context, homeNavigatorKey),
 		  super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

@@ -3,12 +3,13 @@ import 'package:skautex_mobile/src/models/report.dart' as models;
 import 'package:skautex_mobile/src/models/permissions.dart' as models;
 import 'package:skautex_mobile/src/models/player_report.dart' as models;
 
-import 'package:skautex_mobile/src/blocs/report/bloc.dart' as report;
-import 'package:skautex_mobile/src/blocs/player_report/bloc.dart' as playerReport;
+import 'bloc/bloc.dart' as report;
 
-import 'package:skautex_mobile/src/widgets/circular_indicator.dart';
-import 'package:skautex_mobile/src/widgets/view_item_list.dart';
-import 'package:skautex_mobile/src/widgets/player_report.dart';
+import 'components/player_report/bloc/bloc.dart' as playerReport;
+import 'components/player_report/player_report.dart';
+
+import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
+import 'package:skautex_mobile/src/helpers/widgets/view_item_list.dart';
 
 class Report extends StatelessWidget {
 	build(context) {

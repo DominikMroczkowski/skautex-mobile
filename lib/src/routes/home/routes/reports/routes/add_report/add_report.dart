@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/widgets/card_body.dart';
-import '../../widgets/homeDrawer.dart';
-import 'package:skautex_mobile/src/blocs/add_report/bloc.dart' as addReport;
-import '../../widgets/circular_indicator.dart';
+import 'package:skautex_mobile/src/helpers/widgets/card_body.dart';
+import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
+import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
+
+import 'bloc/bloc.dart' as addReport;
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/models/report.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bloc.dart';
-import '../../models/player_report.dart';
+import 'package:skautex_mobile/src/models/player_report.dart';
 
 class Provider extends InheritedWidget {
 	final playerReport;

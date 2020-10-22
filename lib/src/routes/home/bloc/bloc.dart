@@ -22,6 +22,8 @@ class Bloc with Access {
 	final _userFetcher = BehaviorSubject<String>();
 	final _groupsOutput  = BehaviorSubject<Future<List<String>>>();
 
+	final homeNavigatorKey;
+
 	get permissions => _permsOutput.stream;
 	Stream<Future<User>> get me => _userOutput.stream;
 	get groups => _groupsOutput.stream;
@@ -32,7 +34,7 @@ class Bloc with Access {
 	Function(Object) get fetchTeams   => _teamsFetcher.sink.add;
 	Function(Object) get fetchLeagues => _leagueFetcher.sink.add;
 
-	Bloc(BuildContext context) {
+	Bloc(BuildContext context, this.homeNavigatorKey) {
 		otp = context;
 		_teamsFetcher.transform(_fetchTeams()).pipe(_teamsOutput);
 		_leagueFetcher.transform(_fetchLeagues()).pipe(_leagueOutput);

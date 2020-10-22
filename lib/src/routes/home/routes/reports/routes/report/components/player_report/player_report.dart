@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/routes/home/routes/reports/routes/report/bloc/report/bloc.dart' as playerReport;
+import 'bloc/bloc.dart' as playerReport;
 import 'package:skautex_mobile/src/models/player_report.dart' as models;
 import 'package:skautex_mobile/src/models/statistic.dart' as models;
 

@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/blocs/mixins/update.dart';
-import '../../models/player_report.dart';
+import 'package:skautex_mobile/src/helpers/blocs/update.dart';
+import 'package:skautex_mobile/src/models/player_report.dart';
 
 import 'provider.dart';
 export 'provider.dart';

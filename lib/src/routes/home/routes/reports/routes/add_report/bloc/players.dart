@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/resources/repository.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/blocs/mixins/acess.dart';
+import 'package:skautex_mobile/src/helpers/blocs/access.dart';
 
 class Players with Access {
 	final _repository = Repository();

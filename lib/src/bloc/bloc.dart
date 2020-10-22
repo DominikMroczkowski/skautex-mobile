@@ -133,6 +133,9 @@ class Bloc {
 		this.context = context;
 	}
 
+	/*
+	 * To big of a hack should be put in constructor
+	 */
 	final BehaviorSubject<String> _clicked = BehaviorSubject<String>();
 	get clicked => _clicked.stream;
 	Function(String) get changeClicked => _clicked.sink.add;

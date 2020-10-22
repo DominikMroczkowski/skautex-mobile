@@ -6,13 +6,14 @@ import '../../helpers/navCard.dart';
 
 import 'router.dart' as home;
 
-final GlobalKey<NavigatorState> homeNavigator = GlobalKey();
 
 enum _Headers {
 	main, role, options
 }
 
 class Home extends StatelessWidget {
+	final GlobalKey<NavigatorState> homeNavigator = GlobalKey();
+
 	Widget build(BuildContext context) {
 		return home.Provider(
 			context: context,
@@ -20,7 +21,8 @@ class Home extends StatelessWidget {
 				key: homeNavigator,
 				initialRoute: '/home',
 				onGenerateRoute: home.Router.generateRoute
-			)
+			),
+			homeNavigatorKey: homeNavigator,
 		);
 	}
 }

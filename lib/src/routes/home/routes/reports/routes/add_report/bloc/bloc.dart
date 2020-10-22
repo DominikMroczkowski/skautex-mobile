@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/models/report.dart';
-import 'package:skautex_mobile/src/blocs/mixins/add.dart';
-import 'package:skautex_mobile/src/blocs/mixins/validate.dart';
+import 'package:skautex_mobile/src/helpers/blocs/add.dart';
+import 'package:skautex_mobile/src/helpers/blocs/validate.dart';
 import 'players.dart';
 
 import 'provider.dart';
