@@ -9,7 +9,7 @@ class Users extends StatelessWidget {
 			context: context,
 			child: Navigator(
 				onGenerateRoute: users.Router.generateRoute,
-				initialRoute: '/home/users'
+				initialRoute: '/home/users',
 			)
 		);
 	}

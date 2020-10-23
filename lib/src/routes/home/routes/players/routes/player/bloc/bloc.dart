@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/models/jwt.dart';
-import 'package:skautex_mobile/src/blocs/mixins/delete.dart';
-import '../../resources/repository.dart';
-import '../../models/player.dart';
-import '../session/bloc.dart' as session;
-import '../players/bloc.dart' as players;
+import 'package:skautex_mobile/src/helpers/blocs/delete.dart';
+import 'package:skautex_mobile/src/resources/repository.dart';
+import 'package:skautex_mobile/src/models/player.dart';
+import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
 import 'provider.dart';
 export 'provider.dart';

@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
-import 'bloc/bloc.dart' as reports;
-import 'package:skautex_mobile/src/helpers/widgets/reports_tile.dart';
+
 import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
-import 'package:skautex_mobile/src/models/permissions.dart';
+import 'package:skautex_mobile/src/helpers/widgets/playerTile.dart';
 import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/models/permissions.dart';
+import 'package:skautex_mobile/src/models/player.dart';
+
+import 'bloc/bloc.dart' as players;
 
 class View extends StatelessWidget {
+
 	Widget build(context) {
-		final p = reports.Provider.of(context);
+		final p = players.Provider.of(context);
 		p.fetch();
-		final u = info.Provider.of(context);
+
+		final infoBloc = info.Provider.of(context);
 
 		return Scaffold(
-			body: _reportsList(p),
+			body: _playerList(p),
 			appBar: AppBar(
-				title: Text('Raporty')
+				title: Text('Skautex')
 			),
 			drawer: HomeDrawer(),
-			floatingActionButton: _addButton(u),
+			floatingActionButton: _addButton(infoBloc),
 		);
 	}
 
-	Widget _reportsList(reports.Bloc p) {
+	Widget _playerList(players.Bloc p) {
 		return StreamBuilder(
 			stream: p.watcher,
 			builder: (context, snapshot) {
@@ -33,7 +38,7 @@ class View extends StatelessWidget {
 
 				return FutureBuilder(
 					future: snapshot.data,
-					builder: (context, snapshot) {
+					builder: (context, AsyncSnapshot<List<Player>> snapshot) {
 						if (!snapshot.hasData) {
 							return Center(
 								child: CircularProgressIndicator()
@@ -43,8 +48,8 @@ class View extends StatelessWidget {
 						return ListView.builder(
 							itemCount: snapshot.data.length,
 							itemBuilder: (context, int index) {
-								return ReportsTile(
-									report: snapshot.data[index]
+								return PlayerTile(
+									player: snapshot.data[index]
 								);
 							}
 						);
@@ -54,9 +59,9 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _addButton(info.Bloc u) {
+	Widget _addButton(info.Bloc infoBloc) {
 		return StreamBuilder(
-			stream: u.permissions,
+			stream: infoBloc.permissions,
 			builder: (context, snapshot) {
 				if (snapshot.hasData) {
 					return FutureBuilder(
@@ -68,7 +73,7 @@ class View extends StatelessWidget {
 
 							return FloatingActionButton(
      						onPressed: () {
-									Navigator.of(context).pushNamed('/home/reports/addReport');
+									Navigator.of(context).pushNamed('/home/players/addPlayer');
       					},
       					child: Icon(Icons.add),
       					backgroundColor: Colors.blue,

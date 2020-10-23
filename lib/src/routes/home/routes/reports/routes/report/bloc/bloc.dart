@@ -9,8 +9,8 @@ import 'package:skautex_mobile/src/helpers/blocs/item.dart';
 import 'package:skautex_mobile/src/models/report.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 
-import 'package:skautex_mobile/src/helpers/blocs/item.dart';
 import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
+import 'package:skautex_mobile/src/helpers/blocs/item.dart';
 
 
 /* The biggest problem which breaks all the conventions
@@ -33,6 +33,7 @@ class Bloc {
 		report.item.listen(
 			(Future<Report> report) async {
 				Report tmp = await report;
+				print(tmp.uri);
 				playerReports.fetch(uri: tmp.uri + 'player_reports/');
 			}
 		);

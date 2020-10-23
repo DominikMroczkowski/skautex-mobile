@@ -248,6 +248,8 @@ class HomeDrawer extends StatelessWidget {
 			dense: true,
 			enabled: !_currentRouteEquals(c, i.path),
       onTap: () {
+				homeNavigatorKey(c).currentState.pushNamed(i.path);
+				return;
 				homeNavigatorKey(c).currentState.pushNamedAndRemoveUntil(
 					i.path,
 					(Route r) {

@@ -17,7 +17,7 @@ class ItemList<T> with Access {
 
 	get watcher => _output.stream;
 
-	ItemList({String customUrl = null}):
+	ItemList({String customUrl}):
 		customUrl = customUrl {
 		_input.transform(_fetch()).pipe(_output);
 	}
@@ -25,7 +25,7 @@ class ItemList<T> with Access {
 	_fetch() {
 		return StreamTransformer<String, Future<List<T>>>.fromHandlers(
 			handleData: (String uri, sink) {
-				Future<List<T>> list = _repository.fetchItems<T>(otp, uri: customUrl);
+				Future<List<T>> list = _repository.fetchItems<T>(otp, uri: uri);
 				sink.add(list);
 			}
 		);

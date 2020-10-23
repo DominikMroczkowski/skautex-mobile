@@ -47,6 +47,6 @@ class UserTile extends StatelessWidget {
 	onTileTap(context)	{
 		final s = session.Provider.of(context);
 		s.changeClicked(user.uri);
-		Navigator.pushNamed(context, '/home/user');
+		Navigator.pushNamed(context, '/home/users/user');
 	}
 }

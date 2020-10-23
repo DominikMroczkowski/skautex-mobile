@@ -19,12 +19,12 @@ class Router {
 				builder: (_) =>  User(),
 				settings: settings
 			);
-		else if (_route + '/add_user' == settings.name)
+		else if (_route + '/addUser' == settings.name)
     	return MaterialPageRoute(
 				builder: (_) =>  AddUser(),
 				settings: settings
 			);
-		else if (_route + '/edit_user' == settings.name)
+		else if (_route + '/editUser' == settings.name)
     	return MaterialPageRoute(
 				builder: (_) =>  EditUser(),
 				settings: settings

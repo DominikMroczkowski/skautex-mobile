@@ -60,6 +60,6 @@ class ReportsTile extends StatelessWidget {
 	onTileTap(BuildContext context)	{
 		final s = session.Provider.of(context);
 		s.changeClicked(report.uri);
-		Navigator.pushNamed(context, '/home/report');
+		Navigator.pushNamed(context, '/home/reports/report');
 	}
 }

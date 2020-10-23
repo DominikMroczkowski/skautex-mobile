@@ -528,9 +528,12 @@ class SkautexApiProvider implements Source {
 
 		where = {};
 		where["limit"] = "none";
+		print('$uriOpt');
+		if (uriOpt == null || uriOpt == '')
+			uriOpt = Uri.https(_root, _getSubURL<T>(), where).toString();
 
 		final response = await client.get(
-			uriOpt ?? Uri.https(_root, _getSubURL<T>(), where),
+			uriOpt,
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',

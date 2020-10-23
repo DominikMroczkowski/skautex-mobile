@@ -71,7 +71,7 @@ class PlayerTile extends StatelessWidget {
 			onTap: () {
 				final s = session.Provider.of(context);
 				s.changeClicked(player.uri);
-				Navigator.pushNamed(context, '/home/player');
+				Navigator.pushNamed(context, '/home/players/player');
 			}),
 			color: Colors.white,
 		);

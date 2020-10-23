@@ -1,11 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/helpers/positions.dart';
-import '../add_player/bloc.dart' as add_player;
-import '../session/bloc.dart' as session;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
+import '../../add_player/bloc/bloc.dart' as add_player;
 import 'package:skautex_mobile/src/models/player.dart';
+
+
 
 import 'provider.dart';
 export 'provider.dart';
