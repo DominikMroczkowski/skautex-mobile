@@ -68,7 +68,7 @@ class View extends StatelessWidget {
 
 							return FloatingActionButton(
      						onPressed: () {
-									Navigator.of(context).pushNamed('/home/reports/addReport');
+									Navigator.pushNamed(context, '/home/reports/addReport');
       					},
       					child: Icon(Icons.add),
       					backgroundColor: Colors.blue,

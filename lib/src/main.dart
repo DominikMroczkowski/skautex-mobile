@@ -19,7 +19,8 @@ class App extends StatelessWidget {
 		    supportedLocales: [
    		    const Locale('pl', 'PL'),
       	],
-			)
+			),
+			context: context
 		);
 	}
 }

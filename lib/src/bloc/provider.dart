@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'bloc.dart';
 
 class Provider extends InheritedWidget {
-	final session = Bloc();
+	final session;
 
-	Provider({Key key, Widget child}) :
+	Provider({Key key, Widget child, BuildContext context}) :
+		session = Bloc(context: context),
 		super(key: key, child: child) {
 			session.triggerDbLoader();
 		}

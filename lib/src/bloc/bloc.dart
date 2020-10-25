@@ -13,7 +13,7 @@ import '../models/jwt.dart';
 
 class Bloc {
 	final _repository = Repository();
-	BuildContext context = null;
+	BuildContext context;
 
 	final _JWTOutput     = BehaviorSubject<Future<JWT>>();
 	final _JWTFetcher    = BehaviorSubject<Credentials>();
@@ -31,7 +31,7 @@ class Bloc {
 		_OTPFetcher.sink.add(CreadsWithCode(_JWTOutput.value, code));
 	}
 
-	Bloc() {
+	Bloc({this.context}) {
 		_JWTFetcher.stream.transform(_JWTTransformer()).pipe(_JWTOutput);
 		MergeStream<Future<JWT>>([
 			_OTPFetcher.stream.transform(_OTPTransformer()),
@@ -44,23 +44,7 @@ class Bloc {
 		return StreamTransformer<Credentials, Future<JWT>>.fromHandlers(
 			handleData: (creds, sink) {
 				Future<JWT> jWT =_repository.fetchJWT(creds);
-				jWT.then(
-					(_) {
-						Navigator.of(context).pushNamed('/login/auth_code');
-					},
-					onError: (error) {
-						showDialog(
-							context: context,
-							child: AlertDialog(
-								title: Text('Błąd'),
-								content: Text(error),
-								actions: <Widget>[
-									FlatButton(onPressed: Navigator.of(context).pop, child: Text('Ok'))
-								]
-							)
-						);
-					}
-				);
+
 				sink.add(jWT);
 			}
 		);

@@ -135,31 +135,10 @@ class View extends StatelessWidget {
 				if (snapshot.hasData)
 					submitValid = snapshot.data;
 				return RaisedButton(
-					child: indicator(s, l),
+					child: LoginIndicator(stream: s.jwt),
 					color: Colors.blue,
 					onPressed: submitValid ? () {l.submit(s);} : null
 				);
-			}
-		);
-	}
-
-	Widget indicator(session.Bloc s, login.Bloc l) {
-		return  StreamBuilder(
-			stream: s.jwt,
-			builder: (context, snapshot) {
-				if (snapshot.hasData) {
-					return FutureBuilder(
-						future: snapshot.data,
-						builder: (context, snapshot) {
-							if (!snapshot.hasData && !snapshot.hasError) {
-								CircularIndicator();
-							}
-							return Text('Zaloguj');
-						}
-					);
-
-				}
-				return Text('Zaloguj');
 			}
 		);
 	}
@@ -174,5 +153,53 @@ class View extends StatelessWidget {
 				style: TextStyle(color: Colors.blue)
 			)
  		);
+	}
+}
+
+class LoginIndicator extends StatelessWidget {
+	final Stream stream;
+	LoginIndicator({this.stream});
+
+	build(BuildContext context) {
+		return StreamBuilder(
+			stream: stream,
+			builder: (_, snapshot) {
+				if (snapshot.hasData) {
+					snapshot.data.then(
+						(_) {
+							Navigator.of(context).pushNamed('/home');
+						},
+						onError: (err) {
+							logErrors(snapshot.error, context);
+						}
+					);
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (_, snapshot) {
+							if ((!snapshot.hasData && !snapshot.hasError))
+								return CircularIndicator();
+							return Text('Zaloguj');
+						}
+					);
+				}
+				return Text('Zaloguj');
+			}
+		);
+	}
+
+	void logErrors(String jWT, BuildContext context) {
+		showDialog(
+			context: context,
+			child: AlertDialog(
+				title: Text('Błąd'),
+				content: Text(jWT),
+				actions: <Widget>[
+					FlatButton(
+						onPressed: Navigator.of(context, rootNavigator: true).pop,
+						child: Text('Ok')
+					)
+				]
+			)
+		);
 	}
 }
