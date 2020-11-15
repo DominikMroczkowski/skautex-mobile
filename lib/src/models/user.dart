@@ -20,10 +20,10 @@ class User {
 
 	User.fromJson(Map<String, dynamic> parsedJson) :
 		uri       = parsedJson['url'],
-    username  = parsedJson['username'],
+    username  = parsedJson['username'] ?? '',
 		firstName = parsedJson['first_name'] ?? '',
    	lastName  = parsedJson['last_name'] ?? '',
-   	email     = parsedJson['email'],
+   	email     = parsedJson['email'] ?? '',
    	isActive  = parsedJson['is_active'] ?? false;
 
 	Map<String, dynamic> toJson() {
@@ -52,4 +52,11 @@ class User {
 			['Aktywny', !isActive ? 'Nie' : 'Tak'],
 		];
 	}
+
+  bool isEqual(User model) {
+    return this?.uri == model?.uri;
+  }
+
+  @override
+  String toString() => username + ' - ' + firstName + ' ' + lastName;
 }

@@ -167,7 +167,7 @@ class LoginIndicator extends StatelessWidget {
 				if (snapshot.hasData) {
 					snapshot.data.then(
 						(_) {
-							Navigator.of(context).pushNamed('/home');
+							Navigator.of(context).pushNamed('/login/auth_code');
 						},
 						onError: (err) {
 							logErrors(snapshot.error, context);

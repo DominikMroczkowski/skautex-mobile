@@ -25,23 +25,7 @@ class Add<T> with Access {
 	_fetch() {
 		return StreamTransformer<T, Future<T>>.fromHandlers(
 			handleData: (T item, sink) {
-				sink.add(_repository.addItem<T>(otp, item).then(
-					(_) {
-						Navigator.of(context).pushNamed('/home');
-					},
-					onError: (error) {
-						showDialog(
-							context: context,
-							child: AlertDialog(
-								title: Text('Błąd'),
-								content: Text(error),
-								actions: <Widget>[
-									FlatButton(onPressed: Navigator.of(context).pop, child: Text('Ok'))
-								]
-							)
-						);
-					}
-				));
+				sink.add(_repository.addItem<T>(otp, item));
 			}
 		);
 	}

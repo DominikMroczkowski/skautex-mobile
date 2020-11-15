@@ -27,7 +27,7 @@ class Data {
 		toRet.add(DashCard('Kalendarz', Icons.event, '/home/calendar', perms));
 		toRet.add(DashCard('Zadania', Icons.check, '/home/task', perms));
 		toRet.add(DashCard('Wydatki', Icons.poll, '/home/expenses', perms));
-		toRet.add(DashCard('Rezerwacje', Icons.save, '/home/booked', perms));
+		toRet.add(DashCard('Rezerwacje', Icons.save, '/home/bookings', perms));
 
 		return toRet;
 	}

@@ -7,7 +7,7 @@ import 'routes/recommended/recommended.dart';
 import 'routes/calendar/calendar.dart';
 import 'routes/task/task.dart';
 import 'routes/costs/costs.dart';
-import 'routes/booking/booking.dart';
+import 'routes/bookings/bookings.dart';
 import 'routes/reports/reports.dart';
 import 'routes/test/test.dart';
 import 'routes/ranking/ranking.dart';
@@ -47,9 +47,9 @@ class Router {
 				builder: (_) =>  Costs(),
 				settings: settings
 			);
-		else if (_route + '/booked' == settings.name)
+		else if (_route + '/bookings' == settings.name)
 	   	return MaterialPageRoute(
-				builder: (_) =>  Booking(),
+				builder: (_) =>  Bookings(),
 				settings: settings
 			);
 		else if (_route + '/reports' == settings.name)

@@ -66,6 +66,9 @@ class Bloc {
 					(_) {
 						Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil('/home', (r) => false);
 					},
+					onError: (_) {
+						Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil('/login', (r) => false);
+					}
 				);
 				sink.add(jWT);
 				_refresh();
