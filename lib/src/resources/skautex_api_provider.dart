@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
+import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'dart:async';
 
@@ -14,7 +15,9 @@ import '../models/report.dart';
 import '../models/permissions.dart';
 import '../models/cost.dart';
 import '../models/booking.dart';
+import '../models/booking_type.dart';
 import '../models/booking_reservation.dart';
+import '../models/event.dart';
 
 final _root = 'skautex.azurewebsites.net';
 const _API_KEY =  '9QDNEqx5.E3fdjJcev3zDIYT0bQaZu6j01dFmQHDC';
@@ -334,7 +337,6 @@ class SkautexApiProvider implements Source {
 			)
 		);
 
-
 		final parsedJson = json.decode(response.body);
 
 		return Player.fromJson(parsedJson);
@@ -342,12 +344,15 @@ class SkautexApiProvider implements Source {
 
 	String _getSubURL<T>() {
 		final _uris = <Type, String>{
-			User :   '/api/v1/users/',
-			Report : '/api/v1/reports/',
-			Player:  '/api/v1/players/',
-			Cost:    '/api/v1/users/me/cost_recording/',
+			User: '/api/v1/users/',
+			Report: '/api/v1/reports/',
+			Player: '/api/v1/players/',
+			Cost: '/api/v1/users/me/cost_recording/',
 			Booking: '/api/v1/booking/objects/',
-			BookingReservation: '/api/v1/booking/reservations/'
+			BookingType: '/api/v1/booking/objects_types/',
+			BookingReservation: '/api/v1/booking/reservations/',
+			BookingBlacklist: '/api/v1/booking/blacklist/',
+			Event: '/api/v1/calendars/events/'
 		};
 
 	  return _uris[T];
@@ -358,8 +363,10 @@ class SkautexApiProvider implements Source {
 
 		where ??= {};
 		where["limit"] = "none";
+		print(where.toString());
 
 		String uri = _getSubURL<T>();
+
 		final response = await client.get(
 			Uri.https(_root, uri,  where),
 			headers: {
@@ -396,7 +403,10 @@ class SkautexApiProvider implements Source {
 			PlayerReport : (Map<String, dynamic> parsedJson) => PlayerReport.fromJson(parsedJson),
 			Cost         : (Map<String, dynamic> parsedJson) => Cost.fromJson(parsedJson),
 			Booking      : (Map<String, dynamic> parsedJson) => Booking.fromJson(parsedJson),
+			BookingType  : (Map<String, dynamic> parsedJson) => BookingType.fromJson(parsedJson),
+			BookingBlacklist : (Map<String, dynamic> parsedJson) => BookingBlacklist.fromJson(parsedJson),
 			BookingReservation : (Map<String, dynamic> parsedJson) => BookingReservation.fromJson(parsedJson),
+			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -468,6 +478,9 @@ class SkautexApiProvider implements Source {
 			User : (User user) => user.toPost(),
 			Report: (Report report) => report.toPost(),
 			Cost: (Cost cost) => cost.toPost(),
+			Booking: (Booking booking) => booking.toPost(),
+			BookingBlacklist: (BookingBlacklist blacklist) => blacklist.toPost(),
+			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
 		};
 
 	  return _objects[T](item);
@@ -476,8 +489,11 @@ class SkautexApiProvider implements Source {
 	Future<T> addItem<T>(Future<JWT> jwt, T item) async {
 		String access = (await jwt).access;
 
-		final response = await client.post(
+		print(
 			Uri.https(_root, _getSubURL<T>(), {}),
+		);
+		final response = await client.post(
+			Uri.https(_root, _getSubURL<T>(), null),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -526,12 +542,14 @@ class SkautexApiProvider implements Source {
 	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
 		String access = (await jwt).access;
 
-		where = {};
+		if (where == null)
+			where = {};
 		where["limit"] = "none";
 		print('$uriOpt');
 		if (uriOpt == null || uriOpt == '')
 			uriOpt = Uri.https(_root, _getSubURL<T>(), where).toString();
 
+		print('Fetching >>>>>> $uriOpt');
 		final response = await client.get(
 			uriOpt,
 			headers: {
@@ -558,6 +576,8 @@ class SkautexApiProvider implements Source {
 				items.add(_fromJson<T>(i));
 			}
 		);
+
+		print('---> List size after parsing ${items.length}');
 		return items;
 	}
 }

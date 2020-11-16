@@ -17,7 +17,6 @@ class View extends StatelessWidget {
 			appBar: AppBar(
 				title: Text('Dodaj użytkownika')
 			),
-			drawer: HomeDrawer(),
 		);
 	}
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 
 import 'package:skautex_mobile/src/models/player.dart';
+import 'package:skautex_mobile/src/helpers/others/player_statuses.dart';
 import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
 class PlayerTile extends StatelessWidget {
@@ -22,46 +23,48 @@ class PlayerTile extends StatelessWidget {
 				child: Container(
 					child: Column (
 						children: [
-							Align(
-								child: Text(
+							Row(children: [
+								Text(
 									'${player.name} ${player.surname}' ?? 'Brak',
 									style: TextStyle(
 										fontSize: 18,
 									)
 								),
-								alignment: Alignment.topLeft,
-							),
+								Expanded(child: Container()),
+								_playerStatus(player.status)
+							]),
 							Container(margin: EdgeInsets.only(top: 10.0)),
 							Row(children: <Widget>[
+								Text(
+									player.birthDate,
+									style: TextStyle(
+										color: Colors.grey[700],
+									)
+								),
+								Expanded(child: Container()),
 								Text(
 									player.position ?? 'Brak',
 									style: TextStyle(
 										color: Colors.grey[700],
 									)
 								),
-								Container(
-									padding: EdgeInsets.only(left: 20.0),),
-								Text(
-									'Grupa Wiekowa',
-									style: TextStyle(
-										color: Colors.grey[700],
-									)
-								),
-
-								Expanded(child: Container()),
+								]
+							),
+							Container(margin: EdgeInsets.only(top: 10.0)),
+							Row(children: <Widget>[
 								Text(
 									player.team[0] ?? 'Brak',
 									style: TextStyle(
 										color: Colors.grey[700],
 									)
 								),
-								],
-							),
-							Container(margin: EdgeInsets.only(top: 10.0)),
-							Row(children: <Widget>[
-								_playerStatus(player.status ?? 'Brak'),
 								Expanded(child: Container()),
-								Text(player.city ?? 'Brak'),
+								Text(player.city ?? 'Brak',
+										style: TextStyle(
+										color: Colors.grey[700],
+									)
+
+								),
 								],
 							),
 						]
@@ -78,14 +81,10 @@ class PlayerTile extends StatelessWidget {
 	}
 
 	Widget _playerStatus(String status) {
-		return Row(
-			children: <Widget>[
-				Icon(
-      					Icons.check_circle,
-      					color: Colors.green
-    				),
-				Text(status)
-			],
-		);
+		final color = getPlayerStatusColor(status);
+		return Icon(
+      Icons.circle,
+      color: color
+    );
 	}
 }

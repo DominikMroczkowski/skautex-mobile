@@ -5,8 +5,14 @@ class DeleteDialog extends StatelessWidget {
 	final Stream stream;
 	final Function onTrue;
 	final String uri;
+	final String title;
+	final String ask;
+	final String whileWorking;
 
-	DeleteDialog({this.stream, this.onTrue, this.uri});
+	DeleteDialog({this.stream, this.onTrue, this.uri, String title, String ask, String whileWorking}) :
+		this.title = title ?? 'Dezaktywacja',
+		this.ask = ask ?? 'Czy napewno chcesz dezaktywować zawodnika',
+		this.whileWorking = whileWorking ?? 'Dezaktywowano';
 
 	Widget build(BuildContext context) {
 			return _alert(context);
@@ -18,12 +24,14 @@ class DeleteDialog extends StatelessWidget {
 			builder: (context, snapshot) {
 				if (!snapshot.hasData) {
 					return AlertDialog(
-						title: Text("Dezaktywacja"),
-						content: Text("Czy napewno chcesz dezaktywować zawodnika?"),
+						title: Text(title),
+						content: Text(ask),
 						actions: [
 							FlatButton(
 								child: Text('Tak'),
-								onPressed: () { Function.apply(onTrue, [uri]);}
+								onPressed: () {
+									Function.apply(onTrue, [uri]);
+								}
 							),
 							FlatButton(child: Text('Nie'), onPressed:() {Navigator.of(context).pop();})
 						]
@@ -41,13 +49,13 @@ class DeleteDialog extends StatelessWidget {
 							);
 						if (snapshot.hasData)
 							return AlertDialog(
-								title: Text("Dezaktywowano"),
+								title: Text("Powodzenie"),
 								actions: [
 									FlatButton(child: Text('Ok'), onPressed:() {Navigator.of(context).popUntil((route) { return '/home' == route.settings.name;});})
 								]
 							);
 						return AlertDialog(
-							title: Text("Dezaktywuje"),
+							title: Text(whileWorking),
 							content: CircularIndicator.horizontal(Colors.blue)
 						);
 					}

@@ -9,11 +9,11 @@ class Cost {
 	Cost({this.uri, this.name, this.owner, this.cost, this.date, this.file});
 
 	Cost.fromJson(Map<String, dynamic> parsedJson) :
-		uri   = parsedJson['url'],
-		name  = parsedJson['name'],
-		cost  = parsedJson['money'],
-		date  = parsedJson['record_date'],
-		file  = parsedJson['file'];
+		uri   = parsedJson['url'] ?? '',
+		name  = parsedJson['name'] ?? 'Night',
+		cost  = parsedJson['money'] ?? 'Train',
+		date  = parsedJson['record_date'] ?? '',
+		file  = parsedJson['file'] ?? '';
 
 	Map<String, dynamic> toJson() {
 		return <String, dynamic> {

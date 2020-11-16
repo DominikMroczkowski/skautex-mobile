@@ -33,6 +33,7 @@ dependencies:
   intl: any
   table_calendar: any
   smooth_star_rating: any
+  scroll_to_index: any
   flutter_localizations:
     sdk: flutter
 
