@@ -48,27 +48,22 @@ class Permissions {
 	bool addTotpdevice = false;
 	bool changeOwnTotpdevices = false;
 	bool changeTotpdevice = false;
-
 	bool deleteOwnTotpdevices = false;
 	bool deleteTotpdevice = false;
 	bool viewOwnTotpdevices = false;
 	bool viewTotpdevice = false;
-
 	bool addLeague = false;
 	bool changeLeague = false;
 	bool deleteLeague = false;
 	bool viewLeague = false;
-
 	bool addPlayer = false;
 	bool changePlayer = false;
 	bool deletePlayer = false;
 	bool viewPlayer = false;
-
 	bool addPlayerstatus = false;
 	bool changePlayerstatus = false;
 	bool deletePlayerstatus = false;
 	bool viewPlayerstatus = false;
-
 	bool addTeam = false;
 	bool changeTeam = false;
 	bool deleteTeam = false;
@@ -83,6 +78,86 @@ class Permissions {
 	bool changeOutstandingtoken = false;
 	bool deleteOutstandingtoken = false;
 	bool viewOutstandingtoken = false;
+
+	Permissions({
+		this.addAuditentry = false,
+		this.changeAuditentry = false,
+		this.deleteAuditentry = false,
+		this.viewAuditentry = false,
+		this.viewOwnAuditentries = false,
+		this.addGroup = false,
+		this.changeGroup = false,
+		this.deleteGroup = false,
+		this.viewGroup = false,
+		this.addPermission = false,
+		this.changePermission = false,
+		this.deletePermission = false,
+		this.viewPermission = false,
+		this.addUser = false,
+		this.changeOwnUser = false,
+		this.changeUser = false,
+		this.deleteOwnUser = false,
+		this.deleteUser = false,
+		this.viewOwnUser = false,
+		this.viewUser = false,
+		this.addOrganization = false,
+		this.changeOrganization = false,
+		this.deleteOrganization = false,
+		this.viewOrganization = false,
+		this.addOrganizationapikey = false,
+		this.changeOrganizationapikey = false,
+		this.deleteOrganizationapikey = false,
+		this.viewOrganizationapikey = false,
+		this.addEmaildevice = false,
+		this.changeEmaildevice = false,
+		this.changeOwnEmaildevices = false,
+		this.deleteEmaildevice = false,
+		this.deleteOwnEmaildevices = false,
+		this.viewEmaildevice = false,
+		this.viewOwnEmaildevices = false,
+		this.addStaticdevice = false,
+		this.changeOwnStaticdevices = false,
+		this.changeStaticdevice = false,
+		this.deleteOwnStaticdevices = false,
+		this.deleteStaticdevice = false,
+		this.viewOwnStaticdevices = false,
+		this.viewStaticdevice = false,
+		this.addStatictoken = false,
+		this.changeStatictoken = false,
+		this.deleteStatictoken = false,
+		this.viewStatictoken = false,
+		this.addTotpdevice = false,
+		this.changeOwnTotpdevices = false,
+		this.changeTotpdevice = false,
+		this.deleteOwnTotpdevices = false,
+		this.deleteTotpdevice = false,
+		this.viewOwnTotpdevices = false,
+		this.viewTotpdevice = false,
+		this.addLeague = false,
+		this.changeLeague = false,
+		this.deleteLeague = false,
+		this.viewLeague = false,
+		this.addPlayer = false,
+		this.changePlayer = false,
+		this.deletePlayer = false,
+		this.viewPlayer = false,
+		this.addPlayerstatus = false,
+		this.changePlayerstatus = false,
+		this.deletePlayerstatus = false,
+		this.viewPlayerstatus = false,
+		this.addTeam = false,
+		this.changeTeam = false,
+		this.deleteTeam = false,
+		this.viewTeam = false,
+		this.addBlacklistedtoken = false,
+		this.changeBlacklistedtoken = false,
+		this.deleteBlacklistedtoken = false,
+		this.viewBlacklistedtoken = false,
+		this.addOutstandingtoken = false,
+		this.changeOutstandingtoken = false,
+		this.deleteOutstandingtoken = false,
+		this.viewOutstandingtoken = false,
+	});
 
 
 	Permissions.fromJson(Map<String, dynamic> parsedJson) {
@@ -331,15 +406,15 @@ class Permissions {
 	Permissions.toXOR();
 
 	XOR(Permissions permissions) {
-		if ((addAuditentry && permissions.changeAuditentry) ||
-                    (changeAuditentry && permissions.changeAuditentry) ||
-                    (deleteAuditentry && permissions.deleteAuditentry) ||
-                    (viewAuditentry && permissions.viewAuditentry) ||
-                    (viewOwnAuditentries && permissions.viewOwnAuditentries) ||
-                    (addGroup && permissions.addGroup) ||
-                    (changeGroup && permissions.changeGroup) ||
-                    (deleteGroup && permissions.deleteGroup) ||
-                    (viewGroup && permissions.viewGroup) ||
+		return ((addAuditentry && permissions.changeAuditentry) ||
+        (changeAuditentry && permissions.changeAuditentry) ||
+        (deleteAuditentry && permissions.deleteAuditentry) ||
+        (viewAuditentry && permissions.viewAuditentry) ||
+        (viewOwnAuditentries && permissions.viewOwnAuditentries) ||
+        (addGroup && permissions.addGroup) ||
+        (changeGroup && permissions.changeGroup) ||
+        (deleteGroup && permissions.deleteGroup) ||
+        (viewGroup && permissions.viewGroup) ||
 		    (addPermission && permissions.addPermission) ||
 		    (changePermission && permissions.changePermission) ||
 		    (deletePermission && permissions.deletePermission) ||
@@ -407,9 +482,6 @@ class Permissions {
 		    (addOutstandingtoken && permissions.addOutstandingtoken) ||
 		    (changeOutstandingtoken && permissions.changeOutstandingtoken) ||
 		    (deleteOutstandingtoken && permissions.deleteOutstandingtoken) ||
-		    (viewOutstandingtoken && permissions.viewOutstandingtoken)) {
-			return true;
-		}
-		return false;
+		    (viewOutstandingtoken && permissions.viewOutstandingtoken));
 	}
 }
