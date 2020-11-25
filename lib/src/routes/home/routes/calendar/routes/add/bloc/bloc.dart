@@ -10,6 +10,8 @@ import 'package:skautex_mobile/src/models/user.dart';
 import 'provider.dart';
 export 'provider.dart';
 
+import 'types.dart';
+
 class Bloc extends Add<Event> {
 	final name = StreamWrapper<String>();
 	final type = StreamWrapper<EventType>();
@@ -17,7 +19,10 @@ class Bloc extends Add<Event> {
 	final end = StreamWrapper<DateTime>();
 	final color = StreamWrapper<String>();
 	final invited = StreamWrapper<List<User>>();
+	final _types;
 	final _click = BehaviorSubject<Object>();
+
+	get types => _types.watcher;
 
 	addClick() {
 		_click.sink.add(Object());
@@ -47,7 +52,8 @@ class Bloc extends Add<Event> {
 	}));
 
 
-	Bloc({context}) {
+	Bloc({context}):
+		_types = Types(context: context) {
 		otp = context;
 		_click.stream.listen(
 			(_) {
@@ -61,6 +67,7 @@ class Bloc extends Add<Event> {
 				);
 			}
 		);
+
 	}
 }
 

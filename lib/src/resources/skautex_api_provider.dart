@@ -18,9 +18,10 @@ import '../models/booking.dart';
 import '../models/booking_type.dart';
 import '../models/booking_reservation.dart';
 import '../models/event.dart';
+import '../models/event_type.dart';
 
 final _root = 'skautex.azurewebsites.net';
-const _API_KEY =  '9QDNEqx5.E3fdjJcev3zDIYT0bQaZu6j01dFmQHDC';
+const _API_KEY = 'm3uaSTCw.K8vY9BLsH5LTv3L7UAHQoItgh0CjwQ2M';
 class SkautexApiProvider implements Source {
 	Client client = Client();
 
@@ -352,7 +353,8 @@ class SkautexApiProvider implements Source {
 			BookingType: '/api/v1/booking/objects_types/',
 			BookingReservation: '/api/v1/booking/reservations/',
 			BookingBlacklist: '/api/v1/booking/blacklist/',
-			Event: '/api/v1/calendars/events/'
+			Event: '/api/v1/calendars/events/',
+			EventType: '/api/v1/calendars/events_types/'
 		};
 
 	  return _uris[T];
