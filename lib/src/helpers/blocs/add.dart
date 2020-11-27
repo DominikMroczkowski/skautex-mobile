@@ -7,8 +7,8 @@ import 'access.dart';
 class Add<T> with Access {
 	final _repository = Repository();
 
-	final _output     = PublishSubject<Future<T>>();
-	final _input      = PublishSubject<T>();
+	final _output = PublishSubject<Future<T>>();
+	final _input  = PublishSubject<T>();
 
 	var context;
 	Function(T) get addItem    => _input.sink.add;

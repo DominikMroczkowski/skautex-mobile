@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
-import 'package:skautex_mobile/src/models/event_type.dart';
+import 'package:skautex_mobile/src/models/user.dart';
 
-class TypeDropdown extends StatelessWidget {
-	final Function(EventType) change;
-	final Stream stream;
-	final EventType value;
+class UsersDropdown extends StatelessWidget {
+	final Function(List<User>) change;
+	final Stream<Future<List<User>>> stream;
+	final List<User> value;
 
-	TypeDropdown({this.stream, this.value, this.change});
+	UsersDropdown({@required this.stream, @required this.value, @required this.change});
 
 	build(BuildContext context) {
 		return StreamBuilder(
@@ -27,23 +27,31 @@ class TypeDropdown extends StatelessWidget {
 		);
 	}
 
-	_dropdown(List<EventType> data) {
-		List<DropdownMenuItem<EventType>> items = [];
+	_dropdown(List<User> data) {
+		List<DropdownMenuItem<User>> items = [];
 
 		data.forEach(
-			(i) =>
+			(i) {
+				if (value.contains(i))
+					return;
 				items.add(
-					DropdownMenuItem<EventType>(
+					DropdownMenuItem<User>(
 						value: i,
-						child: Text(i.name)
+						child: Text(i.firstName + ' ' + i.lastName + ' #' + i.username),
 					)
-				)
+				);
+			}
 		);
+
 		return SearchableDropdown.single(
 			items: items,
-			onChanged: (EventType i) {i != null ?  change(i) : null;},
+			onChanged: (User i) {
+				List<User> add = List.from(value);
+				i != null ? add.add(i) : null;
+				change(add);
+			},
+			value: value,
 			isExpanded: true,
-			displayClearIcon: false
 		);
 	}
 

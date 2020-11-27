@@ -11,68 +11,71 @@ import 'provider.dart';
 export 'provider.dart';
 
 import 'types.dart';
+import 'users.dart';
 
 class Bloc extends Add<Event> {
-	final name = StreamWrapper<String>();
-	final type = StreamWrapper<EventType>();
-	final start = StreamWrapper<DateTime>();
-	final end = StreamWrapper<DateTime>();
-	final color = StreamWrapper<String>();
-	final invited = StreamWrapper<List<User>>();
+	final _name = BehaviorSubject<String>();
+	Stream get name => _name.stream;
+	Function(String) get changeName => _name.sink.add;
+
+	final _type = BehaviorSubject<EventType>();
+	Stream get type => _type.stream;
+	Function(EventType) get changeType => _type.sink.add;
+
+	final _start = BehaviorSubject<DateTime>();
+	Stream get start => _start.stream;
+	Function(DateTime) get changeStart => _start.sink.add;
+
+	final _end = BehaviorSubject<DateTime>();
+	Stream get end => _end.stream;
+	Function(DateTime) get changeEnd => _end.sink.add;
+
+	final _color = BehaviorSubject<String>();
+	Stream get color => _color.stream;
+	Function(String) get changeColor => _color.sink.add;
+
+	final _invited = BehaviorSubject<List<User>>();
+	Stream get invited => _invited.stream;
+	Function(List<User>) get changeInvited => _invited.sink.add;
+
 	final _types;
-	final _click = BehaviorSubject<Object>();
+	final _users;
 
-	get types => _types.watcher;
+	Stream<Future<List<EventType>>> get types => _types.watcher;
+	Stream<Future<List<User>>> get users => _users.watcher;
 
-	addClick() {
-		_click.sink.add(Object());
+	add() {
+		addItem(
+			Event(
+				name: _name.value,
+				type: _type.value,
+				startDate: _start.value.toString(),
+				endDate: _end.value.toString(),
+				color: _color.value,
+				hide: false,
+				connectedUsers: []
+			)
+		);
 	}
 
-	Stream<Event> get event => Rx.combineLatest(
-		[name.stream, type.stream, start.stream, end.stream, color.stream, invited.stream],
-		(list) {
-			if (list.contains(null))
-				return null;
-			return Event(
-				name: list[0],
-				type: list[1],
-				startDate: list[2],
-				endDate: list[3],
-				color: list[4],
-			);
-		}
+	get submitValid => Rx.combineLatest(
+		[name, type, start, end, color, invited],
+		(list) => true
 	);
 
-	Stream<bool> get submitValid => event.transform(StreamTransformer<Event, bool>.fromHandlers(
-	 handleData: (i, sink) {
-		if (i == null)
-			sink.add(false);
-		else
-			sink.add(true);
-	}));
-
-
 	Bloc({context}):
-		_types = Types(context: context) {
+		_types = Types(context: context),
+		_users = Users(context: context) {
 		otp = context;
-		_click.stream.listen(
-			(_) {
-				event.last.then(
-					(i) {
-						if (event.last == null)
-							return;
-						else
-							addItem(i);
-					}
-				);
-			}
-		);
-
 	}
-}
 
-class StreamWrapper<T> {
-	final _stream = BehaviorSubject<T>();
-	Stream get stream => _stream.stream;
-	Function(T) get change => _stream.sink.add;
+	dispose() {
+		_name.close();
+		_type.close();
+		_start.close();
+		_end.close();
+		_color.close();
+		_invited.close();
+		super.dispose();
+	}
 }

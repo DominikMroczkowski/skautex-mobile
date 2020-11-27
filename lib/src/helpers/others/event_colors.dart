@@ -1,4 +1,6 @@
-final EventColors = [
+import 'package:flutter/material.dart';
+
+final List<String> eventColors = [
 	"#1FBC9C",
 	"#1CA085",
 	"#2ECC70",
@@ -16,3 +18,15 @@ final EventColors = [
 	"#DDE6E8",
 	"#BDC3C8"
 ];
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}

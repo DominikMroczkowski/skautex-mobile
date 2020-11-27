@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class View extends StatelessWidget {
+
+class DateField extends StatelessWidget{
 	final Function(DateTime) change;
 	final String name;
 	final DateTime date;
 
-	View({@required this.change, @required this.name, @required this.date});
+	DateField({@required this.change, String name, @required this.date}):
+		name = name ?? 'Data';
 
 	Widget build(BuildContext context) {
 		return Row(
@@ -66,7 +68,7 @@ class View extends StatelessWidget {
 	}
 
 	Widget _hoursField() {
-		final hours = DateFormat.H().format(date);
+		final hours = DateFormat.Hm().format(date);
 		return TextField(
 			controller: TextEditingController(text: hours),
 			decoration: InputDecoration(

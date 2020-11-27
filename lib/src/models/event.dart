@@ -9,10 +9,11 @@ class Event {
 	String endDate;
 	EventType type;
 	User owner;
+	List<User> connectedUsers;
 	bool hide;
 	String color;
 
-	Event({this.uri, this.name, this.description, this.startDate, this.endDate, this.type, this.owner, this.hide, this.color});
+	Event({this.uri, this.name, this.description, this.startDate, this.endDate, this.type, this.owner, this.hide, this.color, this.connectedUsers});
 
 	Event.fromJson(Map<String, dynamic> parsedJson) :
 		uri = parsedJson['url'],
@@ -33,15 +34,17 @@ class Event {
 			'description' : description,
 			'start_date' : startDate,
 			'end_date' : endDate,
-			'owner' : owner.uri,
+			'owner' : owner,
 			'hide' : hide,
-			'color' : color
+			'color' : color,
+			'connected_users' : connectedUsers.map((i) => i.uri).toList()
 		};
 	}
 
 	Map<String, dynamic> toPost() {
 		var map = toJson();
 		map.remove('url');
+		map.remove('owner');
 		return map;
 	}
 }

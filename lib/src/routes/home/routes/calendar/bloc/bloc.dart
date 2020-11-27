@@ -8,7 +8,7 @@ import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
 import 'package:skautex_mobile/src/models/event.dart';
 
 class Bloc extends ItemList<Event> {
-	final GlobalKey navigator;
+	final GlobalKey<NavigatorState> navigator;
 	final _startDate = BehaviorSubject<DateTime>();
 	final _endDate = BehaviorSubject<DateTime>();
 	final _choosenDate = BehaviorSubject<DateTime>();
