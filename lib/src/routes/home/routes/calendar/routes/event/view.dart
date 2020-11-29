@@ -4,6 +4,7 @@ import 'package:skautex_mobile/src/helpers/others/event_colors.dart';
 import 'bloc/bloc.dart';
 
 import 'components/connected_users/connected_users.dart';
+import 'components/delete/delete.dart';
 
 class View extends StatelessWidget {
 
@@ -11,7 +12,10 @@ class View extends StatelessWidget {
 		final bloc = Provider.of(context);
 		return Scaffold(
 			appBar: AppBar(
-				title: Text(bloc.event.name)
+				title: Text(bloc.event.name),
+				actions: [
+					Delete(event: bloc.event)
+				],
 			),
 			body: _body(context),
 		);

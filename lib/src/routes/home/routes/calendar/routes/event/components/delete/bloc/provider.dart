@@ -6,7 +6,7 @@ class Provider extends InheritedWidget {
 	final delete;
 
 	Provider({Key key, Widget child, BuildContext context, GlobalKey<NavigatorState> navigator, Event event}) :
-		delete = Bloc(event: event),
+		delete = Bloc(context, event: event, navigator: navigator),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

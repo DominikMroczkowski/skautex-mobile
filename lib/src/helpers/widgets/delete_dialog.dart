@@ -8,8 +8,10 @@ class DeleteDialog extends StatelessWidget {
 	final String title;
 	final String ask;
 	final String whileWorking;
+	final Function runAfterDeletion;
+	final List<dynamic> radArgs;
 
-	DeleteDialog({this.stream, this.onTrue, this.uri, String title, String ask, String whileWorking}) :
+	DeleteDialog({this.stream, this.onTrue, this.uri, String title, String ask, String whileWorking, this.runAfterDeletion, this.radArgs}) :
 		this.title = title ?? 'Dezaktywacja',
 		this.ask = ask ?? 'Czy napewno chcesz dezaktywować zawodnika',
 		this.whileWorking = whileWorking ?? 'Dezaktywowano';
@@ -47,13 +49,16 @@ class DeleteDialog extends StatelessWidget {
 									FlatButton(child: Text('Ok'), onPressed:() {Navigator.of(context).pop();})
 								]
 							);
-						if (snapshot.hasData)
+						if (snapshot.hasData) {
+							if (runAfterDeletion != null)
+								Function.apply(runAfterDeletion, radArgs);
 							return AlertDialog(
 								title: Text("Powodzenie"),
 								actions: [
 									FlatButton(child: Text('Ok'), onPressed:() {Navigator.of(context).popUntil((route) { return '/home' == route.settings.name;});})
 								]
 							);
+						}
 						return AlertDialog(
 							title: Text(whileWorking),
 							content: CircularIndicator.horizontal(Colors.blue)
