@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/helpers/widgets/header.dart';
+import 'package:skautex_mobile/src/helpers/others/event_colors.dart';
 import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
 import 'package:skautex_mobile/src/models/event.dart';
 import 'bloc/bloc.dart';
 import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' as calendar;
-
 
 class View extends StatelessWidget {
 	Widget build(context) {
@@ -12,21 +11,35 @@ class View extends StatelessWidget {
 
 		return StreamList(
 			stream: calendar.Provider.of(context).watcher,
-			tile: _tile,
+			tile: (event) => _Tile(event: event),
 			controller: bloc.controller
 		);
 	}
+}
 
-	Widget _tile(Event event) {
+class _Tile extends StatelessWidget {
+	final Event event;
+
+	_Tile({this.event});
+
+	Widget build(BuildContext context) {
 		return Card(
-				child:  ListTile(
-					title: Text(event.name + ' - ' + event.owner.username),
-					subtitle: Text('Od: ' + event.startDate + ' \nDo: ' + event.endDate),
-					isThreeLine: true,
-					dense: true,
-				),
-				color: Color(int.parse(event.color.substring(1), radix: 16) + 0x11000000),
-				margin: EdgeInsets.fromLTRB(8.0,8.0,8.0,0.0),
+			child: _tile(context)
+		);
+	}
+
+	_tile(context) {
+		return ListTile(
+			title: Text(event.name + ' - ' + event.owner.username),
+			subtitle: Text('Od: ' + event.startDate + ' \nDo: ' + event.endDate),
+			isThreeLine: true,
+			dense: true,
+			tileColor: HexColor(event.color),
+			enabled: true,
+			onTap: () {
+				print('xd');
+				Navigator.of(context).pushNamed('/home/calendar/event', arguments: event);
+			}
 		);
 	}
 }

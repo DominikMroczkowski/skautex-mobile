@@ -12,8 +12,9 @@ export 'provider.dart';
 
 import 'types.dart';
 import 'users.dart';
+import 'validator.dart';
 
-class Bloc extends Add<Event> {
+class Bloc extends Add<Event> with Validate {
 	final _name = BehaviorSubject<String>();
 	Stream get name => _name.stream;
 	Function(String) get changeName => _name.sink.add;
@@ -23,11 +24,11 @@ class Bloc extends Add<Event> {
 	Function(EventType) get changeType => _type.sink.add;
 
 	final _start = BehaviorSubject<DateTime>();
-	Stream get start => _start.stream;
+	Stream<DateTime> get start => Rx.combineLatest<DateTime, List<DateTime>>([_start.stream, _end.stream], (i) { return [i[0], i[1]];}).transform(startIsBefore);
 	Function(DateTime) get changeStart => _start.sink.add;
 
 	final _end = BehaviorSubject<DateTime>();
-	Stream get end => _end.stream;
+	Stream<DateTime> get end => Rx.combineLatest<DateTime, List<DateTime>>([_start.stream, _end.stream], (i) { return [i[0], i[1]];}).transform(endIsAfter);
 	Function(DateTime) get changeEnd => _end.sink.add;
 
 	final _color = BehaviorSubject<String>();

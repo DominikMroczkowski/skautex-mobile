@@ -11,5 +11,11 @@ import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' a
 class Bloc {
 	final CalendarController calendarController;
 
-	Bloc(BuildContext context, {@required this.calendarController});
+	Bloc(BuildContext context, {this.calendarController}) {
+		final now = DateTime.now();
+		calendar.Provider.of(context).changeInterval(
+			DateTime(now.year, now.month),
+			DateTime(now.year, now.month+1, 0)
+		);
+	}
 }

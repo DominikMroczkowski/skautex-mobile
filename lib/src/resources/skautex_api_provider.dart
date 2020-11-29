@@ -20,8 +20,9 @@ import '../models/booking_reservation.dart';
 import '../models/event.dart';
 import '../models/event_type.dart';
 
-final _root = 'skautex.azurewebsites.net';
-const _API_KEY = 'm3uaSTCw.K8vY9BLsH5LTv3L7UAHQoItgh0CjwQ2M';
+final _root = 'skautex-development.azurewebsites.net';
+const _API_KEY = 'CmEn7S3V.pxC8owT8poi0WZF111sUMLqeLr9VOCZm';
+
 class SkautexApiProvider implements Source {
 	Client client = Client();
 

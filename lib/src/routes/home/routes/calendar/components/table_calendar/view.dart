@@ -16,7 +16,7 @@ class View extends StatelessWidget {
 			onVisibleDaysChanged: (DateTime start, DateTime end, _) {
 				calendarBloc.changeInterval(start, end);
 			},
-			onDaySelected: (DateTime choosen, _) {
+			onDaySelected: (DateTime choosen, _, __) {
 				calendarBloc.changeChoosenDate(choosen);
 			},
 		);

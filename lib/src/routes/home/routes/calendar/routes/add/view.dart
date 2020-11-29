@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/models/event.dart';
 import 'bloc/bloc.dart';
 
-import 'components/date_field.dart';
+import 'components/date_field/date_field.dart';
 import 'components/type_dropdown.dart';
 import 'components/users_dropdown.dart';
 import 'components/users_chip.dart';
@@ -90,29 +90,19 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _start(Bloc bloc) {
-		return StreamBuilder(
-			stream: bloc.start,
-			builder: (_, snapshot) {
-				return DateField(
-					change: bloc.changeStart,
-					name: "Data rozpoczęcia",
-					date: snapshot.data ?? DateTime.now()
-				);
-			}
+Widget _start(Bloc bloc) {
+		return DateField(
+			change: bloc.changeStart,
+			name: "Data rozpoczęcia",
+			stream: bloc.start
 		);
 	}
 
 	Widget _end(Bloc bloc) {
-		return StreamBuilder(
+		return DateField(
+			change: bloc.changeEnd,
+			name: "Data Zakończenia",
 			stream: bloc.end,
-			builder: (_, snapshot) {
-				return DateField(
-					change: bloc.changeEnd,
-					name: "Data Zakończenia",
-					date: snapshot.data ?? DateTime.now()
-				);
-			}
 		);
 	}
 

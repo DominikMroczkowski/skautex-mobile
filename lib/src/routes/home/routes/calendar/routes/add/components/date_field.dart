@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class DateField extends StatelessWidget{
 	final Function(DateTime) change;
 	final String name;
-	final DateTime date;
+	final Stream stream;
 
-	DateField({@required this.change, String name, @required this.date}):
+	DateField({@required this.change, String name,  this.stream}):
 		name = name ?? 'Data';
 
 	Widget build(BuildContext context) {
@@ -63,6 +62,7 @@ class DateField extends StatelessWidget{
 			controller: TextEditingController(text: days),
 			decoration: InputDecoration(
 				labelText: name,
+				errorText: error
 			)
 		);
 	}
@@ -73,6 +73,7 @@ class DateField extends StatelessWidget{
 			controller: TextEditingController(text: hours),
 			decoration: InputDecoration(
 				labelText: "Godzina",
+				errorText: error
 			)
 		);
 	}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'view.dart';
 import 'routes/add/add.dart';
+import 'routes/event/event.dart';
 const _route = '/home/calendar';
 
 class Router {
@@ -14,6 +15,11 @@ class Router {
 		if (_route + '/add' == settings.name)
     	return MaterialPageRoute(
 				builder: (_) =>  Add(),
+				settings: settings
+			);
+		if (_route + '/event' == settings.name)
+    	return MaterialPageRoute(
+				builder: (_) =>  Event(event: settings.arguments),
 				settings: settings
 			);
 	}
