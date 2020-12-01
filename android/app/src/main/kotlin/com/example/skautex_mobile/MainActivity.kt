@@ -1,4 +1,4 @@
-package com.example.skautex_mobile
+package com.dominikmroczkowski.skautex_mobile
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

@@ -28,7 +28,6 @@ class Repository {
 	}
 
 	Future<JWT> refetchJWT2(Future<JWT> jwt) async {
-		// Async magic - leave as it is
 		await jwt;
 		String refresh = await skautexDbProvider.getRefresh();
 		JWT readyJwt =  JWT(refresh, "noNeed");

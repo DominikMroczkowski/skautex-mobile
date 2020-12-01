@@ -18,9 +18,11 @@ import '../models/booking.dart';
 import '../models/booking_type.dart';
 import '../models/booking_reservation.dart';
 import '../models/event.dart';
+import '../models/event_type.dart';
 
-final _root = 'skautex.azurewebsites.net';
-const _API_KEY =  '9QDNEqx5.E3fdjJcev3zDIYT0bQaZu6j01dFmQHDC';
+final _root = 'skautex-development.azurewebsites.net';
+const _API_KEY = 'CmEn7S3V.pxC8owT8poi0WZF111sUMLqeLr9VOCZm';
+
 class SkautexApiProvider implements Source {
 	Client client = Client();
 
@@ -215,6 +217,7 @@ class SkautexApiProvider implements Source {
 				"authorization" : 'Bearer $access'
 			},
 		);
+		print(response.body.toString());
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<Permissions>.error("Couldn't fetch Permissions");
@@ -352,7 +355,8 @@ class SkautexApiProvider implements Source {
 			BookingType: '/api/v1/booking/objects_types/',
 			BookingReservation: '/api/v1/booking/reservations/',
 			BookingBlacklist: '/api/v1/booking/blacklist/',
-			Event: '/api/v1/calendars/events/'
+			Event: '/api/v1/calendars/events/',
+			EventType: '/api/v1/calendars/events_types/'
 		};
 
 	  return _uris[T];
@@ -407,6 +411,7 @@ class SkautexApiProvider implements Source {
 			BookingBlacklist : (Map<String, dynamic> parsedJson) => BookingBlacklist.fromJson(parsedJson),
 			BookingReservation : (Map<String, dynamic> parsedJson) => BookingReservation.fromJson(parsedJson),
 			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
+			EventType: (Map<String, dynamic> parsedJson) => EventType.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -481,6 +486,7 @@ class SkautexApiProvider implements Source {
 			Booking: (Booking booking) => booking.toPost(),
 			BookingBlacklist: (BookingBlacklist blacklist) => blacklist.toPost(),
 			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
+			Event: (Event event) => event.toPost(),
 		};
 
 	  return _objects[T](item);

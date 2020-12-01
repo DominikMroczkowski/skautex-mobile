@@ -12,10 +12,11 @@ class View extends StatelessWidget {
 			calendarController: bloc.calendarController,
 			locale: 'pl_PL',
 			events: null,
+			initialCalendarFormat: CalendarFormat.month,
 			onVisibleDaysChanged: (DateTime start, DateTime end, _) {
 				calendarBloc.changeInterval(start, end);
 			},
-			onDaySelected: (DateTime choosen, _) {
+			onDaySelected: (DateTime choosen, _, __) {
 				calendarBloc.changeChoosenDate(choosen);
 			},
 		);

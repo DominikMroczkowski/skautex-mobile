@@ -3,7 +3,7 @@ import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
 
 import 'components/events/events.dart';
 import 'components/table_calendar/table_calendar.dart';
-
+import 'components/add.dart';
 
 class View extends StatelessWidget {
 
@@ -13,7 +13,8 @@ class View extends StatelessWidget {
 				title: Text('Kalendarz')
 			),
 			drawer: HomeDrawer(),
-			body: _body(context)
+			body: _body(context),
+			floatingActionButton: Add()
 		);
 	}
 

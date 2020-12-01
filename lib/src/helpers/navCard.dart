@@ -21,7 +21,7 @@ class Data {
 		List<DashCard> toRet = [];
 
 		Permissions perms = Permissions.toXOR();
-		perms.viewGroup = true;
+		perms.viewPlayer = true;
 		toRet.add(DashCard('Zawodnicy', Icons.person_pin_circle, '/home/players', perms));
 		toRet.add(DashCard('Rekomendacje', Icons.favorite, '/home/recommended', perms));
 		toRet.add(DashCard('Kalendarz', Icons.event, '/home/calendar', perms));
@@ -36,7 +36,7 @@ class Data {
 		List<DashCard> toRet = [];
 
 		Permissions perms = Permissions.toXOR();
-		perms.viewGroup = true;
+		perms.viewPlayer = true;
 		toRet.add(DashCard('Raporty', Icons.place, '/home/reports', perms));
 		toRet.add(DashCard('Testy', Icons.visibility, '/home/test', perms));
 		toRet.add(DashCard('Rankingi', Icons.star, '/home/rankings',  perms));
