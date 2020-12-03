@@ -8,7 +8,10 @@ class View extends StatelessWidget {
 		final bloc = Provider.of(context);
 
 		return FlatButton(
-			child: Icon(Icons.delete),
+			child: Icon(
+				Icons.delete,
+				color: Colors.white
+			),
 			onPressed: () {
 				showDialog(
 					context: context,

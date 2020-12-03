@@ -5,9 +5,10 @@ class StreamList extends StatelessWidget {
 
 	final Stream stream;
 	final Function tile;
+	final Function notify;
 	final AutoScrollController controller;
 
-	StreamList({this.stream, this.tile, this.controller});
+	StreamList({this.stream, this.tile, this.controller, this.notify});
 
 	Widget build(BuildContext context) {
 		return StreamBuilder(
@@ -25,26 +26,32 @@ class StreamList extends StatelessWidget {
 								child: CircularProgressIndicator()
 							);
 						}
+						return NotificationListener<ScrollNotification>(
+  						onNotification: (ScrollNotification scrollInfo) {
+    						if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent && notify != null)
+									Function.apply(notify, []);
+								return true;
+  						},
+  						child: ListView.builder(
+								itemCount: snapshot.data.length,
+								itemBuilder: (context, int index) {
+									if (controller == null)
+										return tile(snapshot.data[index]);
 
-						return ListView.builder(
-							itemCount: snapshot.data.length,
-							itemBuilder: (context, int index) {
-								if (controller == null)
-									return tile(snapshot.data[index]);
+									return AutoScrollTag(
+										key: ValueKey(index),
+										index: index,
+										child: tile(
+											snapshot.data[index]
+										),
+										controller: controller,
 
-								return AutoScrollTag(
-									key: ValueKey(index),
-									index: index,
-									child: tile(
-										snapshot.data[index]
-									),
-									controller: controller,
-
-								);
-							},
-							padding: EdgeInsets.only(bottom: 80),
-							shrinkWrap: true,
-							controller: controller
+									);
+								},
+								padding: EdgeInsets.only(bottom: 80),
+								shrinkWrap: true,
+								controller: controller,
+							)
 						);
 					}
 				);

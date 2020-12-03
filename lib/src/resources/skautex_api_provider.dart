@@ -21,7 +21,7 @@ import '../models/event.dart';
 import '../models/event_type.dart';
 
 final _root = 'skautex-development.azurewebsites.net';
-const _API_KEY = 'CmEn7S3V.pxC8owT8poi0WZF111sUMLqeLr9VOCZm';
+const _API_KEY = 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
 
 class SkautexApiProvider implements Source {
 	Client client = Client();
@@ -445,7 +445,8 @@ class SkautexApiProvider implements Source {
 		final _objects = <Type, Function>{
 			User : (User user) => user.toJson(),
 			PlayerReport : (PlayerReport report) => report.toJson(),
-			Cost : (Cost cost) => cost.toJson()
+			Cost : (Cost cost) => cost.toJson(),
+			Event : (Event event) => event.toJson(),
 		};
 
 	  return _objects[T](item);
@@ -468,6 +469,8 @@ class SkautexApiProvider implements Source {
 				jsonToEncode
 			)
 		);
+
+		print('Update response ' + response.body.toString());
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie PUT dla URL: ${jsonToEncode['uri']} nie powiodło się');

@@ -20,6 +20,12 @@ class ColorDropdown extends StatelessWidget {
 				)
 		);
 
+		if (value != null && !eventColors.contains(value))
+			items.add(DropdownMenuItem<String>(
+				value: value,
+				child: Container(height: 20.0, color: Color(HexColor(value).value))
+			));
+
 		return DropdownButtonFormField(
 			items: items,
 			onChanged: (String i) {i != null ?  change(i) : null;},

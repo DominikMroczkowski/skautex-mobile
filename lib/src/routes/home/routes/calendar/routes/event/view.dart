@@ -3,8 +3,11 @@ import 'package:skautex_mobile/src/models/event.dart';
 import 'package:skautex_mobile/src/helpers/others/event_colors.dart';
 import 'bloc/bloc.dart';
 
+import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' as calendarBloc;
+
 import 'components/connected_users/connected_users.dart';
 import 'components/delete/delete.dart';
+import 'components/edit.dart';
 
 class View extends StatelessWidget {
 
@@ -14,7 +17,8 @@ class View extends StatelessWidget {
 			appBar: AppBar(
 				title: Text(bloc.event.name),
 				actions: [
-					Delete(event: bloc.event)
+					Delete(event: bloc.event),
+					Edit(event: bloc.event, navigator: calendarBloc.Provider.of(context).navigator)
 				],
 			),
 			body: _body(context),

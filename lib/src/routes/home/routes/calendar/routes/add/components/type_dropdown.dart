@@ -38,6 +38,11 @@ class TypeDropdown extends StatelessWidget {
 					)
 				)
 		);
+		if (value != null && !data.contains(value))
+			items.add(DropdownMenuItem<EventType>(
+				value: value,
+				child: Text(value.name)
+			));
 
 		return DropdownButtonFormField(
 			items: items,
