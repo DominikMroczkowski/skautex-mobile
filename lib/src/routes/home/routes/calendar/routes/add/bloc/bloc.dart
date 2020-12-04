@@ -6,6 +6,7 @@ import 'package:skautex_mobile/src/models/event.dart';
 import 'package:skautex_mobile/src/models/event_type.dart';
 import 'package:skautex_mobile/src/helpers/blocs/add.dart';
 import 'package:skautex_mobile/src/models/user.dart';
+import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' as calendar;
 
 import 'provider.dart';
 export 'provider.dart';
@@ -68,6 +69,11 @@ class Bloc extends Add<Event> with Validate {
 		_types = Types(context: context),
 		_users = Users(context: context) {
 		otp = context;
+		item.listen((i) {
+			i.then((_) {
+					calendar.Provider.of(context).reloadEvents();
+			});
+		});
 	}
 
 	dispose() {

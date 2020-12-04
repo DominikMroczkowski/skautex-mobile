@@ -25,7 +25,7 @@ class Router {
 			);
 		if (_route + '/event/edit' == settings.name)
     	return MaterialPageRoute(
-				builder: (_) =>  Add(event: settings.arguments),
+				builder: (_) =>  Add(event: (settings.arguments as List)[0], eventBloc: (settings.arguments as List)[1]),
 				settings: settings
 			);
 	}

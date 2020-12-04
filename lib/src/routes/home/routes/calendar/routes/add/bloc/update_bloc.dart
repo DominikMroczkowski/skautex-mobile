@@ -15,9 +15,13 @@ import 'users.dart';
 import 'connected_user.dart';
 import 'validator.dart';
 
+import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' as calendar;
+import 'package:skautex_mobile/src/routes/home/routes/calendar/routes/event/bloc/bloc.dart' as event;
+
 class UpdateBloc extends Update<Event> with Validate {
 	final String uri;
 	final _name = BehaviorSubject<String>();
+	final event.Bloc eventBloc;
 	Stream get name => _name.stream;
 	Function(String) get changeName => _name.sink.add;
 
@@ -86,7 +90,7 @@ class UpdateBloc extends Update<Event> with Validate {
 		(list) => true
 	);
 
-	UpdateBloc({context, Event event}):
+	UpdateBloc({context, Event event, this.eventBloc}):
 		uri = event.uri,
 		_types = Types(context: context),
 		_users = Users(context: context),
@@ -103,6 +107,12 @@ class UpdateBloc extends Update<Event> with Validate {
 				changeInvited(i);
 			})
 		);
+		item.listen((i) {
+			i.then((i) {
+					calendar.Provider.of(context).reloadEvents();
+					eventBloc.changeEvent(i);
+			});
+		});
 	}
 
 	dispose() {

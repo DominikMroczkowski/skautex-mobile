@@ -5,15 +5,16 @@ import 'view.dart';
 
 class Add extends StatelessWidget {
 	final Event event;
+	final eventBloc;
 
-	Add({this.event});
+	Add({this.event, this.eventBloc});
 
 	Widget build(BuildContext context) {
-		print('Build event ' + event.toString());
 		return Provider(
 			context: context,
 			child: View(event: event),
-			event: event
+			event: event,
+			bloc: eventBloc
 		);
 	}
 }

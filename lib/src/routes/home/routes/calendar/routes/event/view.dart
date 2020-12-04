@@ -13,33 +13,41 @@ class View extends StatelessWidget {
 
 	Widget build(context) {
 		final bloc = Provider.of(context);
-		return Scaffold(
-			appBar: AppBar(
-				title: Text(bloc.event.name),
-				actions: [
-					Delete(event: bloc.event),
-					Edit(event: bloc.event, navigator: calendarBloc.Provider.of(context).navigator)
-				],
-				shadowColor: HexColor(bloc.event.color),
-			),
-			body: _body(context),
+		return StreamBuilder(
+			stream: bloc.event,
+			builder: (_, AsyncSnapshot<Event> snapshot) {
+				if (snapshot.hasData)
+					return Scaffold(
+						appBar: AppBar(
+							title: Text(snapshot.data.name),
+							actions: [
+								Delete(event: snapshot.data),
+								Edit(event: snapshot.data, navigator: calendarBloc.Provider.of(context).navigator, eventBloc: bloc)
+							],
+							shadowColor: HexColor(snapshot.data.color),
+						),
+						body: _body(snapshot.data),
+					);
+				return Scaffold(
+					body: Center(child: Text('Coś poszło nie tak :('))
+				);
+			}
 		);
 	}
 
-	Widget _body(BuildContext context) {
+	Widget _body(Event event) {
 		return SizedBox.expand(child: Container(
-			child: SingleChildScrollView(child: _layout(context))
+			child: SingleChildScrollView(child: _layout(event))
 		,));
 	}
 
-	Widget _layout(BuildContext context) {
-		final bloc = Provider.of(context);
+	Widget _layout(Event event) {
 		return Column(
 			children: [
 				Container(child:
-					_info(bloc.event),
+					_info(event),
 					padding: EdgeInsets.all(8.0)),
-				ConnectedUsers(event: bloc.event)
+				ConnectedUsers(event: event)
 			],
 		);
 	}
