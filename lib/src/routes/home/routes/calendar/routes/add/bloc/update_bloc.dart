@@ -76,6 +76,7 @@ class UpdateBloc extends Update<Event> with Validate {
 				endDate: _end.value.toString(),
 				color: _color.value,
 				hide: false,
+				connectedUsers: _invited.value
 			)
 		);
 	}

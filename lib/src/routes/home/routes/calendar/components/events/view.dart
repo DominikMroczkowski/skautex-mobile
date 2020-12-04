@@ -30,11 +30,10 @@ class _Tile extends StatelessWidget {
 
 	_tile(context) {
 		return ListTile(
-			title: Text(event.name + ' - ' + event.owner.username),
+			title: Column(children: [Text(event.name + ' - ' + event.owner.username), Container(height: 2.0, color: HexColor(event.color) )],),
 			subtitle: Text('Od: ' + event.startDate + ' \nDo: ' + event.endDate),
 			isThreeLine: true,
 			dense: true,
-			tileColor: HexColor(event.color),
 			enabled: true,
 			onTap: () {
 				print('xd');

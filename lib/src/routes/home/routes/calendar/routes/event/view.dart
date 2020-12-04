@@ -20,15 +20,14 @@ class View extends StatelessWidget {
 					Delete(event: bloc.event),
 					Edit(event: bloc.event, navigator: calendarBloc.Provider.of(context).navigator)
 				],
+				shadowColor: HexColor(bloc.event.color),
 			),
 			body: _body(context),
 		);
 	}
 
 	Widget _body(BuildContext context) {
-		final bloc = Provider.of(context);
 		return SizedBox.expand(child: Container(
-			color: HexColor(bloc.event.color),
 			child: SingleChildScrollView(child: _layout(context))
 		,));
 	}
