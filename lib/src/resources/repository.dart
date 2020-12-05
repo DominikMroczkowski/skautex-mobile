@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:skautex_mobile/src/models/permissions.dart';
+import 'package:skautex_mobile/src/models/response_list.dart';
 
 import 'skautex_api_provider.dart';
 import 'skautex_db_provider.dart';
@@ -105,7 +106,7 @@ class Repository {
 		return sources[0].deleteItem(jwt, url);
 	}
 
-	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {String uri, Map<String, String> where}) {
+	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uri, Map<String, String> where}) {
 		return sources[0].fetchItems<T>(jwt, where: where, uriOpt: uri);
 	}
 
@@ -133,7 +134,6 @@ abstract class Source {
 
 	Future<Player> addPlayer(Future<JWT> access, Player player);
 
-
 	Future<List<List<String>>> fetchTeams(Future<JWT> jwt);
 	Future<List<List<String>>> fetchLeagues(Future<JWT> jwt);
 
@@ -143,7 +143,7 @@ abstract class Source {
 	Future<T> addItem<T>(Future<JWT> jwt, T item);
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
 
-	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where, String uriOpt});
+	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where, String uriOpt});
 	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
 }
 

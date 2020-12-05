@@ -22,24 +22,20 @@ class Bloc extends ItemList<BookingReservation> {
 			'start_date': DateTime.now().toString()
 		});
 
-		watcher.listen(
-			(Future<List<BookingReservation>> i) {
-				i.then(
-					(List<BookingReservation> i) {
-						List<DateTime> dates = [];
-						i.forEach(
-							(i) {
-								var start = DateTime.parse(i.startDate);
-								final end = DateTime.parse(i.endDate);
-								while(!start.isAfter(end)) {
-									dates.add(start);
-									start = start.add(new Duration(days: 1));
-								}
-							}
-						);
-						_reservationsDates.sink.add(dates);
+		itemsWatcher.listen(
+			(i) {
+				List<DateTime> dates = [];
+				i.forEach(
+					(i) {
+						var start = DateTime.parse(i.startDate);
+						final end = DateTime.parse(i.endDate);
+						while(!start.isAfter(end)) {
+							dates.add(start);
+							start = start.add(new Duration(days: 1));
+						}
 					}
 				);
+				_reservationsDates.sink.add(dates);
 			}
 		);
 	}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
 import 'package:skautex_mobile/src/helpers/widgets/playerTile.dart';
+import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
 import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/models/permissions.dart';
 import 'package:skautex_mobile/src/models/player.dart';
@@ -26,9 +27,13 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _playerList(players.Bloc p) {
+	Widget _playerList(players.Bloc bloc) {
+		return StreamList(
+			itemsWatcher: bloc.itemsWatcher,
+			requestWatcher: bloc.requestWatcher,
+			tile: (p) => PlayerTile(player: p)
+		);
 		return StreamBuilder(
-			stream: p.watcher,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData) {
 					return Center(

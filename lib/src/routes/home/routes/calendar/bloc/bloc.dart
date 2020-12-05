@@ -49,5 +49,6 @@ class Bloc extends ItemList<Event> {
 	dispose() {
 		_startDate.close();
 		_endDate.close();
+		_endDate.close();
 	}
 }

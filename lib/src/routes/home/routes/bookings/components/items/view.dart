@@ -9,7 +9,8 @@ class View extends StatelessWidget {
 		final bloc = Provider.of(context);
 
 		return StreamList(
-			stream: bloc.watcher,
+			itemsWatcher: bloc.itemsWatcher,
+			requestWatcher: bloc.requestWatcher,
 			tile: (booking) => ItemTile(booking: booking)
 		);
 	}

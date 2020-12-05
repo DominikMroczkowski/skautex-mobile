@@ -25,7 +25,7 @@ class View extends StatelessWidget {
 
 	Widget _userList(users.Bloc p) {
 		return StreamBuilder(
-			stream: p.watcher,
+			stream: p.requestWatcher,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData) {
 					return Center(

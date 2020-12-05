@@ -74,27 +74,21 @@ class View extends StatelessWidget {
 		final r = report.Provider.of(context);
 
 		return StreamBuilder(
-			stream: r.playerReports.watcher,
-			builder: (context, AsyncSnapshot<Future<List<models.PlayerReport>>> snapshot) {
-				if (snapshot.hasData)
-					return FutureBuilder(
-						future: snapshot.data,
-						builder: (context, AsyncSnapshot<List<models.PlayerReport>> snapshot) {
-							List<Widget> list = [];
-							if (snapshot.hasData) {
-								print(snapshot.data);
-								snapshot.data.forEach(
-									(i) {
-										list.add(_playerReport(i, context));
-								});
-							}
-							if (list.isEmpty)
-								list.add(Center(child: Text('Brak zawodników')));
-							return Column(
-								children: list
-							);
+			stream: r.playerReports.itemsWatcher,
+			builder: (context, snapshot) {
+				if (snapshot.hasData) {
+					List<Widget> list = [];
+					snapshot.data.forEach(
+						(i) {
+							list.add(_playerReport(i, context));
 						}
 					);
+					if (list.isEmpty)
+						list.add(Center(child: Text('Brak zawodników')));
+					return Column(
+						children: list
+					);
+				}
 				return CircularIndicator.horizontal(Colors.blue);
 			}
 		);

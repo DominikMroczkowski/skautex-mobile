@@ -18,7 +18,7 @@ class _View extends StatelessWidget {
 		bloc.fetch();
 
 		return StreamList(
-			stream: bloc.watcher,
+			requestWatcher: bloc.requestWatcher,
 			tile: createCostTile
 		);
 	}

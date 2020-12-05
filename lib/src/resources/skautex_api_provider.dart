@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
+import 'package:skautex_mobile/src/models/response_list.dart';
 import 'dart:async';
 
 import 'repository.dart';
@@ -548,7 +549,7 @@ class SkautexApiProvider implements Source {
 		return Future<Object>.value(Object());
 	}
 
-	Future<List<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
+	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
 		String access = (await jwt).access;
 
 		if (where == null)
@@ -572,21 +573,21 @@ class SkautexApiProvider implements Source {
 		debugPrint(response.body);
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
-			return Future<List<T>>.error('Pobranie adressów url dla uri: ${Uri.https(_root, _getSubURL<T>(), where)} nie powiodło się');
+			return Future<ResponseList<T>>
+				.error('Pobranie adressów url dla uri: ${Uri.https(_root, _getSubURL<T>(), where)} nie powiodło się');
 		}
 
 		String stringJson = Utf8Decoder().convert(response.bodyBytes);
 		final parsedJson = json.decode(stringJson);
 
-		List<T> items = List<T>();
+		var list = ResponseList<T>.fromJson(parsedJson);
 
 		parsedJson['results'].forEach(
 			(i) {
-				items.add(_fromJson<T>(i));
+				list.results.add(_fromJson<T>(i));
 			}
 		);
 
-		print('---> List size after parsing ${items.length}');
-		return items;
+		return list;
 	}
 }

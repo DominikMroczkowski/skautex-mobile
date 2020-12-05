@@ -8,7 +8,7 @@ class View extends StatelessWidget {
 	Widget build(context) {
 		final bloc = Provider.of(context);
 		return StreamList(
-			stream: bloc.watcher,
+			itemsWatcher: bloc.itemsWatcher,
 			tile: (User u) => _tile(u)
 		);
 	}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
 import 'bloc/bloc.dart' as reports;
 import 'package:skautex_mobile/src/helpers/widgets/reports_tile.dart';
 import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
@@ -21,9 +22,14 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _reportsList(reports.Bloc p) {
+	Widget _reportsList(reports.Bloc bloc) {
+		return StreamList(
+			itemsWatcher: bloc.itemsWatcher,
+			requestWatcher: bloc.requestWatcher,
+			tile: (i) => ReportsTile(report: i)
+		);
+
 		return StreamBuilder(
-			stream: p.watcher,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData) {
 					return Center(

@@ -64,30 +64,21 @@ class AddView extends StatelessWidget {
 
 	Widget _type(Bloc bloc) {
 		return StreamBuilder(
-			stream: bloc.types.watcher,
-			builder: (context, AsyncSnapshot<Future<List<BookingType>>> snapshot) {
-				if (snapshot.hasError)
-					return Text('fetch should be called');
+			stream: bloc.types.itemsWatcher,
+			builder: (context, snapshot) {
 				if (!snapshot.hasData)
 					return CircularIndicator();
 
-				return FutureBuilder(
-					future: snapshot.data,
-					builder: (context, AsyncSnapshot<List<BookingType>> snapshot) {
-						if (snapshot.hasError)
-							return Text('Error');
-						if (!snapshot.hasData)
-							return CircularIndicator();
+				if (snapshot.hasError)
+					return Text('Error');
 
-						List<DropdownMenuItem<BookingType>> items = snapshot.data.map((i) {
-							return DropdownMenuItem(
-								child: Text(getBookingTypeName(i.name)),
-								value: i
-							);
-						}).toList();
-						return _dropDown(bloc, items);
-					}
-				);
+				List<DropdownMenuItem<BookingType>> items = snapshot.data.map((i) {
+					return DropdownMenuItem(
+						child: Text(getBookingTypeName(i.name)),
+						value: i
+					);
+				}).toList();
+				return _dropDown(bloc, items);
 			}
 		);
 	}
