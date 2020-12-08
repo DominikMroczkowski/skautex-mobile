@@ -44,16 +44,19 @@ class Bloc {
 		return StreamTransformer<Credentials, Future<JWT>>.fromHandlers(
 			handleData: (creds, sink) {
 				Future<JWT> jWT =_repository.fetchJWT(creds);
-
 				sink.add(jWT);
 			}
 		);
 	}
 
-	_identity() {
+	_refreshError() {
 		return StreamTransformer<Future<JWT>, Future<JWT>>.fromHandlers(
 			handleData: (event, sink) {
 				sink.add(event);
+			},
+			handleError: (_, __, ___) {
+				Navigator.of(context, rootNavigator: true)
+					.pushNamedAndRemoveUntil('login', (r) => false);
 			}
 		);
 	}

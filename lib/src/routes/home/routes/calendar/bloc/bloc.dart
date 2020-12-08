@@ -27,13 +27,14 @@ class Bloc extends ItemList<Event> {
 	changeInterval(DateTime start, DateTime end) {
 		_changeStartDate(start);
 		_changeEndDate(end);
-		_refetch();
+		_fetch();
 	}
 
-	_refetch() {
+	_fetch() {
 		fetch(where: {
 			'start_date': _startDate.value.toString(),
 			'end_date': _endDate.value.toString(),
+			'order': 'start_date'
 		});
 	}
 
@@ -41,7 +42,7 @@ class Bloc extends ItemList<Event> {
 		otp = context;
 		_reloadEvents.listen(
 			(i) {
-				_refetch();
+				_fetch();
 			}
 		);
 	}
@@ -49,6 +50,6 @@ class Bloc extends ItemList<Event> {
 	dispose() {
 		_startDate.close();
 		_endDate.close();
-		_endDate.close();
+		_choosenDate.close();
 	}
 }

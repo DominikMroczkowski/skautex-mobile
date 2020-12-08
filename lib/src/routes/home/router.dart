@@ -12,6 +12,7 @@ import 'routes/reports/reports.dart';
 import 'routes/test/test.dart';
 import 'routes/ranking/ranking.dart';
 import 'routes/users/users.dart';
+import 'routes/options/options.dart';
 
 const _route = '/home';
 
@@ -72,7 +73,10 @@ class Router {
 				builder: (_) =>  Users(),
 				settings: settings
 			);
-
-
+		else if (_route + '/options' == settings.name)
+	   	return MaterialPageRoute(
+				builder: (_) =>  Options(),
+				settings: settings
+			);
 	}
 }

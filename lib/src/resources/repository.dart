@@ -36,6 +36,10 @@ class Repository {
 		return sources[0].refetchJWT2(Future.value(readyJwt));
 	}
 
+	Future<int> clear() async {
+		return skautexDbProvider.clear();
+	}
+
 	void sendCodeOnEmail(Future<JWT> jwt) {
 		return sources[0].sendCodeOnEmail(jwt);
 	}

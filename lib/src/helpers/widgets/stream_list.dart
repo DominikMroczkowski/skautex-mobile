@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:skautex_mobile/src/models/response_list.dart';
 
 class StreamList extends StatelessWidget {
 
-	final Stream itemsWatcher;
-	final Stream requestWatcher;
+	final Stream<List> itemsWatcher;
+	final Stream<Future<ResponseList>> requestWatcher;
 	final Function tile;
 	final Function notify;
 	final AutoScrollController controller;
@@ -14,73 +15,63 @@ class StreamList extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return StreamBuilder(
 			stream: itemsWatcher,
-			builder: (context, snapshot) {
-				if (!snapshot.hasData && requestWatcher != null) {
-					return StreamBuilder(
-						stream: requestWatcher,
-						builder: (_, snapshot) {
-							if (snapshot.hasData)
-								return FutureBuilder(
-									future: snapshot.data,
-									builder: (_, snapshot) {
-										if (snapshot.hasData)
-											return Container(width: 0.0, height: 0.0);
-										return Center(child: CircularProgressIndicator());
-									}
-							);
-							return Container(child: Text('Brak danych'));
-						}
-					);
-				}
-
-				if (!snapshot.hasData)
+			builder: (context, AsyncSnapshot<List> items) {
+				if (!items.hasData)
 					return Center(child: CircularProgressIndicator());
-
-				return NotificationListener<ScrollNotification>(
-  				onNotification: (ScrollNotification scrollInfo) {
-    				if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent && notify != null)
-							Function.apply(notify, []);
-							return true;
-  					},
-  					child: ListView.builder(
-						itemCount: snapshot.data.length,
-						itemBuilder: (context, int index) {
-							if (controller == null)
-								return tile(snapshot.data[index]);
-							return AutoScrollTag(
-								key: ValueKey(index),
-								index: index,
-								child: index == snapshot.data.length && requestWatcher != null ?
-									Column(children: [tile(snapshot.data[index]), getMoreIndicator()]) :
-									tile(snapshot.data[index]),
-								controller: controller,
-							);
-
-						},
-						padding: EdgeInsets.only(bottom: 80),
-						shrinkWrap: true,
-						controller: controller,
-						)
-				);
+				if (items.data.isEmpty)
+					return Center(child: Text('Brak danych'));
+				return list(items.data);
 			}
 		);
 	}
 
-	Widget getMoreIndicator() {
+	Widget list(List list) {
+  	return ListView.builder(
+			itemCount: list.length,
+			itemBuilder: (context, int index) {
+				if (controller == null)
+					return index == list.length - 1 && requestWatcher != null ?
+						Column(children: [tile(list[index]), _getMore()]) :
+						tile(list[index]);
+				return AutoScrollTag(
+					key: ValueKey(index),
+					index: index,
+					child: index == list.length - 1 && requestWatcher != null ?
+						Column(children: [tile(list[index]), _getMore()]) :
+						tile(list[index]),
+					controller: controller,
+				);
+			},
+			padding: EdgeInsets.only(bottom: 80),
+			shrinkWrap: true,
+			controller: controller,
+		);
+	}
+
+	Widget _getMore() {
 		return StreamBuilder(
 				stream: requestWatcher,
-				builder: (_, snapshot) {
+				builder: (_, AsyncSnapshot<Future<ResponseList>> snapshot) {
 					if (snapshot.hasData)
 						return FutureBuilder(
 							future: snapshot.data,
-							builder: (_, snapshot) {
-								if (snapshot.hasData)
-									return Container(width: 0.0, height: 0.0);
-								return Container(child: Center(child: CircularProgressIndicator()), height: 20.0);
+							builder: (_, AsyncSnapshot<ResponseList> snapshot) {
+								if (snapshot.connectionState == ConnectionState.done)
+									return _moreButton(snapshot.data);
+								return Container(child: Center(child: CircularProgressIndicator()), height: 40.0);
 							}
 						);
 					return Container(width: 0.0, height: 0.0);
 				}
 			);
+	}
+
+	Widget _moreButton(ResponseList rl) {
+		return FlatButton(
+			child: Text('Więcej'),
+			onPressed: () {
+				Function.apply(notify, [], {#uri: rl.next});
+			}
+		);
 	}
 }

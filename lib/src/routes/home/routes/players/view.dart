@@ -31,36 +31,8 @@ class View extends StatelessWidget {
 		return StreamList(
 			itemsWatcher: bloc.itemsWatcher,
 			requestWatcher: bloc.requestWatcher,
-			tile: (p) => PlayerTile(player: p)
-		);
-		return StreamBuilder(
-			builder: (context, snapshot) {
-				if (!snapshot.hasData) {
-					return Center(
-						child: CircularProgressIndicator()
-					);
-				}
-
-				return FutureBuilder(
-					future: snapshot.data,
-					builder: (context, AsyncSnapshot<List<Player>> snapshot) {
-						if (!snapshot.hasData) {
-							return Center(
-								child: CircularProgressIndicator()
-							);
-						}
-
-						return ListView.builder(
-							itemCount: snapshot.data.length,
-							itemBuilder: (context, int index) {
-								return PlayerTile(
-									player: snapshot.data[index]
-								);
-							}
-						);
-					}
-				);
-			}
+			tile: (p) => PlayerTile(player: p),
+			notify: bloc.fetch
 		);
 	}
 

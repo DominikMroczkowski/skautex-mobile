@@ -8,7 +8,7 @@ class ResponseList<T> {
 
 	ResponseList.fromJson(Map<String, dynamic> parsedJson):
 		next = parsedJson['next'],
-		previous= parsedJson['access'],
+		previous = parsedJson['previous'],
 		count = parsedJson['count'],
 		results = List<T>();
 }

@@ -32,7 +32,7 @@ class DeleteDialog extends StatelessWidget {
 							FlatButton(
 								child: Text('Tak'),
 								onPressed: () {
-									Function.apply(onTrue, [uri]);
+									Function.apply(onTrue, uri != null ? [uri] : []);
 								}
 							),
 							FlatButton(child: Text('Nie'), onPressed:() {Navigator.of(context).pop();})

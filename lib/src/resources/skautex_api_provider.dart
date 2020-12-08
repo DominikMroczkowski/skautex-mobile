@@ -552,14 +552,9 @@ class SkautexApiProvider implements Source {
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
 		String access = (await jwt).access;
 
-		if (where == null)
-			where = {};
-		where["limit"] = "none";
-		print('$uriOpt');
 		if (uriOpt == null || uriOpt == '')
 			uriOpt = Uri.https(_root, _getSubURL<T>(), where).toString();
 
-		print('Fetching >>>>>> $uriOpt');
 		final response = await client.get(
 			uriOpt,
 			headers: {

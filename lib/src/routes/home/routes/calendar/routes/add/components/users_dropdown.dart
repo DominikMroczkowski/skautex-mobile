@@ -4,7 +4,7 @@ import 'package:skautex_mobile/src/models/user.dart';
 
 class UsersDropdown extends StatelessWidget {
 	final Function(List<User>) change;
-	final Stream<Future<List<User>>> stream;
+	final Stream<List<User>> stream;
 	final List<User> value;
 
 	UsersDropdown({@required this.stream, @required this.value, @required this.change});
@@ -14,14 +14,7 @@ class UsersDropdown extends StatelessWidget {
 			stream: stream,
 			builder: (_, snapshot) {
 				if (snapshot.hasData)
-					return FutureBuilder(
-						future: snapshot.data,
-						builder: (_, snapshot) {
-							if (snapshot.hasData)
-								return _dropdown(snapshot.data);
-							return loading();
-						}
-					);
+					return _dropdown(snapshot.data);
 				return loading();
 			}
 		);

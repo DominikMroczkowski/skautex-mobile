@@ -46,29 +46,14 @@ class UpdateBloc extends Update<Event> with Validate {
 	Function(List<User>) get changeInvited => _invited.sink.add;
 
 	final _invitedReady = BehaviorSubject<List<Users>>();
-	get invitedReady => Rx.combineLatest<Object, Future<List<User>>>([(_connectedUsers.watcher as Stream<Future<List<User>>>).transform(_futureReady), users], (i) => i[1]).transform(_noCastFromCombineLatestStreamToStreamWorkaround);
-
-	final _noCastFromCombineLatestStreamToStreamWorkaround = StreamTransformer<Future<List<User>>, Future<List<User>>>.fromHandlers(
-		handleData: (Future<List<User>> i, sink) {
-			sink.add(i);
-		}
-	);
+	get invitedReady => Rx.combineLatest<Object, List<User>>([_connectedUsers.itemsWatcher, users], (i) => i[1]);
 
 	final _types;
 	final _users;
 	final _connectedUsers;
 
-	Stream<Future<List<EventType>>> get types => _types.watcher;
-	Stream<Future<List<User>>> get users => _users.watcher;
-
-	final _futureReady = StreamTransformer<Future<List<User>>, bool>.fromHandlers(
-		handleData: (Future<List<User>> i, sink) {
-			i.then(
-				(i) {
-					sink.add(true);
-				}
-			);
-		});
+	Stream<List<EventType>> get types => _types.itemsWatcher;
+	Stream<List<User>> get users => _users.itemsWatcher;
 
 	send() {
 		updateItem(
@@ -102,10 +87,10 @@ class UpdateBloc extends Update<Event> with Validate {
 		changeEnd(DateTime.parse(event.endDate));
 		changeColor(event.color);
 		changeInvited(event.connectedUsers);
-		_connectedUsers.watcher.listen((i) => i.then(
+		_connectedUsers.itemsWatcher.listen(
 			(List<User> i) {
 				changeInvited(i);
-			})
+			}
 		);
 		item.listen((i) {
 			i.then((i) {
