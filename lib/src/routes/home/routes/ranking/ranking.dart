@@ -62,7 +62,6 @@ class _State extends State<Ranking> {
 			],)
 		);
 	}
-
 }
 
 const List _positions = [

@@ -1,41 +1,31 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+
+import 'package:skautex_mobile/src/models/report.dart';
+import 'package:skautex_mobile/src/models/player_report.dart';
+import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
 
 import 'provider.dart';
 export 'provider.dart';
-import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
-
-import 'package:skautex_mobile/src/helpers/blocs/item.dart';
-import 'package:skautex_mobile/src/models/report.dart';
-import 'package:skautex_mobile/src/models/player_report.dart';
-
-import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
-import 'package:skautex_mobile/src/helpers/blocs/item.dart';
-
-
-/* The biggest problem which breaks all the conventions
- * is edit_report
- */
 class Bloc {
-	final report = Item<Report>();
+	final _report = BehaviorSubject<Report>();
+	Stream<Report> get report =>  _report.stream;
+	Function(Report) get changeEvent => _report.sink.add;
+
 	final playerReports = ItemList<PlayerReport>();
 
-	final _clicked;
-
-	Bloc(BuildContext context) :
-		_clicked = session.Provider.of(context).clicked {
-		report.otp = context;
+	Bloc(BuildContext context, {Report report}) {
 		playerReports.otp = context;
-	}
+		_report.startWith(report);
 
-	fetchLastClicked() {
-		report.fetchItem(_clicked.value);
-		report.item.listen(
-			(Future<Report> report) async {
-				Report tmp = await report;
-				print(tmp.uri);
-				playerReports.fetch(uri: tmp.uri + 'player_reports/');
+		final _fetchPlayerReport = StreamTransformer<Report, void>.fromHandlers(
+			handleData: (i, sink) {
+				playerReports.fetch(uri: i.uri);
 			}
 		);
+
+		_report.transform(_fetchPlayerReport);
 	}
 }

@@ -15,7 +15,7 @@ class Router {
 			);
 		else if (_route + '/report' == settings.name)
     	return MaterialPageRoute(
-				builder: (_) =>  Report(),
+				builder: (_) =>  Report(report: settings.arguments),
 				settings: settings
 			);
 		else if (_route + '/addReport' == settings.name)

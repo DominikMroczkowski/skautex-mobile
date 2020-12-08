@@ -22,14 +22,14 @@ class Player {
 		league = league;
 
 	Player.fromJson(Map<String, dynamic> parsedJson) :
-		uri       = parsedJson['url'],
-		name      = parsedJson['name'],
-    surname   = parsedJson['surname'],
-    position  = parsedJson['position'],
-    birthDate = parsedJson['birth_date'],
-    country   = parsedJson['country'],
-    city      = parsedJson['city'],
-		status    = parsedJson['status'],
+		uri       = parsedJson['url'] ?? '',
+		name      = parsedJson['name'] ?? '',
+    surname   = parsedJson['surname'] ?? '',
+    position  = parsedJson['position'] ?? '',
+    birthDate = parsedJson['birth_date'] ?? '',
+    country   = parsedJson['country'] ?? '',
+    city      = parsedJson['city'] ?? '',
+		status    = parsedJson['status'] ?? '',
     team      = [parsedJson['team']['name'], parsedJson['team']['url']],
     league    = [parsedJson['league']['name'], parsedJson['league']['url']];
 
