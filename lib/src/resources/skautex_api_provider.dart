@@ -4,6 +4,9 @@ import 'package:http/http.dart' show Client;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'dart:async';
 
 import 'repository.dart';
@@ -586,5 +589,25 @@ class SkautexApiProvider implements Source {
 		);
 
 		return list;
+	}
+
+
+	Future<String> downloadItem(Future<JWT> jwt, String uri) async {
+		String access = (await jwt).access;
+
+		final taskId = FlutterDownloader.enqueue(
+ 		 	url: uri,
+  		savedDir: getDownloadsDirectory().toString(),
+  		showNotification: true,
+  		openFileFromNotification: true,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+		);
+
+		return Future.value('Rozpoczęto pobieranie');
 	}
 }
