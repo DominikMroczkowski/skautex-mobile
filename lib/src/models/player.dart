@@ -30,8 +30,8 @@ class Player {
     country   = parsedJson['country'] ?? '',
     city      = parsedJson['city'] ?? '',
 		status    = parsedJson['status'] ?? '',
-    team      = [parsedJson['team']['name'], parsedJson['team']['url']],
-    league    = [parsedJson['league']['name'], parsedJson['league']['url']];
+    team      = parsedJson['team'] != null ?[parsedJson['team']['name'], parsedJson['team']['url']] : [],
+    league    = parsedJson['league'] != null ? [parsedJson['league']['name'], parsedJson['league']['url']] : [];
 
 	toJson() {
 		return {
@@ -41,8 +41,8 @@ class Player {
 			'birth_date' : birthDate,
 			'country' : country,
 			'city' : city,
-			'team' : team[1],
-			'league' : league[1],
+			'team' : team.isEmpty ? null : team[0],
+			'league' : league.isEmpty ? null : league[0],
 			'dominant_leg' : 'LEFT',
 			'status' : 'OBSERVATION'
 		};
@@ -60,5 +60,9 @@ class Player {
 			['Drużyna', team[0]],
 			['Liga', league[0]]
 		];
+	}
+
+	toString() {
+		return name ?? '' + ' ' + surname ?? '';
 	}
 }

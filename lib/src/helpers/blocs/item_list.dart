@@ -34,6 +34,7 @@ class ItemList<T> with Access {
 
 	ItemList({this.customUrl, int paging}):
 		paging = paging ?? 0 {
+		_output.sink.add([]);
 
 		final _fetch = StreamTransformer<UriParametrized, Future<ResponseList<T>>>.fromHandlers(
 			handleData: (UriParametrized uri, sink) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skautex_mobile/src/models/report.dart' as models;
 
 import 'view.dart';
 import 'routes/add_report/add_report.dart';
@@ -15,7 +16,7 @@ class Router {
 			);
 		else if (_route + '/report' == settings.name)
     	return MaterialPageRoute(
-				builder: (_) =>  Report(report: settings.arguments),
+				builder: (_) =>  Report(report: settings.arguments as models.Report),
 				settings: settings
 			);
 		else if (_route + '/addReport' == settings.name)

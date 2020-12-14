@@ -8,7 +8,7 @@ class PlayerReport {
 	int rating;
 	String description;
 	String status;
-	List<PlayerReportNestedProfile> profiles;
+	List<NestedProfile> profiles;
 
 	PlayerReport({String uri, String report, Player player, int rating, String description, String status}) :
 		uri = uri ?? '',
@@ -19,25 +19,36 @@ class PlayerReport {
 		status = status ?? '';
 
 	PlayerReport.fromJson(Map<String, dynamic> parsedJson) :
-		uri         = parsedJson['url'] ?? '',
-    reportUri      = parsedJson['report'] ?? '',
-		player     = parsedJson['player'] ?? '',
-   	rating      = parsedJson['rating'] ?? 0,
+		uri = parsedJson['url'] ?? '',
+    reportUri = parsedJson['report'] ?? '',
+		player = Player.fromJson(parsedJson['player']) ?? Player(),
+   	rating = parsedJson['rating'] ?? 0,
    	description = parsedJson['description'] ?? '',
-		profiles = parsedJson['profiles'].map((i) {
-			return PlayerReportNestedProfile.fromJson(i);
-		}).asList(),
-   	status      = parsedJson['status'] ?? '' ;
+   	status = parsedJson['status'] ?? ''  {
+			profiles = _jsonToProfileList(parsedJson['profiles']);
+		}
+
+	List<NestedProfile> _jsonToProfileList(List json) {
+		List<NestedProfile> list = [];
+		if (json == null)
+			return list;
+
+		json.forEach((i) {
+			list.add(NestedProfile.fromJson(i));
+		});
+		return list;
+	}
 
 
 	toJson() {
 		return <String, dynamic> {
 			'url' : uri,
 			'report' : reportUri,
-			'player' : player.toJson(),
+			'player' : player.uri,
 			'rating' : rating,
 			'description' : description,
 			'status' : status,
+			'profiles': profiles.map((i) => i.toJson()).toList()
 		};
 	}
 

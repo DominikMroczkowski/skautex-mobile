@@ -19,6 +19,11 @@ class App extends StatelessWidget {
 		    supportedLocales: [
    		    const Locale('pl', 'PL'),
       	],
+				theme: ThemeData(
+    			brightness: Brightness.light,
+					primaryColor: Colors.indigo[900],
+					backgroundColor: Colors.white
+				)
 			),
 			context: context
 		);

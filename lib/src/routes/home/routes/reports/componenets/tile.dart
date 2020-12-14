@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/widgets/tile.dart';
 import 'package:skautex_mobile/src/models/report.dart';
-import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
 class ReportsTile extends StatelessWidget {
 	final Report report;
@@ -9,6 +8,7 @@ class ReportsTile extends StatelessWidget {
 	ReportsTile({this.report});
 
 	Widget build(context) {
+		print(report.uri);
 		return Container(
 			child: buildTile(context, report),
 			padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
@@ -38,7 +38,7 @@ class ReportsTile extends StatelessWidget {
 			children: children,
 			func: onTileTap,
 			args: null,
-			positionalArgs: [context]
+			positionalArgs: [context, report]
 		);
 	}
 
@@ -56,9 +56,7 @@ class ReportsTile extends StatelessWidget {
 		);
 	}
 
-	onTileTap(BuildContext context)	{
-		final s = session.Provider.of(context);
-		s.changeClicked(report.uri);
-		Navigator.pushNamed(context, '/home/reports/report');
+	onTileTap(BuildContext context, Report report)	{
+		Navigator.pushNamed(context, '/home/reports/report', arguments: report);
 	}
 }

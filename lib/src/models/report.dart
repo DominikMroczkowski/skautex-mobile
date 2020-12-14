@@ -11,7 +11,7 @@ class Report {
 	List<Player> players;
 	String event;
 
-	Report({String title, String description, List<Player> players, String event}) :
+	Report({String title, String description, List<Player> players, String event, this.type}) :
 		title = title,
 		description = description,
 		players = players,
@@ -34,6 +34,7 @@ class Report {
 			'title' : title,
 			'description' : description,
 			'players' : playersUris,
+			'type': type
 		};
 	}
 

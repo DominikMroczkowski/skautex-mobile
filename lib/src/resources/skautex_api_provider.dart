@@ -20,6 +20,7 @@ import '../models/booking_type.dart';
 import '../models/booking_reservation.dart';
 import '../models/event.dart';
 import '../models/event_type.dart';
+import '../models/file.dart';
 
 final _root = 'skautex-development.azurewebsites.net';
 const _API_KEY = 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
@@ -413,6 +414,7 @@ class SkautexApiProvider implements Source {
 			BookingReservation : (Map<String, dynamic> parsedJson) => BookingReservation.fromJson(parsedJson),
 			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
 			EventType: (Map<String, dynamic> parsedJson) => EventType.fromJson(parsedJson),
+			File: (Map<String, dynamic> parsedJson) => File.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
