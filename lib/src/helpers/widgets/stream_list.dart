@@ -22,7 +22,6 @@ class StreamList extends StatelessWidget {
 					return Center(child: Text('Brak danych'));
 				}
 			);
-
 		}
 
 		return StreamBuilder(
@@ -47,7 +46,6 @@ class StreamList extends StatelessWidget {
 			}
 		);
 	}
-
 
 	Widget list(List list) {
   	return ListView.builder(
@@ -74,20 +72,20 @@ class StreamList extends StatelessWidget {
 
 	Widget _getMore() {
 		return StreamBuilder(
-				stream: requestWatcher,
-				builder: (_, AsyncSnapshot<Future<ResponseList>> snapshot) {
-					if (snapshot.hasData)
-						return FutureBuilder(
-							future: snapshot.data,
-							builder: (_, AsyncSnapshot<ResponseList> snapshot) {
-								if (snapshot.connectionState == ConnectionState.done)
-									return _moreButton(snapshot.data);
-								return Container(child: Center(child: CircularProgressIndicator()), height: 40.0);
-							}
-						);
-					return Container(width: 0.0, height: 0.0);
-				}
-			);
+			stream: requestWatcher,
+			builder: (_, AsyncSnapshot<Future<ResponseList>> snapshot) {
+				if (snapshot.hasData)
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (_, AsyncSnapshot<ResponseList> snapshot) {
+							if (snapshot.connectionState == ConnectionState.done)
+								return _moreButton(snapshot.data);
+							return Container(child: Center(child: CircularProgressIndicator()), height: 40.0);
+						}
+					);
+				return Container(width: 0.0, height: 0.0);
+			}
+		);
 	}
 
 	Widget _moreButton(ResponseList rl) {

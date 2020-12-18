@@ -14,6 +14,10 @@ class Bloc {
 	Stream<Report> get report =>  _report.stream;
 	Function(Report) get changeReport => _report.sink.add;
 
+	final _reloadFiles = BehaviorSubject<bool>();
+	reloadFiles() {_reloadFiles.sink.add(true);}
+	Stream get files => _reloadFiles.stream;
+
 	final playerReports = ItemList<PlayerReport>();
 
 	update({Report report}) {
@@ -32,5 +36,9 @@ class Bloc {
 		_report.transform(_fetchPlayerReport);
 
 		playerReports.fetch(uri: report.uri + 'player_reports/');
+	}
+
+	dispose() {
+		_reloadFiles.close();
 	}
 }

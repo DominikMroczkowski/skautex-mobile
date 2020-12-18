@@ -8,6 +8,7 @@ import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'components/player_reports/player_reports.dart';
 import 'components/files/files.dart';
 import 'components/delete/delete.dart';
+import 'components/download_raport/download_raport.dart';
 
 class View extends StatelessWidget {
 
@@ -23,11 +24,6 @@ class View extends StatelessWidget {
 	}
 
 	Widget _report(BuildContext context, Report report) {
-		final _tabs = TabController(
-				length: 3,
-				vsync:
-			);
-
 		return report == null ?
 			Scaffold(
 				appBar: AppBar(
@@ -38,17 +34,17 @@ class View extends StatelessWidget {
 				)
 			) :
 			DefaultTabController(
-				length: 3,
+				length: 2,
 				child: Scaffold(
 					appBar: AppBar(
 						title: Text(report.title),
 						bottom: TabBar(tabs: <Widget>[
 							Tab(icon: Icon(Icons.info)),
 							Tab(icon: Icon(Icons.person)),
-							Tab(icon: Icon(Icons.file_download))
 						],
 						),
 						actions: [
+							DownloadReport(report: report),
 							Delete(report: report)
 						]
 					),
@@ -72,7 +68,6 @@ class View extends StatelessWidget {
 			children: <Widget>[
 				_info(report),
 				PlayerReports(reports: reports),
-				Files()
 			],
 		);
 	}
@@ -85,7 +80,7 @@ class View extends StatelessWidget {
 				_disabledField('Twórca', report.owner),
 				_disabledField('Data rozpoczęcia', report.openDate),
 				_disabledField('Data zakończenia', report.closeDate),
-				_disabledField('Typ', report.type),
+				_padding(Files(report: report))
 			]
 		);
 	}

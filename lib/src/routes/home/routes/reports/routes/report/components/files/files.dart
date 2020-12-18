@@ -6,12 +6,13 @@ import 'view.dart';
 class Files extends StatelessWidget {
 	final Report report;
 
-	Files({this.report});
+	Files({@required this.report});
 
 	Widget build(BuildContext context) {
 		return Provider(
-			child: View(),
-			context: context
+			child: View(report: report),
+			context: context,
+			report: report
 		);
 	}
 }

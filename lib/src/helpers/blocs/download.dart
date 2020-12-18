@@ -1,15 +1,31 @@
+import 'dart:async';
+import 'package:rxdart/rxdart.dart';
+import 'package:skautex_mobile/src/resources/repository.dart';
 import 'access.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Download with Access {
-	download(String url) {
-		final taskId = FlutterDownloader.enqueue(
- 		 	url: url,
-  		savedDir: getDownloadsDirectory().toString(),
-  		showNotification: true,
-  		openFileFromNotification: true,
+	final _repository = Repository();
+
+	final _output = PublishSubject<Future<String>>();
+	final _input = PublishSubject<String>();
+
+	Function(String) get downloadItem => _input.sink.add;
+	Stream<Future<String>> get item => _output.stream;
+
+	Download() {
+		_input.transform(_fetch()).pipe(_output);
+	}
+
+	_fetch() {
+		return StreamTransformer<String, Future<String>>.fromHandlers(
+			handleData: (String uri, sink) {
+				sink.add(_repository.downloadItem(otp, uri));
+			}
 		);
-		return taskId;
+	}
+
+	dispose() {
+		_output.close();
+		_input.close();
 	}
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' as io;
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
@@ -594,10 +595,21 @@ class SkautexApiProvider implements Source {
 
 	Future<String> downloadItem(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
+		WidgetsFlutterBinding.ensureInitialized();
+		await FlutterDownloader.initialize(
+  		debug: true
+		);
+		final directory = await getExternalStorageDirectory();
 
-		final taskId = FlutterDownloader.enqueue(
+    bool hasExisted = await directory.exists();
+    if (!hasExisted) {
+      directory.create();
+    }
+
+		print(directory.toString());
+		FlutterDownloader.enqueue(
  		 	url: uri,
-  		savedDir: getDownloadsDirectory().toString(),
+  		savedDir: directory.path,
   		showNotification: true,
   		openFileFromNotification: true,
 			headers: {
@@ -608,6 +620,34 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		return Future.value('Rozpoczęto pobieranie');
+		return Future.value('Dodano plik do kolejki pobierań');
 	}
+
+	Future<String> uploadItem(Future<JWT> jwt, String uri, File file) async {
+		String access = (await jwt).access;
+  	final loaded = await io.File(file.file).readAsBytes();
+
+		final response = await client.post(
+			uri,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+			body: jsonEncode({
+				'file': loaded
+			})
+		);
+
+		debugPrint(response.body);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<String>
+				.error('Dodawanie pliku $file.file nie powiodło się');
+		}
+
+		return Future.value('Plik $file.file został wysłany');
+	}
+
 }

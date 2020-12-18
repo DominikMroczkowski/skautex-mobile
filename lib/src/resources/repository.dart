@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:skautex_mobile/src/models/file.dart';
 import 'package:skautex_mobile/src/models/permissions.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 
@@ -110,11 +111,17 @@ class Repository {
 		return sources[0].deleteItem(jwt, url);
 	}
 
+	Future<String> downloadItem(Future<JWT> jwt, String url) {
+		return sources[0].downloadItem(jwt, url);
+	}
+
+	Future<String> uploadItem(Future<JWT> jwt, String url, File file) {
+		return sources[0].uploadItem(jwt, url, file);
+	}
+
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uri, Map<String, String> where}) {
 		return sources[0].fetchItems<T>(jwt, where: where, uriOpt: uri);
 	}
-
-
 
 	clearCache() async {
 		for (var cache in caches) {
@@ -146,6 +153,8 @@ abstract class Source {
 	Future<T> updateItem<T>(Future<JWT> jwt, T item);
 	Future<T> addItem<T>(Future<JWT> jwt, T item);
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
+	Future<String> downloadItem(Future<JWT> jwt, String url);
+	Future<String> uploadItem(Future<JWT> jwt, String url, File file);
 
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where, String uriOpt});
 	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
