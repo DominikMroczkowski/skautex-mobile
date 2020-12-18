@@ -9,12 +9,10 @@ import 'validate.dart';
 
 class Bloc with Validate {
 	var codeSend = false;
+
 	final _code = BehaviorSubject<String>();
-
 	Stream<String> get code => _code.stream.transform(validateCode);
-
 	Stream<bool> get submitValid => code.transform(isNumber);
-
 	Function(String) get changeCode => _code.sink.add;
 
 	getCode() {

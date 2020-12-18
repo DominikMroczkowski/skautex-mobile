@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
+import 'package:skautex_mobile/src/models/code_on_mail.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -183,18 +184,27 @@ class SkautexApiProvider implements Source {
 		return parsedJson['name'];
 	}
 
-	void sendCodeOnEmail(Future<JWT> jwt) async {
-		var j = await jwt;
-		await client.get(
+	Future<Object> sendCodeOnEmail(Future<JWT> jwt) async {
+		String access = (await jwt).access;
+
+		final response = await client.get(
 			Uri.https(_root,  '/api/v1/otp/email/send/'),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
 				"content-type" : 'application/json',
-				"authorization" : 'Bearer ${j.access}'
+				"authorization" : 'Bearer $access'
 			},
 		);
+
+		print(response.body.toString());
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<Object>.error('Wysłanie kodu na email nie powiodło się');
+		}
+
+		return Future<Object>.value(Object());
 	}
+
 
 	Future<User> fetchUser(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
@@ -362,7 +372,9 @@ class SkautexApiProvider implements Source {
 			BookingReservation: '/api/v1/booking/reservations/',
 			BookingBlacklist: '/api/v1/booking/blacklist/',
 			Event: '/api/v1/calendars/events/',
-			EventType: '/api/v1/calendars/events_types/'
+			EventType: '/api/v1/calendars/events_types/',
+			CodeOnMail: '/api/v1/otp/email/send'
+
 		};
 
 	  return _uris[T];
@@ -419,6 +431,7 @@ class SkautexApiProvider implements Source {
 			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
 			EventType: (Map<String, dynamic> parsedJson) => EventType.fromJson(parsedJson),
 			File: (Map<String, dynamic> parsedJson) => File.fromJson(parsedJson),
+			CodeOnMail: (_) => CodeOnMail()
 		};
 
 	  return _objects[T](parsedJson);
@@ -497,6 +510,7 @@ class SkautexApiProvider implements Source {
 			BookingBlacklist: (BookingBlacklist blacklist) => blacklist.toPost(),
 			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
 			Event: (Event event) => event.toPost(),
+			CodeOnMail: (_) => null
 		};
 
 	  return _objects[T](item);
@@ -516,10 +530,11 @@ class SkautexApiProvider implements Source {
 				"content-type" : 'application/json',
 				"authorization" : 'Bearer $access'
 			},
-			body: json.encode(_toPost(item))
+			body: _toPost(item) != null ? json.encode(_toPost(item)) : null
 		);
 
 		print(response.body);
+
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie POST dla URL: ${_getSubURL<T>()} nie powiodło się');
 		}

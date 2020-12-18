@@ -41,11 +41,9 @@ class Repository {
 		return skautexDbProvider.clear();
 	}
 
-	void sendCodeOnEmail(Future<JWT> jwt) {
+	Future<Object> sendCodeOnEmail(Future<JWT> jwt) {
 		return sources[0].sendCodeOnEmail(jwt);
 	}
-
-
 
 
 	Future<List<String>> fetchTopPlayersUris(Future<JWT> access) {
@@ -134,7 +132,7 @@ abstract class Source {
 	Future<JWT> fetchJWT(Credentials creds);
 	Future<JWT> fetchJWT2(Future<JWT> jwt, String code);
 	Future<JWT> refetchJWT2(Future<JWT> jwt);
-	void sendCodeOnEmail(Future<JWT> jwt);
+	Future<Object> sendCodeOnEmail(Future<JWT> jwt);
 
 	Future<Player> fetchPlayer(Future<JWT> access, String uri);
 	Future<List<String>> fetchTopPlayersUris(Future<JWT> access);
