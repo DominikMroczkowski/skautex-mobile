@@ -27,7 +27,7 @@ class Event {
 		color = parsedJson['color'] ?? '#ffffff';
 
 	Map<String, dynamic> toJson() {
-		return <String, dynamic> {
+		var map = <String, dynamic> {
 			'url'   : uri,
 			'name'  : name,
 			'type'  : type.uri,
@@ -37,8 +37,10 @@ class Event {
 			'owner' : owner,
 			'hide' : hide,
 			'color' : color,
-			'connected_users' : connectedUsers.map((i) => i.uri).toList()
 		};
+		if (connectedUsers != null)
+			map['connected_users'] = connectedUsers.map((i) => i.uri).toList();
+		return map;
 	}
 
 	Map<String, dynamic> toPost() {

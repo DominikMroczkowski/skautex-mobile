@@ -14,8 +14,11 @@ class Bloc {
 	final hourController = TextEditingController();
 	final dayController = TextEditingController();
 
-	Bloc({change, this.date, this.stream}):
-		_change = change;
+	Bloc({change, this.date, this.stream, DateTime init}):
+		_change = change {
+			if (init != null)
+				changeDate(init);
+		}
 
 	changeDate(DateTime date) async {
 		final days = DateFormat.yMMMd().format(date);

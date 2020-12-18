@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'bloc.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class Provider extends InheritedWidget {
 	final tableCalendar;

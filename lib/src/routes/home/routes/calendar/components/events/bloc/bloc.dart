@@ -10,6 +10,9 @@ export 'provider.dart';
 
 class Bloc {
 	final AutoScrollController controller;
+	final _event = BehaviorSubject<Event>();
+	get event => _event.stream;
+	get changeEvent => _event.sink.add;
 
 	Bloc({this.controller, context}) {
 		final calendarBloc = calendar.Provider.of(context);
@@ -37,5 +40,9 @@ class Bloc {
 			i++;
 		}
 		return 0;
+	}
+
+	dispose() {
+		_event.close();
 	}
 }

@@ -12,11 +12,14 @@ import 'components/indicator.dart';
 import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' as calendarBloc;
 
 class View extends StatelessWidget {
+	final Event event;
+
+	View({this.event});
 
 	Widget build(context) {
 		return Scaffold(
 			appBar: AppBar(
-				title: Text('Dodaj wydarzenie')
+				title: Text(event != null ? 'Edytuj wydarzenie' : 'Dodaj wydarzenie')
 			),
 			body: _body(context),
 		);
@@ -45,7 +48,7 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _layout(Bloc bloc) {
+	Widget _layout(bloc) {
 		return Column(
 			children: <Widget>[
 				_padding(_title(bloc)),
@@ -63,7 +66,7 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _title(Bloc bloc) {
+	Widget _title(bloc) {
 		return StreamBuilder(
 			stream: bloc.name,
 			builder: (_, snapshot) {
@@ -72,12 +75,13 @@ class View extends StatelessWidget {
 					decoration: InputDecoration(
 						labelText: 'Tytuł'
 					),
+					initialValue: event?.name ?? ''
 				);
 			}
 		);
 	}
 
-	Widget _type(Bloc bloc) {
+	Widget _type(bloc) {
 		return StreamBuilder(
 			stream: bloc.type,
 			builder: (_, snapshot) {
@@ -90,35 +94,37 @@ class View extends StatelessWidget {
 		);
 	}
 
-Widget _start(Bloc bloc) {
+Widget _start(bloc) {
 		return DateField(
 			change: bloc.changeStart,
 			name: "Data rozpoczęcia",
-			stream: bloc.start
+			stream: bloc.start,
+			init: event !=null ? DateTime.parse(event.startDate) : null
 		);
 	}
 
-	Widget _end(Bloc bloc) {
+	Widget _end(bloc) {
 		return DateField(
 			change: bloc.changeEnd,
 			name: "Data Zakończenia",
 			stream: bloc.end,
+			init: event !=null ? DateTime.parse(event.endDate) : null
 		);
 	}
 
-	Widget _color(Bloc bloc) {
+	Widget _color(bloc) {
 		return StreamBuilder(
 			stream: bloc.color,
 			builder: (_, snapshot) {
 				return ColorDropdown(
 					change: bloc.changeColor,
-					value: snapshot.data
+					value: snapshot.data ?? event?.color
 				);
 			}
 		);
 	}
 
-	Widget _users(Bloc bloc) {
+	Widget _users(bloc) {
 		return StreamBuilder(
 			stream: bloc.invited,
 			builder: (_, snapshot) {
@@ -129,9 +135,9 @@ Widget _start(Bloc bloc) {
 							value: snapshot.data ??  []
 						),
 						UsersDropdown(
-							stream: bloc.users,
+							stream: bloc?.invitedReady != null ? bloc.invitedReady : bloc.users,
 							value: snapshot.data ?? [],
-							change: bloc.changeInvited
+							change: bloc.changeInvited,
 						)
 					],
 				);
@@ -139,7 +145,7 @@ Widget _start(Bloc bloc) {
 		);
 	}
 
-	Widget _buttons(Bloc bloc) {
+	Widget _buttons(bloc) {
 		return Row(
 			children: [
 				Expanded(child: Container()),
@@ -148,13 +154,13 @@ Widget _start(Bloc bloc) {
 		);
 	}
 
-	_addButton(Bloc bloc) {
+	_addButton(bloc) {
 		return StreamBuilder(
 			stream: bloc.submitValid,
 			builder: (_, snapshot) {
 				return FlatButton(
-					child: Text('Dodaj'),
-					onPressed:  snapshot.data != null ? () { bloc.add(); }: null
+					child: Text(event != null ? 'Edytuj' : 'Dodaj'),
+					onPressed:  snapshot.data != null ? () { bloc.send(); }: null
 				);
 			},
 		);

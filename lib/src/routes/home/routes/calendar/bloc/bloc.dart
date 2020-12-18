@@ -17,6 +17,11 @@ class Bloc extends ItemList<Event> {
 	get _changeEndDate => _endDate.sink.add;
 	get changeChoosenDate => _choosenDate.sink.add;
 
+	final _reloadEvents = BehaviorSubject<bool>();
+	reloadEvents() {
+		_reloadEvents.sink.add(true);
+	}
+
 	Stream get choosenDate => _choosenDate.stream;
 
 	changeInterval(DateTime start, DateTime end) {
@@ -34,6 +39,11 @@ class Bloc extends ItemList<Event> {
 
 	Bloc(BuildContext context, {this.navigator}) {
 		otp = context;
+		_reloadEvents.listen(
+			(i) {
+				_refetch();
+			}
+		);
 	}
 
 	dispose() {
