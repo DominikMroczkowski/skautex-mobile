@@ -3,7 +3,7 @@ import 'package:skautex_mobile/src/models/event_type.dart';
 
 class TypeDropdown extends StatelessWidget {
 	final Function(EventType) change;
-	final Stream<Future<List<EventType>>> stream;
+	final Stream<List<EventType>> stream;
 	final EventType value;
 
 	TypeDropdown({this.stream, this.value, this.change});
@@ -13,14 +13,7 @@ class TypeDropdown extends StatelessWidget {
 			stream: stream,
 			builder: (_, snapshot) {
 				if (snapshot.hasData)
-					return FutureBuilder(
-						future: snapshot.data,
-						builder: (_, snapshot) {
-							if (snapshot.hasData)
-								return _dropdown(snapshot.data);
-							return loading();
-						}
-					);
+					return _dropdown(snapshot.data);
 				return loading();
 			}
 		);

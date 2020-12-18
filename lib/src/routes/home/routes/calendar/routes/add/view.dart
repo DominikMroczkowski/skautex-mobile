@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/models/event.dart';
+import 'package:skautex_mobile/src/models/user.dart';
 import 'bloc/bloc.dart';
 
 import 'components/date_field/date_field.dart';
@@ -127,7 +128,7 @@ Widget _start(bloc) {
 	Widget _users(bloc) {
 		return StreamBuilder(
 			stream: bloc.invited,
-			builder: (_, snapshot) {
+			builder: (_, AsyncSnapshot<List<User>> snapshot) {
 				return Column(
 					children: [
 						UsersChip(
@@ -135,7 +136,7 @@ Widget _start(bloc) {
 							value: snapshot.data ??  []
 						),
 						UsersDropdown(
-							stream: bloc?.invitedReady != null ? bloc.invitedReady : bloc.users,
+							stream: event != null ? bloc.invitedReady : bloc.users,
 							value: snapshot.data ?? [],
 							change: bloc.changeInvited,
 						)

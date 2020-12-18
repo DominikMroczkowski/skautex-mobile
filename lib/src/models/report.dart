@@ -7,6 +7,7 @@ class Report {
 	String openDate;
 	String closeDate;
 	String description;
+	String type;
 	List<Player> players;
 	String event;
 
@@ -22,7 +23,8 @@ class Report {
 		owner       = parsedJson['owner']['username'] ?? '',
    	openDate    = parsedJson['open_date']?.toString()?.substring(0, 10) ?? '1970-01-01',
    	closeDate   = parsedJson['close_date']?.toString()?.substring(0, 10) ?? '1970-01-01',
-   	description = parsedJson['description'] ?? '';
+   	description = parsedJson['description'] ?? '',
+   	type = parsedJson['type'] ?? '';
 
 	toJson() {
 		List<String> playersUris = [];

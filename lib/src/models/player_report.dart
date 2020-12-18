@@ -1,47 +1,43 @@
-import 'statistic.dart';
+import 'player.dart';
+import 'player_report_profile_nested_profile.dart';
 
 class PlayerReport {
 	String uri;
-	String report;
-	Map<String, dynamic> _player;
+	String reportUri;
+	Player player;
 	int rating;
 	String description;
 	String status;
-	List<Statistic> statistics = [];
+	List<PlayerReportNestedProfile> profiles;
 
-	String get player => _player['name'];
-
-	PlayerReport({String uri, String report, Map<String, dynamic> player, int rating, String description, String status}) :
+	PlayerReport({String uri, String report, Player player, int rating, String description, String status}) :
 		uri = uri ?? '',
-		report = report ?? '',
-		_player = player ?? '',
+		reportUri = report ?? '',
+		player = player,
 		rating = rating ?? 0,
 		description = description ?? '',
 		status = status ?? '';
 
 	PlayerReport.fromJson(Map<String, dynamic> parsedJson) :
 		uri         = parsedJson['url'] ?? '',
-    report      = parsedJson['report'] ?? '',
-		_player     = parsedJson['player'] ?? '',
+    reportUri      = parsedJson['report'] ?? '',
+		player     = parsedJson['player'] ?? '',
    	rating      = parsedJson['rating'] ?? 0,
    	description = parsedJson['description'] ?? '',
-   	status      = parsedJson['status'] ?? '' {
-		parsedJson['statistics'].forEach(
-			(i) {
-				statistics.add(Statistic(name: i['name'], value: i['value'] ?? 0));
-			}
-		);
-	}
+		profiles = parsedJson['profiles'].map((i) {
+			return PlayerReportNestedProfile.fromJson(i);
+		}).asList(),
+   	status      = parsedJson['status'] ?? '' ;
+
 
 	toJson() {
 		return <String, dynamic> {
 			'url' : uri,
-			'report' : report,
-			'player' : _player['url'],
+			'report' : reportUri,
+			'player' : player.toJson(),
 			'rating' : rating,
 			'description' : description,
 			'status' : status,
-			'statistics' : statistics.map((i) {return i.toJson();}).toList()
 		};
 	}
 
@@ -52,3 +48,4 @@ class PlayerReport {
 		return map;
 	}
 }
+

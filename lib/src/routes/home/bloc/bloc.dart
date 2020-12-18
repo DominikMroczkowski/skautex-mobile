@@ -45,6 +45,10 @@ class Bloc with Access {
 		_fetchMe();
 	}
 
+	flush() {
+
+	}
+
 	_fetchTeams() {
 		return StreamTransformer<Object, Future<List<List<String>>>>.fromHandlers(
 			handleData: (_, sink) {

@@ -9,7 +9,7 @@ import 'routes/login/bloc/bloc.dart' as login;
 class Router {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-		if ('/' == settings.name)
+		if ('/' == settings.name || '/login' == settings.name)
     	return MaterialPageRoute(
 				builder: (_) => login.Provider(child: Login()),
 				settings: settings

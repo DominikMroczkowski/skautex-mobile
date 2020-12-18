@@ -10,7 +10,7 @@ class View extends StatelessWidget {
 		final bloc = Provider.of(context);
 
 		return StreamList(
-			stream: calendar.Provider.of(context).watcher,
+			itemsWatcher: calendar.Provider.of(context).itemsWatcher,
 			tile: (event) => _Tile(event: event),
 			controller: bloc.controller
 		);

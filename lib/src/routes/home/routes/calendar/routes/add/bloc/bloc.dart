@@ -43,8 +43,8 @@ class Bloc extends Add<Event> with Validate {
 	final _types;
 	final _users;
 
-	Stream<Future<List<EventType>>> get types => _types.watcher;
-	Stream<Future<List<User>>> get users => _users.watcher;
+	Stream<List<EventType>> get types => _types.itemsWatcher;
+	Stream<List<User>> get users => _users.itemsWatcher;
 
 	send() {
 		addItem(
@@ -55,7 +55,7 @@ class Bloc extends Add<Event> with Validate {
 				endDate: _end.value.toString(),
 				color: _color.value,
 				hide: false,
-				connectedUsers: []
+				connectedUsers: _invited.value
 			)
 		);
 	}
@@ -68,6 +68,7 @@ class Bloc extends Add<Event> with Validate {
 	Bloc({context}):
 		_types = Types(context: context),
 		_users = Users(context: context) {
+		_invited.startWith([]);
 		otp = context;
 		item.listen((i) {
 			i.then((_) {

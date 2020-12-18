@@ -41,7 +41,8 @@ class View extends StatelessWidget {
 	_banList(BuildContext context) {
 		final bloc = Provider.of(context);
 		return StreamList(
-			stream: bloc.watcher,
+			itemsWatcher: bloc.itemsWatcher,
+			requestWatcher: bloc.requestWatcher,
 			tile: _tile
 		);
 	}

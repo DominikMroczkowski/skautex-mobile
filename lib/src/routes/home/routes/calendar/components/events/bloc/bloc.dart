@@ -18,13 +18,9 @@ class Bloc {
 		final calendarBloc = calendar.Provider.of(context);
 		calendarBloc.choosenDate.listen(
 			(choosen) {
-				calendarBloc.watcher.listen(
-					(future) {
-						future.then(
-							(List<Event> events) {
-								controller.scrollToIndex(_getIndex(events, choosen));
-							}
-						);
+				calendarBloc.itemsWatcher.listen(
+					(events) {
+						controller.scrollToIndex(_getIndex(events, choosen));
 					}
 				);
 			}

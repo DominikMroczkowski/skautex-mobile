@@ -6,7 +6,7 @@ import 'provider.dart';
 export 'provider.dart';
 
 class Bloc extends ItemList<Player> {
-	Bloc(BuildContext context) {
+	Bloc(BuildContext context) : super(paging: 8) {
 		otp = context;
 	}
 }

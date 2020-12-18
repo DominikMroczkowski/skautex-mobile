@@ -20,7 +20,7 @@ class Players with Access {
 	_fetch() {
 		return StreamTransformer<String, Future<List<Player>>>.fromHandlers(
 			handleData: (stringus , sink) {
-				sink.add(_repository.fetchItems<Player>(otp, where: {"surname__contains" : stringus}));
+				//sink.add(_repository.fetchItems<Player>(otp, where: {"surname__contains" : stringus}));
 			}
 		);
 	}
