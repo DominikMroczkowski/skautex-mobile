@@ -10,6 +10,9 @@ import 'components/files/files.dart';
 import 'components/delete/delete.dart';
 import 'components/download_raport/download_raport.dart';
 
+import 'components/files/files.dart';
+import 'components/player_reports/player_reports.dart';
+
 class View extends StatelessWidget {
 
 	build(context) {

@@ -10,10 +10,10 @@ class Header extends StatelessWidget {
 		return Align(
 			child: Text(
 				text,
+				overflow: TextOverflow.fade,
 				style: TextStyle(
 					fontSize: fontSize ?? 18,
 				),
-				overflow: TextOverflow.clip
 			),
 			alignment: Alignment.topLeft,
 		);
