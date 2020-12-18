@@ -144,15 +144,10 @@ class View extends StatelessWidget {
 	}
 
 	Widget forgetPassword(BuildContext c) {
-		return InkWell(
-  			onTap: () {
-				Navigator.pushNamed(c, '/change_password');
-     			},
-     			child: new Text(
-				"ZAPOMNIAŁEŚ HASŁA?",
-				style: TextStyle(color: Colors.blue)
-			)
- 		);
+		return Container(
+			height: 0.0,
+			width: 0.0
+		);
 	}
 }
 
