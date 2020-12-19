@@ -1,15 +1,19 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:io' as io;
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' show Client, ByteStream;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/code_on_mail.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'dart:async';
 
 import 'repository.dart';
 import '../helpers/credentials.dart';
@@ -187,7 +191,7 @@ class SkautexApiProvider implements Source {
 	Future<Object> sendCodeOnEmail(Future<JWT> jwt) async {
 		String access = (await jwt).access;
 
-		final response = await client.get(
+		final response = await client.post(
 			Uri.https(_root,  '/api/v1/otp/email/send/'),
 			headers: {
 				"api-key" : _API_KEY,
@@ -197,7 +201,6 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		print(response.body.toString());
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<Object>.error('Wysłanie kodu na email nie powiodło się');
 		}
@@ -640,22 +643,33 @@ class SkautexApiProvider implements Source {
 
 	Future<String> uploadItem(Future<JWT> jwt, String uri, File file) async {
 		String access = (await jwt).access;
-  	final loaded = await io.File(file.file).readAsBytes();
 
-		final response = await client.post(
-			uri,
-			headers: {
-				"api-key" : _API_KEY,
-				"accept" : 'application/json',
-				"content-type" : 'application/json',
-				"authorization" : 'Bearer $access'
-			},
-			body: jsonEncode({
-				'file': loaded
-			})
-		);
+		print(file.file);
+		io.File f = io.File(file.file);
+		var stream = ByteStream(DelegatingStream(f.openRead()));
+    var length = await f.length();
 
-		debugPrint(response.body);
+		Map<String, String> headers = {
+			"api-key" : _API_KEY,
+			"accept" : 'application/json',
+			"content-type" : 'multipart/form-data',
+			"authorization" : 'Bearer $access'
+		};
+
+    var u = Uri.parse(uri);
+    var request = new http.MultipartRequest("POST", u);
+    var sing = http.MultipartFile('file', stream, length,
+        filename: basename(f.path));
+
+    request.files.add(sing);
+    request.headers.addAll(headers);
+
+    var response = await request.send();
+
+		// Debug
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<String>
