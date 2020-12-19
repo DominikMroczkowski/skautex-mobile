@@ -1,8 +1,8 @@
-class PlayerReportProfileNestedStatistics {
+class Statistic {
 	String name;
 	int value;
 
-	PlayerReportProfileNestedStatistics({this.name, this.value});
+	Statistic({this.name, this.value});
 
 	toJson() {
 		return {
@@ -11,7 +11,7 @@ class PlayerReportProfileNestedStatistics {
 		};
 	}
 
-	PlayerReportProfileNestedStatistics.fromJson(Map<String, dynamic> parsedJson) :
+	Statistic.fromJson(Map<String, dynamic> parsedJson) :
 		name = parsedJson['name'],
 		value = parsedJson['value'];
 }

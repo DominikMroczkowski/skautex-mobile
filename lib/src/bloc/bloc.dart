@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:skautex_mobile/src/helpers/widgets/dialog_info.dart';
 import '../helpers/credentials.dart';
 import '../helpers/creds_with_code.dart';
 
@@ -32,6 +33,18 @@ class Bloc {
 	}
 
 	Bloc({this.context}) {
+		_JWTOutput.listen(
+			(_) {},
+			onError: (i) {
+				showDialog(
+					context: context,
+					builder: (_) => DialogInfo(
+						future: Future.value(Object()),
+						title: i.error
+					)
+				);
+			}
+		);
 		_JWTFetcher.stream.transform(_JWTTransformer()).pipe(_JWTOutput);
 		MergeStream<Future<JWT>>([
 			_OTPFetcher.stream.transform(_OTPTransformer()),

@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io' as io;
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'dart:async';
 
 import 'repository.dart';
@@ -20,6 +24,7 @@ import '../models/booking_type.dart';
 import '../models/booking_reservation.dart';
 import '../models/event.dart';
 import '../models/event_type.dart';
+import '../models/file.dart';
 
 final _root = 'skautex-development.azurewebsites.net';
 const _API_KEY = 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
@@ -413,6 +418,7 @@ class SkautexApiProvider implements Source {
 			BookingReservation : (Map<String, dynamic> parsedJson) => BookingReservation.fromJson(parsedJson),
 			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
 			EventType: (Map<String, dynamic> parsedJson) => EventType.fromJson(parsedJson),
+			File: (Map<String, dynamic> parsedJson) => File.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -585,4 +591,63 @@ class SkautexApiProvider implements Source {
 
 		return list;
 	}
+
+
+	Future<String> downloadItem(Future<JWT> jwt, String uri) async {
+		String access = (await jwt).access;
+		WidgetsFlutterBinding.ensureInitialized();
+		await FlutterDownloader.initialize(
+  		debug: true
+		);
+		final directory = await getExternalStorageDirectory();
+
+    bool hasExisted = await directory.exists();
+    if (!hasExisted) {
+      directory.create();
+    }
+
+		print(directory.toString());
+		FlutterDownloader.enqueue(
+ 		 	url: uri,
+  		savedDir: directory.path,
+  		showNotification: true,
+  		openFileFromNotification: true,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+		);
+
+		return Future.value('Dodano plik do kolejki pobierań');
+	}
+
+	Future<String> uploadItem(Future<JWT> jwt, String uri, File file) async {
+		String access = (await jwt).access;
+  	final loaded = await io.File(file.file).readAsBytes();
+
+		final response = await client.post(
+			uri,
+			headers: {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			},
+			body: jsonEncode({
+				'file': loaded
+			})
+		);
+
+		debugPrint(response.body);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<String>
+				.error('Dodawanie pliku $file.file nie powiodło się');
+		}
+
+		return Future.value('Plik $file.file został wysłany');
+	}
+
 }

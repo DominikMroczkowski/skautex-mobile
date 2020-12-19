@@ -1,29 +1,33 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:skautex_mobile/src/helpers/widgets/dialog_info.dart';
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/models/report.dart';
 import 'package:skautex_mobile/src/helpers/blocs/add.dart';
 import 'package:skautex_mobile/src/helpers/blocs/validate.dart';
 import 'players.dart';
+import 'package:skautex_mobile/src/routes/home/routes/reports/bloc/bloc.dart' as reportsBloc;
 
 import 'provider.dart';
 export 'provider.dart';
 
 class Bloc extends Add<Report> with Validate {
-
 	final _title        = BehaviorSubject<String>();
 	final _description  = BehaviorSubject<String>();
 	final _players      = BehaviorSubject<List<Player>>();
 	final _playerAdd    = BehaviorSubject<Player>();
 	final _playerDelete = BehaviorSubject<Player>();
 	final _event        = BehaviorSubject<String>();
-	final playerSearch  = Players();
+	final _type         = BehaviorSubject<String>();
+	final reportsBloc.Bloc _reportsBloc;
+	final Players players;
 
 	Stream<String> get title => _title.stream.transform(hasOneSymbol);
 	Stream<String> get description => _description.stream.transform(hasOneSymbol);
-	Stream<List<Player>> get players => _players.stream;
+	Stream<List<Player>> get choosenPlayers => _players.stream;
 	Stream<String> get event => _event.stream;
+	Stream<String> get type => _type.stream;
 
 	Function(String) get changeTitle       => _title.sink.add;
 	Function(String) get changeDescription => _description.sink.add;
@@ -31,16 +35,38 @@ class Bloc extends Add<Report> with Validate {
 	Function(Player) get deletePlayer      => _playerDelete.sink.add;
 	Function(String) get changeEvent       => _event.sink.add;
 	Stream<bool>     get submitValid       => Rx.combineLatest2(title, description, (t, d) => true);
+	Function(String) get changeType => _type.sink.add;
 
-	Bloc(BuildContext context) {
+	Bloc(BuildContext context) :
+		players  = Players(context: context),
+		_reportsBloc = reportsBloc.Provider.of(context) {
 		otp = context;
-		playerSearch.otp = context;
+		players.otp = context;
 		setContext(context);
 
 		MergeStream<StreamedPlayer>([
 			_playerAdd.transform(_toStreamedPlayer(false)),
 			_playerDelete.transform(_toStreamedPlayer(true))
 		]).transform(_toPlayer()).pipe(_players);
+		item.listen(
+			(i) {
+				showDialog(
+					context: context,
+					builder: (_) {
+						return DialogInfo(
+							future: i,
+							title: 'Dodawanie Raportu',
+							runAfter: _popAndUpdate,
+						);
+					}
+				);
+			}
+		);
+	}
+
+	_popAndUpdate() async {
+		_reportsBloc.reloadReports();
+		_reportsBloc.navigator.currentState.pop();
 	}
 
 	_toStreamedPlayer(bool delete) {
@@ -72,7 +98,8 @@ class Bloc extends Add<Report> with Validate {
 			title: _title.value,
 			description: _description.value,
 			players: _players.value,
-			event: _event.value
+			event: _event.value,
+			type: _type.value
 		);
 
 		addItem(report);
@@ -85,6 +112,7 @@ class Bloc extends Add<Report> with Validate {
 		_playerDelete.close();
 		_playerAdd.close();
 		_event.close();
+		_type.close();
 	}
 }
 

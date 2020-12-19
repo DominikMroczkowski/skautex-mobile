@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/helpers/widgets/card_body.dart';
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
 
 import 'bloc/bloc.dart' as addReport;
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/models/report.dart';
+import 'package:skautex_mobile/src/helpers/others/report_type.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class View extends StatelessWidget {
 
 	Widget build(context) {
-		addReport.Provider.of(context).playerSearch.fetchPlayers('');
 		return Scaffold(
 			body: _body(context),
 			appBar: AppBar(
 				title: Text('Dodaj raport')
 			),
-			drawer: HomeDrawer(),
 		);
 	}
 
 	_body(BuildContext context) {
-		return SingleChildScrollView(child: CardBody(
+		return SingleChildScrollView(child: Column(
 			children: <Widget>[
 				_header('Nowy raport', 22),
 				_titleInput(context),
@@ -32,8 +29,9 @@ class View extends StatelessWidget {
 				_observedInput(context),
 				_header('Wydarzenie', 18),
 				_eventInput(context),
+				_typeInput(context),
 				_buttons(context)
-			]
+			].map((i) => _padding(i)).toList()
 		));
 	}
 
@@ -81,7 +79,7 @@ class View extends StatelessWidget {
 		final r = addReport.Provider.of(context);
 
 		return StreamBuilder(
-			stream: r.players,
+			stream: r.choosenPlayers,
 			builder: (context, AsyncSnapshot<List<Player>> snapshot) {
 				if (snapshot.hasData) {
 					List<Widget> children = [];
@@ -104,31 +102,19 @@ class View extends StatelessWidget {
 		final r = addReport.Provider.of(context);
 
 		return StreamBuilder(
-			stream: r.playerSearch.players,
-			builder: (context, AsyncSnapshot<Future<List<Player>>> snapshot) {
+			stream: r.players.itemsWatcher,
+			builder: (context, AsyncSnapshot<List<Player>> snapshot) {
 				List<DropdownMenuItem<Player>> items = [];
 
 				if (snapshot.hasData)
-					return FutureBuilder(
-						future: snapshot.data,
-						builder: (context, snapshot) {
-							if (snapshot.hasData)
-								snapshot.data.forEach(
-									(i) =>
-										items.add(
-											DropdownMenuItem<Player>(
-												value: i,
-												child: Text(i.name + ' ' + i.surname)
-											)
-										)
-								);
-							return SearchableDropdown.single(
-								items: items,
-								onChanged: (Player i) {i != null ?  r.addPlayer(i) : null;},
-								isExpanded: true,
-								displayClearIcon: false
-							);
-						}
+					snapshot.data.forEach(
+						(i) =>
+							items.add(
+								DropdownMenuItem<Player>(
+									value: i,
+									child: Text(i.toString())
+								)
+							)
 					);
 
 				return SearchableDropdown<Player>(
@@ -152,6 +138,39 @@ class View extends StatelessWidget {
 					decoration: InputDecoration(
 						hintText: 'Wydarzenie',
 						labelText: 'Wydarzenie',
+						border: new OutlineInputBorder(),
+						errorText: snapshot.error
+					)
+				);
+			}
+		);
+	}
+
+	_typeInput(BuildContext context) {
+		final r = addReport.Provider.of(context);
+		List<DropdownMenuItem<String>> items = [];
+
+		reportType.forEach(
+			(i) {
+				items.add(
+					DropdownMenuItem<String>(
+						child: Text(i),
+						value: i
+					)
+				);
+			}
+		);
+
+		return StreamBuilder(
+			stream: r.type,
+			builder: (context, snapshot) {
+				return DropdownButtonFormField<String>(
+					items: items,
+					value: snapshot.data,
+					onChanged: r.changeType,
+					decoration: InputDecoration(
+						hintText: 'Wybierz typ',
+						labelText: 'Typ',
 						border: new OutlineInputBorder(),
 						errorText: snapshot.error
 					)
@@ -236,6 +255,13 @@ class View extends StatelessWidget {
 			label: _text(player.name + ' ' + player.surname, 14),
 			deleteIcon: Icon(Icons.clear, size: 14),
 			onDeleted: () { onDeleted(player);}
+		);
+	}
+
+	Widget _padding(Widget child) {
+		return Container(
+			child: child,
+			padding: EdgeInsets.all(8.0)
 		);
 	}
 }

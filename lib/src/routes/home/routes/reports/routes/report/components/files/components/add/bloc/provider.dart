@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'bloc.dart';
 import 'package:skautex_mobile/src/models/report.dart';
+import 'bloc.dart';
 
 class Provider extends InheritedWidget {
-	final playerReport;
+	final add;
 
-	Provider({Key key, Widget child, BuildContext context, Report report}):
-		playerReport = Bloc(context, report),
+	Provider({Key key, Widget child, BuildContext context, @required Report report}) :
+		add = Bloc(context, report: report),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;
 
 	static Bloc of(BuildContext context) {
-		return (context.inheritFromWidgetOfExactType(Provider) as Provider).playerReport;
+		return context.dependOnInheritedWidgetOfExactType<Provider>().add;
 	}
 }

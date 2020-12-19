@@ -11,7 +11,7 @@ description: Application for a skauting division in "Lech Poznań" academia.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+6
+version: 1.0.0+7
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -28,12 +28,14 @@ dependencies:
   http: any
   sqflite: any
   path_provider: any
+  flutter_document_picker: any
   date_format: any
   searchable_dropdown: any
   intl: any
   table_calendar:  2.3.1
   smooth_star_rating: any
   scroll_to_index: any
+  flutter_downloader: any
   flutter_localizations:
     sdk: flutter
 

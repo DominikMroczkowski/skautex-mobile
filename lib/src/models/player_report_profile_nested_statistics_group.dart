@@ -1,14 +1,24 @@
 import 'player_report_profile_nested_statistics.dart';
 
-class PlayerReportProfileNestedStatisticsGroup {
+class StatisticGroup {
 	String name;
-	List<PlayerReportProfileNestedStatistics> statistics;
+	List<Statistic> statistics;
 
-	PlayerReportProfileNestedStatisticsGroup.fromJson(Map<String, dynamic> parsedJson) :
-		name = parsedJson['name'],
-		statistics = parsedJson['statistics'].map((i) {
-			return PlayerReportProfileNestedStatistics.fromJson(i);
-		}).asList();
+	StatisticGroup.fromJson(Map<String, dynamic> parsedJson) :
+		name = parsedJson['name'] {
+		statistics = _jsonToStatisticsList(parsedJson['statistics']);
+	}
+
+	List<Statistic> _jsonToStatisticsList(List json) {
+		List<Statistic> list = [];
+		if (json == null)
+			return list;
+
+		json.forEach((i) {
+			list.add(Statistic.fromJson(i));
+		});
+		return list;
+	}
 
 	toJson() {
 		return {

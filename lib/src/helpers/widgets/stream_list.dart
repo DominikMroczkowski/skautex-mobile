@@ -13,6 +13,17 @@ class StreamList extends StatelessWidget {
 	StreamList({this.itemsWatcher, this.requestWatcher, this.tile, this.controller, this.notify});
 
 	Widget build(BuildContext context) {
+		if (requestWatcher != null) {
+			return StreamBuilder(
+				stream: requestWatcher,
+				builder: (_, snapshot) {
+					if (snapshot.hasData)
+						return _itemsWatcherBuilder();
+					return Center(child: Text('Brak danych'));
+				}
+			);
+		}
+
 		return StreamBuilder(
 			stream: itemsWatcher,
 			builder: (context, AsyncSnapshot<List> items) {
@@ -20,6 +31,17 @@ class StreamList extends StatelessWidget {
 					return Center(child: CircularProgressIndicator());
 				if (items.data.isEmpty)
 					return Center(child: Text('Brak danych'));
+				return list(items.data);
+			}
+		);
+	}
+
+	_itemsWatcherBuilder() {
+		return StreamBuilder(
+			stream: itemsWatcher,
+			builder: (context, AsyncSnapshot<List> items) {
+				if (!items.hasData || items.data.isEmpty)
+					return Center(child: CircularProgressIndicator());
 				return list(items.data);
 			}
 		);
@@ -50,23 +72,25 @@ class StreamList extends StatelessWidget {
 
 	Widget _getMore() {
 		return StreamBuilder(
-				stream: requestWatcher,
-				builder: (_, AsyncSnapshot<Future<ResponseList>> snapshot) {
-					if (snapshot.hasData)
-						return FutureBuilder(
-							future: snapshot.data,
-							builder: (_, AsyncSnapshot<ResponseList> snapshot) {
-								if (snapshot.connectionState == ConnectionState.done)
-									return _moreButton(snapshot.data);
-								return Container(child: Center(child: CircularProgressIndicator()), height: 40.0);
-							}
-						);
-					return Container(width: 0.0, height: 0.0);
-				}
-			);
+			stream: requestWatcher,
+			builder: (_, AsyncSnapshot<Future<ResponseList>> snapshot) {
+				if (snapshot.hasData)
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (_, AsyncSnapshot<ResponseList> snapshot) {
+							if (snapshot.connectionState == ConnectionState.done)
+								return _moreButton(snapshot.data);
+							return Container(child: Center(child: CircularProgressIndicator()), height: 40.0);
+						}
+					);
+				return Container(width: 0.0, height: 0.0);
+			}
+		);
 	}
 
 	Widget _moreButton(ResponseList rl) {
+		if (rl.next == null || notify == null)
+			return Container(width: 0.0, height: 0.0);
 		return FlatButton(
 			child: Text('Więcej'),
 			onPressed: () {

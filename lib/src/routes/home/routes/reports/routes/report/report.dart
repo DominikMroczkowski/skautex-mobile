@@ -5,9 +5,9 @@ import 'bloc/bloc.dart';
 import 'view.dart';
 
 class Report extends StatelessWidget {
-	models.Report report;
+	final models.Report report;
 
-	Report({this.report});
+	Report({@required this.report});
 
 	Widget build(BuildContext context) {
 		return Provider(
