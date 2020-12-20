@@ -20,7 +20,7 @@ class HomeDrawer extends StatelessWidget {
 								if (snapshot.hasData) {
 									List<Widget> toShow = [];
 									List<Widget> tmp = [];
-									<List<DashCard>>[Data.main(), Data.role(), Data.options()].forEach(
+									<List<DashCard>>[Data.data()].forEach(
 										(i) { i.forEach( (j) {
 											if ((snapshot.data as Permissions).XOR(j == null ? Permissions.toXOR() : j.perms)) {
 												tmp.add(_element(j, context));
