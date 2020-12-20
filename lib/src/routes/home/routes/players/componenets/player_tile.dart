@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:date_format/date_format.dart';
 
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/helpers/others/player_statuses.dart';
@@ -74,7 +73,7 @@ class PlayerTile extends StatelessWidget {
 			onTap: () {
 				final s = session.Provider.of(context);
 				s.changeClicked(player.uri);
-				Navigator.pushNamed(context, '/home/players/player');
+				Navigator.pushNamed(context, '/home/players/player', arguments: player);
 			}),
 			color: Colors.white,
 		);

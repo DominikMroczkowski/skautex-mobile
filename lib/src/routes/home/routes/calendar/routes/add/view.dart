@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/models/event.dart';
 import 'package:skautex_mobile/src/models/user.dart';
 import 'bloc/bloc.dart';

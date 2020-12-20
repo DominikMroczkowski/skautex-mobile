@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-
 import 'bloc/bloc.dart';
 import 'view.dart';
 
-class EditPlayer extends StatelessWidget {
+class Delete extends StatelessWidget {
 	final Player player;
 
-	EditPlayer({@required this.player});
+	Delete({@required this.player});
 
 	Widget build(BuildContext context) {
 		return Provider(

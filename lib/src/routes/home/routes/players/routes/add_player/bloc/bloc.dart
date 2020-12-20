@@ -1,104 +1,82 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
-import 'package:skautex_mobile/src/models/jwt.dart';
+import 'package:skautex_mobile/src/helpers/blocs/add.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/resources/repository.dart';
+import 'package:skautex_mobile/src/routes/home/routes/players/bloc/bloc.dart' as playersBloc;
 
 import 'provider.dart';
 export 'provider.dart';
 
 import 'validate.dart';
 
-class Bloc with Validate {
-	final _repository = Repository();
-	final nameTM      = BehaviorSubject<String>();
-	final surnameTM   = BehaviorSubject<String>();
-	final positionTM  = BehaviorSubject<String>();
-	final birthDateTM = BehaviorSubject<String>();
-	final countryTM   = BehaviorSubject<String>();
-	final cityTM      = BehaviorSubject<String>();
-	final teamTM      = BehaviorSubject<List<String>>();
-	final leagueTM    = BehaviorSubject<List<String>>();
-
-	final _response  = BehaviorSubject<Future<Player>>();
-	final _request   = BehaviorSubject<BuildContext>();
-
-	BehaviorSubject<Future<JWT>> _jwt;
+class Bloc extends Add<Player> with Validate {
+	final _name      = BehaviorSubject<String>();
+	final _surname   = BehaviorSubject<String>();
+	final _position  = BehaviorSubject<String>();
+	final _birthDate = BehaviorSubject<String>();
+	final _country   = BehaviorSubject<String>();
+	final _city      = BehaviorSubject<String>();
+	final _team      = BehaviorSubject<List<String>>();
+	final _league    = BehaviorSubject<List<String>>();
 
 	Bloc(BuildContext c) {
-		final s = session.Provider.of(c);
-		_jwt = s.otp;
-
-		_request.transform(_postPlayer()).pipe(_response);
-	}
-
-	Stream<String> get name         => nameTM.stream;
-	Stream<String> get surname      => surnameTM.stream;
-	Stream<String> get position  		=> positionTM.stream;
-	Stream<String> get birthData  	=> birthDateTM.stream;
-	Stream<String> get country      => countryTM.stream;
-	Stream<String> get city         => cityTM.stream;
-	Stream<List<String>> get team   => teamTM.stream;
-	Stream<List<String>> get league => leagueTM.stream;
-	Stream<bool>   get submitValid  => Rx.combineLatest([name, surname, position, birthData, country, city, team, league], (List<Object> _) { return true;});
-
-	Stream<Future<Player>> get response => _response.stream;
-
-	get repository => _repository;
-	get access => _jwt;
-
-	Function(String) get changeName => nameTM.sink.add;
-	Function(String) get changeSurname => surnameTM.sink.add;
-	Function(String) get changePosition => positionTM.sink.add;
-	Function(String) get changeBithDate => birthDateTM.sink.add;
-	Function(String) get changeCountry => countryTM.sink.add;
-	Function(String) get changeCity => cityTM.sink.add;
-	Function(List<String>) get changeTeam => teamTM.sink.add;
-	Function(List<String>) get changeLeague => leagueTM.sink.add;
-
-	Function(BuildContext) get submitPlayer => _request.sink.add;
-
-	_postPlayer() {
-		return StreamTransformer<BuildContext, Future<Player>>.fromHandlers(
-			handleData: (context, sink) {
-				final player = Player(
-					name: nameTM.value,
-					surname: surnameTM.value,
-					position: positionTM.value,
-					birthDate: birthDateTM.value,
-					country: countryTM.value,
-					city: cityTM.value,
-					team: teamTM.value,
-					league: leagueTM.value
-				);
-				sink.add(_repository.addPlayer(_jwt.value, player).then(
-					(_) {
-						Navigator.of(context).popUntil((route) {
-							return '/home' == route.settings.name;
-						});
-						return _;
-					},
-					onError: (error) {
-						print(error);
+		otp = c;
+		item.listen(
+			(Future<Player> i) {
+				i.then(
+					(Player i) {
+						final bloc = playersBloc.Provider.of(c);
+						bloc.reloadPlayers();
+						bloc.navigator.currentState.pop();
 					}
-				));
+				);
 			}
 		);
 	}
 
-	dispose() {
-		nameTM.close();
-		surnameTM.close();
-		positionTM.close();
-		birthDateTM.close();
-		countryTM.close();
-		cityTM.close();
-		teamTM.close();
-		leagueTM.close();
+	Stream<String> get name         => _name.stream;
+	Stream<String> get surname      => _surname.stream;
+	Stream<String> get position  		=> _position.stream;
+	Stream<String> get birthData  	=> _birthDate.stream;
+	Stream<String> get country      => _country.stream;
+	Stream<String> get city         => _city.stream;
+	Stream<List<String>> get team   => _team.stream;
+	Stream<List<String>> get league => _league.stream;
+	Stream<bool>   get submitValid  => Rx.combineLatest([name, surname, position, birthData, country, city, team, league], (List<Object> _) { return true;});
 
-		_response.close();
-		_request.close();
+	Function(String) get changeName => _name.sink.add;
+	Function(String) get changeSurname => _surname.sink.add;
+	Function(String) get changePosition => _position.sink.add;
+	Function(String) get changeBithDate => _birthDate.sink.add;
+	Function(String) get changeCountry => _country.sink.add;
+	Function(String) get changeCity => _city.sink.add;
+	Function(List<String>) get changeTeam => _team.sink.add;
+	Function(List<String>) get changeLeague => _league.sink.add;
+
+	addPlayer() {
+		addItem(
+			Player(
+				name: _name.value,
+				surname: _surname.value,
+				position: _position.value,
+				birthDate: _birthDate.value,
+				country: _country.value,
+				city: _city.value,
+				team: _team.value,
+				league: _league.value
+			)
+		);
+	}
+
+	dispose() {
+		_name.close();
+		_surname.close();
+		_position.close();
+		_birthDate.close();
+		_country.close();
+		_city.close();
+		_team.close();
+		_league.close();
 	}
 }

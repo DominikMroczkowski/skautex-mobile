@@ -12,6 +12,7 @@ class Download extends StatelessWidget {
 		return Provider(
 			context: context,
 			child: View(file: file),
+			file: file
 		);
 	}
 }

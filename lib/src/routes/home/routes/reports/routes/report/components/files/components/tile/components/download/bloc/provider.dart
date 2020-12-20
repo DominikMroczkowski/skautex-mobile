@@ -5,8 +5,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final download;
 
-	Provider({Key key, Widget child, BuildContext context, File blacklist}) :
-		download = Bloc(context, file: blacklist),
+	Provider({Key key, Widget child, BuildContext context, @required File file}) :
+		download = Bloc(context, file: file),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

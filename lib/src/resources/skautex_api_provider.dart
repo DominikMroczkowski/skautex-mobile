@@ -343,27 +343,6 @@ class SkautexApiProvider implements Source {
 	}
 
 
-	Future<Player> updatePlayer(Future<JWT> jwt, Player player) async {
-		String access = (await jwt).access;
-
-		final response = await client.put(
-			player.uri,
-			headers: {
-				"api-key" : _API_KEY,
-				"accept" : 'application/json',
-				"content-type" : 'application/json',
-				"authorization" : 'Bearer $access'
-			},
-			body: json.encode(
-				player.toJson()
-			)
-		);
-
-		final parsedJson = json.decode(response.body);
-
-		return Player.fromJson(parsedJson);
-	}
-
 	String _getSubURL<T>() {
 		final _uris = <Type, String>{
 			User: '/api/v1/users/',
@@ -377,7 +356,6 @@ class SkautexApiProvider implements Source {
 			Event: '/api/v1/calendars/events/',
 			EventType: '/api/v1/calendars/events_types/',
 			CodeOnMail: '/api/v1/otp/email/send'
-
 		};
 
 	  return _uris[T];
@@ -468,6 +446,7 @@ class SkautexApiProvider implements Source {
 		final _objects = <Type, Function>{
 			User : (User user) => user.toJson(),
 			PlayerReport : (PlayerReport report) => report.toJson(),
+			Player : (Player player) => player.toJson(),
 			Cost : (Cost cost) => cost.toJson(),
 			Event : (Event event) => event.toJson(),
 		};
@@ -479,7 +458,6 @@ class SkautexApiProvider implements Source {
 		String access = (await jwt).access;
 
 		var jsonToEncode = _toJson(item);
-		print(jsonToEncode['url']);
 		final response = await client.put(
 			jsonToEncode['url'],
 			headers: {
@@ -509,6 +487,7 @@ class SkautexApiProvider implements Source {
 			User : (User user) => user.toPost(),
 			Report: (Report report) => report.toPost(),
 			Cost: (Cost cost) => cost.toPost(),
+			Player: (Player player) => player.toPost(),
 			Booking: (Booking booking) => booking.toPost(),
 			BookingBlacklist: (BookingBlacklist blacklist) => blacklist.toPost(),
 			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
@@ -579,6 +558,7 @@ class SkautexApiProvider implements Source {
 		if (uriOpt == null || uriOpt == '')
 			uriOpt = Uri.https(_root, _getSubURL<T>(), where).toString();
 
+		print(uriOpt);
 		final response = await client.get(
 			uriOpt,
 			headers: {
@@ -611,7 +591,7 @@ class SkautexApiProvider implements Source {
 	}
 
 
-	Future<String> downloadItem(Future<JWT> jwt, String uri) async {
+	Future<String> downloadItem(Future<JWT> jwt, String uri, File file) async {
 		String access = (await jwt).access;
 		WidgetsFlutterBinding.ensureInitialized();
 
@@ -625,6 +605,7 @@ class SkautexApiProvider implements Source {
 		print(directory.toString());
 		FlutterDownloader.enqueue(
  		 	url: uri,
+			fileName: basename(file.file),
   		savedDir: directory.path,
   		showNotification: true,
   		openFileFromNotification: true,
@@ -642,7 +623,6 @@ class SkautexApiProvider implements Source {
 	Future<String> uploadItem(Future<JWT> jwt, String uri, File file) async {
 		String access = (await jwt).access;
 
-		print(file.file);
 		io.File f = io.File(file.file);
 		var stream = ByteStream(DelegatingStream(f.openRead()));
     var length = await f.length();

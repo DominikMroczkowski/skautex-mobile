@@ -7,7 +7,10 @@ export 'provider.dart';
 
 class Bloc extends Download {
 	final File file;
-	Bloc(BuildContext context, {this.file}) {
+
+	download() {downloadItem(file);}
+
+	Bloc(BuildContext context, {@required this.file}) {
 		otp = context;
 	}
 }

@@ -84,10 +84,6 @@ class Repository {
 
 
 
-	Future<Player> updatePlayer(Future<JWT> jwt, Player player) {
-		return sources[0].updatePlayer(jwt, player);
-	}
-
 
 	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where}) {
 		return sources[0].fetchUris<T>(jwt, where: where);
@@ -109,8 +105,8 @@ class Repository {
 		return sources[0].deleteItem(jwt, url);
 	}
 
-	Future<String> downloadItem(Future<JWT> jwt, String url) {
-		return sources[0].downloadItem(jwt, url);
+	Future<String> downloadItem(Future<JWT> jwt, String url, File file) {
+		return sources[0].downloadItem(jwt, url, file);
 	}
 
 	Future<String> uploadItem(Future<JWT> jwt, String url, File file) {
@@ -151,11 +147,10 @@ abstract class Source {
 	Future<T> updateItem<T>(Future<JWT> jwt, T item);
 	Future<T> addItem<T>(Future<JWT> jwt, T item);
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
-	Future<String> downloadItem(Future<JWT> jwt, String url);
+	Future<String> downloadItem(Future<JWT> jwt, String url, File file);
 	Future<String> uploadItem(Future<JWT> jwt, String url, File file);
 
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where, String uriOpt});
-	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
 }
 
 abstract class Cache {

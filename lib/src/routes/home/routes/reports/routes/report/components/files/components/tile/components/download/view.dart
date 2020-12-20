@@ -20,8 +20,7 @@ class View extends StatelessWidget {
 					context: context,
 					builder: (context) => DeleteDialog(
 							stream: bloc.item,
-							uri: file.file,
-							onTrue: bloc.downloadItem,
+							onTrue: bloc.download,
 							title: 'Pobierz',
 							ask: 'Czy napewno chcesz pobrać plik ${basename(file.file)}',
 							whileWorking: 'Pobieranie',

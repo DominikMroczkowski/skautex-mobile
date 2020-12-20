@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
+import 'package:skautex_mobile/src/models/file.dart';
 import 'package:skautex_mobile/src/resources/repository.dart';
 import 'access.dart';
 
@@ -7,9 +8,16 @@ class Download with Access {
 	final _repository = Repository();
 
 	final _output = PublishSubject<Future<String>>();
-	final _input = PublishSubject<String>();
+	final _input = PublishSubject<File>();
 
-	Function(String) get downloadItem => _input.sink.add;
+	downloadItem(File file, {String uri}) {
+		_input.sink.add(
+			File(
+				file: file.file,
+				uri: uri ?? file.uri
+			)
+		);
+	}
 	Stream<Future<String>> get item => _output.stream;
 
 	Download() {
@@ -17,9 +25,9 @@ class Download with Access {
 	}
 
 	_fetch() {
-		return StreamTransformer<String, Future<String>>.fromHandlers(
-			handleData: (String uri, sink) {
-				sink.add(_repository.downloadItem(otp, uri));
+		return StreamTransformer<File, Future<String>>.fromHandlers(
+			handleData: (File file, sink) {
+				sink.add(_repository.downloadItem(otp, file.uri, file));
 			}
 		);
 	}

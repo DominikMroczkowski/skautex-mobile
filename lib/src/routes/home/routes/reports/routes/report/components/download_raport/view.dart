@@ -15,7 +15,7 @@ class View extends StatelessWidget {
 					builder: (context) {
 						return DeleteDialog(
 							stream: bloc.item,
-							onTrue: bloc.startDownload,
+							onTrue: bloc.download,
 							title: 'Pobierz',
 							ask: 'Czy napewno chcesz pobrać raport?',
 							whileWorking: 'Inicializowanie',

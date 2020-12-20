@@ -7,10 +7,11 @@ class Player {
 	String country;
 	String city;
 	String status;
+	bool isActive;
 	List<String> team;
 	List<String> league;
 
-	Player({String name, String surname, String position, String birthDate, String country, String city, String status, List<String> team, List<String> league}) :
+	Player({this.uri, String name, String surname, String position, String birthDate, String country, String city, String status, List<String> team, List<String> league}) :
 		name = name,
 		surname = surname,
 		position = position,
@@ -27,6 +28,7 @@ class Player {
     surname   = parsedJson['surname'] ?? '',
     position  = parsedJson['position'] ?? '',
     birthDate = parsedJson['birth_date'] ?? '',
+		isActive  = parsedJson['is_active'] ?? true,
     country   = parsedJson['country'] ?? '',
     city      = parsedJson['city'] ?? '',
 		status    = parsedJson['status'] ?? '',
@@ -35,17 +37,24 @@ class Player {
 
 	toJson() {
 		return {
+			'url' : uri,
 			'name' : name,
 			'surname' : surname,
 			'position' : position,
 			'birth_date' : birthDate,
 			'country' : country,
 			'city' : city,
-			'team' : team.isEmpty ? null : team[0],
-			'league' : league.isEmpty ? null : league[0],
-			'dominant_leg' : 'LEFT',
-			'status' : 'OBSERVATION'
+			'team' : team.isEmpty ? null : team[1],
+			'league' : league.isEmpty ? null : league[1],
+			'dominant_leg' : "left",
+			'status' : "observation"
 		};
+	}
+
+	toPost() {
+		var i = toJson();
+		i.remove('url');
+		return i;
 	}
 
 	toList() {

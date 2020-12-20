@@ -16,12 +16,12 @@ class Router {
 			);
 		else if (_route + '/player' == settings.name)
     	return MaterialPageRoute(
-				builder: (_) =>  Player(),
+				builder: (_) =>  Player(player: settings.arguments),
 				settings: settings
 			);
 		else if (_route + '/editPlayer' == settings.name)
     	return MaterialPageRoute(
-				builder: (_) =>  EditPlayer(),
+				builder: (_) =>  EditPlayer(player: settings.arguments),
 				settings: settings
 			);
 		else if (_route + '/addPlayer' == settings.name)
