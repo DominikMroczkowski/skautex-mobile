@@ -614,9 +614,7 @@ class SkautexApiProvider implements Source {
 	Future<String> downloadItem(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
 		WidgetsFlutterBinding.ensureInitialized();
-		await FlutterDownloader.initialize(
-  		debug: true
-		);
+
 		final directory = await getExternalStorageDirectory();
 
     bool hasExisted = await directory.exists();

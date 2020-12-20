@@ -15,6 +15,7 @@ class Bloc extends ItemList<File> {
 
 	Bloc(BuildContext context, {this.report}) {
 		otp = context;
+		super.fetch(uri: report.uri + 'files/');
 	}
 
 	dispose() {

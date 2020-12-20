@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
-import 'package:skautex_mobile/src/models/file.dart';
 import 'package:skautex_mobile/src/models/report.dart';
 
 import 'components/add/add.dart';
-import 'components/delete/delete.dart';
-import 'components/tile.dart';
+import 'components/tile/tile.dart';
 
 import 'bloc/bloc.dart';
 
@@ -41,7 +39,8 @@ class View extends StatelessWidget {
 		return StreamList(
 			itemsWatcher: bloc.itemsWatcher,
 			requestWatcher: bloc.requestWatcher,
-			tile: (i) => Tile(file: i)
+			tile: (i) => Tile(file: i),
+			scrollable: false
 		);
 	}
 }

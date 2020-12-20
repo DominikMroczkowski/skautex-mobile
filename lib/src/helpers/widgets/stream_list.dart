@@ -9,8 +9,9 @@ class StreamList extends StatelessWidget {
 	final Function tile;
 	final Function notify;
 	final AutoScrollController controller;
+	final scrollable;
 
-	StreamList({this.itemsWatcher, this.requestWatcher, this.tile, this.controller, this.notify});
+	StreamList({this.itemsWatcher, this.requestWatcher, this.tile, this.controller, this.notify, this.scrollable});
 
 	Widget build(BuildContext context) {
 		if (requestWatcher != null) {
@@ -67,6 +68,7 @@ class StreamList extends StatelessWidget {
 			padding: EdgeInsets.only(bottom: 80),
 			shrinkWrap: true,
 			controller: controller,
+			physics: scrollable != null && scrollable == false ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics()
 		);
 	}
 

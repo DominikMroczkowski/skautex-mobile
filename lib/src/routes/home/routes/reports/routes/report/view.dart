@@ -76,15 +76,17 @@ class View extends StatelessWidget {
 	}
 
 	Widget _info(Report report) {
-		return Column(
-			children: [
-				_disabledField('Tytuł', report.title),
-				_disabledField('Opis', report.description),
-				_disabledField('Twórca', report.owner),
-				_disabledField('Data rozpoczęcia', report.openDate),
-				_disabledField('Data zakończenia', report.closeDate),
-				_padding(Files(report: report))
-			]
+		return SingleChildScrollView(
+			child: Column(
+				children: [
+					_disabledField('Tytuł', report.title),
+					_disabledField('Opis', report.description),
+					_disabledField('Twórca', report.owner),
+					_disabledField('Data rozpoczęcia', report.openDate),
+					_disabledField('Data zakończenia', report.closeDate),
+					_padding(Files(report: report))
+				]
+			)
 		);
 	}
 
