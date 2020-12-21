@@ -31,8 +31,8 @@ import '../models/event.dart';
 import '../models/event_type.dart';
 import '../models/file.dart';
 
-final _root = 'skautex-development.azurewebsites.net';
-const _API_KEY = 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
+final _root = 'skautex-production.azurewebsites.net';
+const _API_KEY = 'phQeWrRf.aO1N3cRc0HKVDco8DoZ0G9HVLBObiPZq';
 
 class SkautexApiProvider implements Source {
 	Client client = Client();
