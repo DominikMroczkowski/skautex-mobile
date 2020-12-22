@@ -5,6 +5,8 @@ import 'package:skautex_mobile/src/helpers/widgets/dialog_info.dart';
 import '../helpers/credentials.dart';
 import '../helpers/creds_with_code.dart';
 
+import 'auth_code_dialog.dart';
+
 
 import 'provider.dart';
 export 'provider.dart';
@@ -34,7 +36,19 @@ class Bloc {
 
 	Bloc({this.context}) {
 		_JWTOutput.listen(
-			(_) {},
+			(Future<JWT> i) {
+				i.then(
+					(JWT i) {
+						if (i.otpauth != null)
+							showDialog(
+								context: context,
+								builder: (_) {
+									return AuthCodeDialog(otpauth: i.otpauth);
+								}
+							);
+					}
+				);
+			},
 			onError: (i) {
 				showDialog(
 					context: context,
@@ -46,6 +60,7 @@ class Bloc {
 			}
 		);
 		_JWTFetcher.stream.transform(_JWTTransformer()).pipe(_JWTOutput);
+
 		MergeStream<Future<JWT>>([
 			_OTPFetcher.stream.transform(_OTPTransformer()),
 			_refreshTokens.stream,

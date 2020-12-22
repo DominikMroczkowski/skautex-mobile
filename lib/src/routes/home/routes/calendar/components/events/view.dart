@@ -36,7 +36,6 @@ class _Tile extends StatelessWidget {
 			dense: true,
 			enabled: true,
 			onTap: () {
-				print('xd');
 				Navigator.of(context).pushNamed('/home/calendar/event', arguments: event);
 			}
 		);

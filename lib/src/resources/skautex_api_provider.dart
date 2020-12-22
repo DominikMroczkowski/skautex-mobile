@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client, ByteStream;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/code_on_mail.dart';
+import 'package:skautex_mobile/src/models/connected_users.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -31,8 +32,8 @@ import '../models/event.dart';
 import '../models/event_type.dart';
 import '../models/file.dart';
 
-final _root = 'skautex-production.azurewebsites.net';
-const _API_KEY = 'phQeWrRf.aO1N3cRc0HKVDco8DoZ0G9HVLBObiPZq';
+final _root = 'skautex-development.azurewebsites.net';
+const _API_KEY = 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
 
 class SkautexApiProvider implements Source {
 	Client client = Client();
@@ -51,11 +52,12 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		if (json.decode(response.body).toString().contains('detail')) {
+		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<JWT>.error('Logowanie nie powiodło się');
 		}
 
 		final parsedJson = json.decode(response.body);
+		print(parsedJson);
 		return JWT.fromJson(parsedJson);
 	}
 
@@ -75,11 +77,13 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		if (json.decode(response.body).toString().contains('detail')) {
+		debugPrint(response.body);
+		final parsedJson = json.decode(response.body);
+		print(parsedJson);
+		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<JWT>.error('Logowanie nie powiodło się');
 		}
 
-		final parsedJson = json.decode(response.body);
 		return JWT.fromJson(parsedJson);
 	}
 
@@ -107,7 +111,7 @@ class SkautexApiProvider implements Source {
 		}
 
 		final parsedJson = json.decode(response.body);
-		print(parsedJson['access']);
+		print(parsedJson);
 		var newJwt = JWT.fromJson(parsedJson);
 		newJwt.refresh = jwtC.refresh;
 		return newJwt;
@@ -412,7 +416,8 @@ class SkautexApiProvider implements Source {
 			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
 			EventType: (Map<String, dynamic> parsedJson) => EventType.fromJson(parsedJson),
 			File: (Map<String, dynamic> parsedJson) => File.fromJson(parsedJson),
-			CodeOnMail: (_) => CodeOnMail()
+			CodeOnMail: (_) => CodeOnMail(),
+			ConnectedUser: (Map<String, dynamic> parsedJson) => ConnectedUser.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -554,13 +559,15 @@ class SkautexApiProvider implements Source {
 
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
 		String access = (await jwt).access;
-
+		String uri;
 		if (uriOpt == null || uriOpt == '')
-			uriOpt = Uri.https(_root, _getSubURL<T>(), where).toString();
+			uri = Uri.https(_root, _getSubURL<T>(), where).toString();
+		else
+			uri = uriOpt;
 
-		print(uriOpt);
+		print(uri);
 		final response = await client.get(
-			uriOpt,
+			uri,
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -569,7 +576,7 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		debugPrint(response.body);
+		print(response.body);
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<ResponseList<T>>

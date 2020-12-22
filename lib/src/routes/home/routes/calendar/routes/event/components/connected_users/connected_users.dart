@@ -9,6 +9,7 @@ class ConnectedUsers extends StatelessWidget {
 
 	Widget build(BuildContext context) {
 		return Provider(
+			context: context,
 			event: event,
 			child: View(),
 		);
