@@ -15,6 +15,7 @@ import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:skautex_mobile/src/models/totp_device.dart';
 
 import 'repository.dart';
 import '../helpers/credentials.dart';
@@ -359,7 +360,8 @@ class SkautexApiProvider implements Source {
 			BookingBlacklist: '/api/v1/booking/blacklist/',
 			Event: '/api/v1/calendars/events/',
 			EventType: '/api/v1/calendars/events_types/',
-			CodeOnMail: '/api/v1/otp/email/send'
+			CodeOnMail: '/api/v1/otp/email/send',
+			TOTPDevice: '/api/v1/otp/totp/'
 		};
 
 	  return _uris[T];
@@ -418,6 +420,7 @@ class SkautexApiProvider implements Source {
 			File: (Map<String, dynamic> parsedJson) => File.fromJson(parsedJson),
 			CodeOnMail: (_) => CodeOnMail(),
 			ConnectedUser: (Map<String, dynamic> parsedJson) => ConnectedUser.fromJson(parsedJson),
+			TOTPDevice: (Map<String, dynamic> parsedJson) => TOTPDevice.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
