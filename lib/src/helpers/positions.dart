@@ -1,6 +1,6 @@
 List<String> positions = [
   "goalkeeper",
-	"side defender"
+	"side defender",
   "central defender",
   "defensive help",
   "middle help 8",

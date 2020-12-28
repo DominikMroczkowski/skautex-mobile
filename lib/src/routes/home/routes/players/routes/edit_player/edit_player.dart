@@ -6,14 +6,16 @@ import 'view.dart';
 
 class EditPlayer extends StatelessWidget {
 	final Player player;
+	final Function updateUpperPage;
 
-	EditPlayer({@required this.player});
+	EditPlayer({@required this.player, @required this.updateUpperPage});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			context: context,
 			child: View(),
-			player: player
+			player: player,
+			updateUpperPage: updateUpperPage
 		);
 	}
 }

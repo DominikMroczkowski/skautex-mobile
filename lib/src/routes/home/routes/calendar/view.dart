@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
+import 'package:skautex_mobile/src/helpers/widgets/home_drawer.dart';
 
 import 'components/events/events.dart';
 import 'components/table_calendar/table_calendar.dart';

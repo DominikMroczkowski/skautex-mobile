@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/helpers/blocs/add.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/routes/home/routes/players/bloc/bloc.dart' as playersBloc;
 
 import 'provider.dart';
 export 'provider.dart';
@@ -19,20 +18,41 @@ class Bloc extends Add<Player> with Validate {
 	final _city      = BehaviorSubject<String>();
 	final _team      = BehaviorSubject<List<String>>();
 	final _league    = BehaviorSubject<List<String>>();
+	final Function updateUpperPage;
 
-	Bloc(BuildContext c) {
+	Bloc(BuildContext c, {@required this.updateUpperPage}) {
 		otp = c;
+
 		item.listen(
 			(Future<Player> i) {
 				i.then(
-					(Player i) {
-						final bloc = playersBloc.Provider.of(c);
-						bloc.reloadPlayers();
-						bloc.navigator.currentState.pop();
-					}
+				 (i) {_update(i);},
+				 onError: (_) {
+					showDialog(
+						context: context,
+						builder: (context) {
+							return AlertDialog(
+								title: Text('Niepowodzenie'),
+								actions: [
+									FlatButton(
+										child: Text('Ok'),
+										onPressed: () {
+											Navigator.of(context).pop();
+										}
+									)
+								],
+							);
+						}
+					);
+				 }
 				);
 			}
 		);
+	}
+
+	_update(Player player) async {
+		updateUpperPage != null ? updateUpperPage() : null;
+		Navigator.of(context).pushNamed('/home/players/player', arguments: [player, updateUpperPage]);
 	}
 
 	Stream<String> get name         => _name.stream;

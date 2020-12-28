@@ -6,14 +6,16 @@ import 'view.dart';
 
 class Player extends StatelessWidget {
 	final models.Player player;
+	final Function updateUpperPage;
 
-	Player({@required this.player});
+	Player({@required this.player, this.updateUpperPage});
 
 	Widget build(context) {
 		return Provider(
 			context: context,
 			child: View(),
-			player: player
+			player: player,
+			reloadUpperPage: updateUpperPage
 		);
 	}
 }

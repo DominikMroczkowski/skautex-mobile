@@ -6,7 +6,6 @@ export 'provider.dart';
 
 class Bloc {
 	final _added = BehaviorSubject<bool>();
-	final GlobalKey<NavigatorState> navigator;
 
 	final _reloadItems = BehaviorSubject<bool>();
 	Function get reloadItems => _reloadItems.sink.add;
@@ -16,7 +15,7 @@ class Bloc {
 	Function get reloadReservations => _reloadReservations.sink.add;
 	Stream get reservations => _reloadReservations.stream;
 
-	Bloc({this.navigator});
+	Bloc();
 
 	dispose() {
 		_added.close();

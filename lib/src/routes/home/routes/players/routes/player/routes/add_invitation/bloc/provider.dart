@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'bloc.dart';
 
 class Provider extends InheritedWidget {
-	final home;
+	var addInvitation;
 
-	Provider({Key key, Widget child, BuildContext context, homeNavigatorKey})
-		: home = Bloc(context, homeNavigatorKey),
+	Provider({Key key, Widget child, BuildContext context})
+		: addInvitation = Bloc(context),
 		  super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;
 
 	static Bloc of(BuildContext context) {
-		return (context.inheritFromWidgetOfExactType(Provider) as Provider).home;
+		return (context.inheritFromWidgetOfExactType(Provider) as Provider).addInvitation;
 	}
 }

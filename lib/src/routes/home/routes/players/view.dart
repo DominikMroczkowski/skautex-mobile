@@ -1,41 +1,40 @@
 import 'package:flutter/material.dart';
 
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
+import 'package:skautex_mobile/src/helpers/widgets/home_drawer.dart';
 import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/models/permissions.dart';
-import 'package:skautex_mobile/src/models/player.dart';
 
 import 'componenets/player_tile.dart';
 
-import 'bloc/bloc.dart' as players;
+import 'bloc/bloc.dart';
 
 class View extends StatelessWidget {
 
 	Widget build(context) {
-		final p = players.Provider.of(context);
+		final bloc = Provider.of(context);
 		final infoBloc = info.Provider.of(context);
 
 		return Scaffold(
-			body: _playerList(p),
+			body: _playerList(bloc),
 			appBar: AppBar(
 				title: Text('Skautex')
 			),
 			drawer: HomeDrawer(),
-			floatingActionButton: _addButton(infoBloc),
+			floatingActionButton: _addButton(infoBloc, bloc),
 		);
 	}
 
-	Widget _playerList(players.Bloc bloc) {
+	Widget _playerList(Bloc bloc) {
 		return StreamList(
 			itemsWatcher: bloc.itemsWatcher,
 			requestWatcher: bloc.requestWatcher,
-			tile: (p) => PlayerTile(player: p),
+			tile: (p) => PlayerTile(player: p, reload: bloc.reloadPlayers),
 			notify: bloc.fetch
 		);
 	}
 
-	Widget _addButton(info.Bloc infoBloc) {
+	Widget _addButton(info.Bloc infoBloc, Bloc bloc) {
 		return StreamBuilder(
 			stream: infoBloc.permissions,
 			builder: (context, snapshot) {
@@ -49,7 +48,7 @@ class View extends StatelessWidget {
 
 							return FloatingActionButton(
      						onPressed: () {
-									Navigator.of(context).pushNamed('/home/players/addPlayer');
+									Navigator.of(context).pushNamed('/home/players/addPlayer', arguments: bloc.reloadPlayers);
       					},
       					child: Icon(Icons.add),
       					backgroundColor: Colors.blue,

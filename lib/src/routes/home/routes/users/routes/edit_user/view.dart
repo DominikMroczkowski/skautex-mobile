@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'bloc/bloc.dart' as editUser;
 
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
+import 'package:skautex_mobile/src/helpers/widgets/home_drawer.dart';
 import 'package:skautex_mobile/src/helpers/widgets/card_body.dart';
 import 'package:skautex_mobile/src/helpers/widgets/view_item_list.dart';
 

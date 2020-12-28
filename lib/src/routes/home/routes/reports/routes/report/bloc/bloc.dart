@@ -10,6 +10,8 @@ import 'provider.dart';
 export 'provider.dart';
 
 class Bloc {
+	final Function updateUpperPage;
+
 	final _report = BehaviorSubject<Report>();
 	Stream<Report> get report =>  _report.stream;
 	Function(Report) get changeReport => _report.sink.add;
@@ -24,7 +26,7 @@ class Bloc {
 		changeReport(report ?? _report.value);
 	}
 
-	Bloc(BuildContext context, {Report report}) {
+	Bloc(BuildContext context, {Report report, this.updateUpperPage}) {
 		playerReports.otp = context;
 		changeReport(report);
 

@@ -5,8 +5,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final report;
 
-	Provider({Key key, Widget child, BuildContext context, Report report})
-		: report = Bloc(context, report: report),
+	Provider({Key key, Widget child, BuildContext context, Report report, Function updateUpperPage})
+		: report = Bloc(context, report: report, updateUpperPage: updateUpperPage),
 		  super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

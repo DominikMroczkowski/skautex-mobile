@@ -5,14 +5,16 @@ import 'view.dart';
 
 class Files extends StatelessWidget {
 	final Report report;
+	final Stream reload;
 
-	Files({@required this.report});
+	Files({@required this.report, this.reload});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			child: View(report: report),
 			context: context,
-			report: report
+			report: report,
+			reload: reload
 		);
 	}
 }

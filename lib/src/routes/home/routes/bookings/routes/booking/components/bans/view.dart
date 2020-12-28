@@ -4,7 +4,7 @@ import 'package:skautex_mobile/src/helpers/others/booking_types.dart';
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/permissions.dart';
 import 'package:skautex_mobile/src/models/booking.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'bloc/bloc.dart';
 import 'components/add/add.dart';
 import 'components/delete/delete.dart';

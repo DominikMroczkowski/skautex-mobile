@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/helpers/blocs/update.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/routes/home/routes/players/bloc/bloc.dart' as playersBloc;
 
 import 'provider.dart';
 export 'provider.dart';
@@ -11,6 +10,7 @@ export 'provider.dart';
 class Bloc extends Update<Player> {
 	final _player = BehaviorSubject<Player>();
 	final String _uri;
+	final Function updateUpperPage;
 
 	final _name      = BehaviorSubject<String>();
 	final _surname   = BehaviorSubject<String>();
@@ -21,9 +21,9 @@ class Bloc extends Update<Player> {
 	final _team      = BehaviorSubject<List<String>>();
 	final _league    = BehaviorSubject<List<String>>();
 
-	Bloc(BuildContext c, {@required Player player}):
+	Bloc(BuildContext context, {@required Player player, @required this.updateUpperPage}):
 		_uri = player.uri {
-		otp = c;
+		otp = context;
 		changeName(player.name);
 		changeSurname(player.surname);
 		changePosition(player.position);
@@ -36,10 +36,9 @@ class Bloc extends Update<Player> {
 			(Future<Player> i) {
 				i.then(
 					(Player i) {
-						final bloc = playersBloc.Provider.of(c);
-						bloc.reloadPlayers();
-						bloc.navigator.currentState.pop();
-						bloc.navigator.currentState.pushReplacementNamed('/home/players/player', arguments: i);
+						updateUpperPage != null ? updateUpperPage() : null;
+						Navigator.of(context).pop();
+						Navigator.of(context).pushReplacementNamed('/home/players/player', arguments: [i, null]);
 					}
 				);
 			}

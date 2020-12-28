@@ -4,7 +4,7 @@ import 'package:date_format/date_format.dart';
 
 import 'package:skautex_mobile/src/models/user.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
+import 'package:skautex_mobile/src/helpers/widgets/home_drawer.dart';
 
 
 class Task extends StatefulWidget {

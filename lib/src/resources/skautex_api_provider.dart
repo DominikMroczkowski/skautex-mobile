@@ -5,12 +5,12 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client, ByteStream;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/code_on_mail.dart';
 import 'package:skautex_mobile/src/models/connected_users.dart';
+import 'package:skautex_mobile/src/models/invitation.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -361,7 +361,8 @@ class SkautexApiProvider implements Source {
 			Event: '/api/v1/calendars/events/',
 			EventType: '/api/v1/calendars/events_types/',
 			CodeOnMail: '/api/v1/otp/email/send',
-			TOTPDevice: '/api/v1/otp/totp/'
+			TOTPDevice: '/api/v1/otp/totp/',
+			Invitation: '/api/v1/invitations/'
 		};
 
 	  return _uris[T];
@@ -421,6 +422,7 @@ class SkautexApiProvider implements Source {
 			CodeOnMail: (_) => CodeOnMail(),
 			ConnectedUser: (Map<String, dynamic> parsedJson) => ConnectedUser.fromJson(parsedJson),
 			TOTPDevice: (Map<String, dynamic> parsedJson) => TOTPDevice.fromJson(parsedJson),
+			Invitation: (Map<String, dynamic> parsedJson) => Invitation.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -479,7 +481,17 @@ class SkautexApiProvider implements Source {
 			)
 		);
 
-		print('Update response ' + response.body.toString());
+		debugPrint('Update >>> ' + jsonToEncode['url'].toString() +
+			'\nheaders: ' + {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			}.toString() + '\nbody: ' +
+				jsonToEncode.toString()
+		);
+		debugPrint('Update request ' + response.request.toString());
+		debugPrint('Update response ' + response.body.toString());
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie PUT dla URL: ${jsonToEncode['uri']} nie powiodło się');

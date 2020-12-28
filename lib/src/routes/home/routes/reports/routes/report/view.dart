@@ -61,21 +61,21 @@ class View extends StatelessWidget {
 		return StreamBuilder(
 			stream: bloc.playerReports.itemsWatcher,
 			builder: (_, snapshot) {
-				return _tabBarView(snapshot.data, report);
+				return _tabBarView(snapshot.data, report, Provider.of(context));
 			}
 		);
 	}
 
-	Widget _tabBarView(List<PlayerReport> reports, Report report) {
+	Widget _tabBarView(List<PlayerReport> reports, Report report, Bloc bloc) {
 		return TabBarView(
 			children: <Widget>[
-				_info(report),
+				_info(report, bloc),
 				PlayerReports(reports: reports),
 			],
 		);
 	}
 
-	Widget _info(Report report) {
+	Widget _info(Report report, Bloc bloc) {
 		return SingleChildScrollView(
 			child: Column(
 				children: [
@@ -84,7 +84,7 @@ class View extends StatelessWidget {
 					_disabledField('Twórca', report.owner),
 					_disabledField('Data rozpoczęcia', report.openDate),
 					_disabledField('Data zakończenia', report.closeDate),
-					_padding(Files(report: report))
+					_padding(Files(report: report, reload: bloc.files))
 				]
 			)
 		);

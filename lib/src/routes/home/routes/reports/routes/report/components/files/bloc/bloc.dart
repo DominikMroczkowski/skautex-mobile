@@ -9,17 +9,17 @@ export 'provider.dart';
 
 class Bloc extends ItemList<File> {
 	final Report report;
-	final _tabIndex = BehaviorSubject<int>();
-	get changeTabIndex => _tabIndex.sink.add;
-	get tabIndex => _tabIndex.stream;
+	final Stream reload;
 
-	Bloc(BuildContext context, {this.report}) {
+	Bloc(BuildContext context, {this.report, this.reload}) {
 		otp = context;
 		super.fetch(uri: report.uri + 'files/');
+		reload.listen((i) {
+			fetch(uri: report.uri + 'files/');
+		});
 	}
 
 	dispose() {
-		_tabIndex.close();
 		super.dispose();
 	}
 }

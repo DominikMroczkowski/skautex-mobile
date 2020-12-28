@@ -8,7 +8,15 @@ export 'provider.dart';
 
 class Bloc extends Delete {
 	final File file;
-	Bloc(BuildContext context, {this.file}) {
+	final Function update;
+	Bloc(BuildContext context, {this.file, this.update}) {
 		otp = context;
+		item.listen((i) {
+			i.then(
+				(i) {
+					update();
+				}
+			);
+		});
 	}
 }

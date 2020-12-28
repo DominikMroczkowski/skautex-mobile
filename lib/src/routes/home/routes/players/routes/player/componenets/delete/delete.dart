@@ -5,14 +5,16 @@ import 'view.dart';
 
 class Delete extends StatelessWidget {
 	final Player player;
+	final Function updateUpperPage;
 
-	Delete({@required this.player});
+	Delete({@required this.player, this.updateUpperPage});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			context: context,
 			child: View(),
-			player: player
+			player: player,
+			updateUpperPage: updateUpperPage
 		);
 	}
 }

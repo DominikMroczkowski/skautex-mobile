@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/widgets/widget_with_permision.dart';
 import 'package:skautex_mobile/src/models/permissions.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as home;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as home;
 
 class Add extends StatelessWidget {
 	Widget build(context) {

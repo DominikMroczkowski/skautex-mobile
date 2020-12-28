@@ -24,7 +24,7 @@ class View extends StatelessWidget {
 							ask: 'Czy napewno chcesz usunąć wydarzenie',
 							whileWorking: 'Usuwanie',
 							runAfterDeletion: _f,
-							radArgs: [bloc.navigator]
+							radArgs: [context]
 						);
 					}
 				);
@@ -34,7 +34,8 @@ class View extends StatelessWidget {
  		);
 	}
 
-	Widget _f(GlobalKey<NavigatorState> navigator) {
-		navigator.currentState.pop();
+	Widget _f(BuildContext context) {
+		Navigator.of(context).pop();
+		Navigator.of(context).pop();
 	}
 }

@@ -4,18 +4,8 @@ import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 import 'package:skautex_mobile/src/routes/login/bloc/bloc.dart' as login;
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 
-import 'router.dart' as login;
 
 class Login extends StatelessWidget {
-Widget build(BuildContext context) {
-		return Navigator(
-			initialRoute: '/login',
-			onGenerateRoute: login.Router.generateRoute
-		);
-	}
-}
-
-class View extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			body: SafeArea(

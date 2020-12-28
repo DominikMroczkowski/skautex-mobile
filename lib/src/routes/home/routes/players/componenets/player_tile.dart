@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/helpers/others/player_statuses.dart';
-import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
 class PlayerTile extends StatelessWidget {
 	final Player player;
+	final Function reload;
 
-	PlayerTile({this.player});
+	PlayerTile({this.player, this.reload});
 
 	Widget build(context) {
 		return Container(
@@ -71,9 +71,7 @@ class PlayerTile extends StatelessWidget {
 					padding: EdgeInsets.all(20.0),
 				),
 			onTap: () {
-				final s = session.Provider.of(context);
-				s.changeClicked(player.uri);
-				Navigator.pushNamed(context, '/home/players/player', arguments: player);
+				Navigator.of(context).pushNamed('/home/players/player', arguments: [player, reload]);
 			}),
 			color: Colors.white,
 		);

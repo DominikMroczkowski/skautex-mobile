@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/models/report.dart' as models;
 
-import 'view.dart';
+import 'reports.dart';
 import 'routes/add_report/add_report.dart';
 import 'routes/report/report.dart';
 
 const _route = '/home/reports';
 
-class Router {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-		if (_route == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  View(),
-				settings: settings
-			);
-		else if (_route + '/report' == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  Report(report: settings.arguments as models.Report),
-				settings: settings
-			);
-		else if (_route + '/addReport' == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  AddReport(),
-				settings: settings
-			);
-	}
+Map<String, MaterialPageRoute> routes(RouteSettings settings) {
+	return {
+		_route: MaterialPageRoute(
+			builder: (_) =>  Reports(),
+			settings: settings
+		),
+		_route + '/report':  MaterialPageRoute(
+			builder: (_) =>  Report(report: (settings.arguments as List)[0] as models.Report, updateUpperPage: (settings.arguments as List)[1]),
+			settings: settings
+		),
+		_route + '/addReport': MaterialPageRoute(
+			builder: (_) =>  AddReport(updateUpperPage: settings.arguments),
+			settings: settings
+		)
+	};
 }

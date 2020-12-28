@@ -1,30 +1,9 @@
 import 'package:flutter/material.dart';
-import 'bloc/bloc.dart' as home;
-import '../../models/user.dart';
+import '../../bloc/bloc.dart' as home;
 import '../../models/permissions.dart';
 import '../../helpers/navCard.dart';
 
-import 'router.dart' as home;
-
-
 class Home extends StatelessWidget {
-	final GlobalKey<NavigatorState> homeNavigator = GlobalKey();
-
-	Widget build(BuildContext context) {
-		return home.Provider(
-			context: context,
-			child: Navigator(
-				key: homeNavigator,
-				initialRoute: '/home',
-				onGenerateRoute: home.Router.generateRoute
-			),
-			homeNavigatorKey: homeNavigator,
-		);
-	}
-}
-
-
-class View extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			body: SafeArea(
@@ -119,4 +98,6 @@ class View extends StatelessWidget {
 	    );
 	}
 }
+
+
 

@@ -5,13 +5,15 @@ import 'view.dart';
 
 class Delete extends StatelessWidget {
 	final File file;
+	final Function update;
 
-	Delete({this.file});
+	Delete({this.file, this.update});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			context: context,
 			child: View(file: file),
+			update: update
 		);
 	}
 }

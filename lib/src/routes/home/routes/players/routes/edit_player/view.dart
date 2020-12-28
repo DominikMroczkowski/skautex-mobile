@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/helpers/positions.dart';
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'package:date_format/date_format.dart';

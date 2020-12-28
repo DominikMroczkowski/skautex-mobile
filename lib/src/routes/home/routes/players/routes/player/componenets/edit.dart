@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/routes/home/routes/players/bloc/bloc.dart' as playersBloc;
 
 class Edit extends StatelessWidget {
 	final Player player;
+	final Function updateUpperPage;
 
-	Edit({@required this.player});
+	Edit({@required this.player, this.updateUpperPage});
 
 	Widget build(context) {
 		return FlatButton(
 			child: Icon(Icons.edit, color: Colors.white),
 			onPressed: () {
-				playersBloc.Provider.of(context).navigator.currentState.pushNamed('/home/players/editPlayer', arguments: player);
+				Navigator.of(context).pushNamed('/home/players/editPlayer', arguments: [player, updateUpperPage]);
 			},
 			shape: CircleBorder(),
 			minWidth: 10.0

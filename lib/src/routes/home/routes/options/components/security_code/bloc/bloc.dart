@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
 import 'package:skautex_mobile/src/models/totp_device.dart';
 import 'package:skautex_mobile/src/models/user.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as session;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
 import 'provider.dart';
 export 'provider.dart';
