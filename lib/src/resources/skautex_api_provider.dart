@@ -13,6 +13,7 @@ import 'package:skautex_mobile/src/models/connected_users.dart';
 import 'package:skautex_mobile/src/models/invitation.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
+import 'package:skautex_mobile/src/models/contact_detail.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:skautex_mobile/src/models/totp_device.dart';
@@ -512,20 +513,22 @@ class SkautexApiProvider implements Source {
 			BookingBlacklist: (BookingBlacklist blacklist) => blacklist.toPost(),
 			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
 			Event: (Event event) => event.toPost(),
-			CodeOnMail: (_) => null
+			CodeOnMail: (_) => null,
+			ContactDetail: (ContactDetail detail) => detail.toPost()
 		};
 
 	  return _objects[T](item);
 	}
 
-	Future<T> addItem<T>(Future<JWT> jwt, T item) async {
+	Future<T> addItem<T>(Future<JWT> jwt, T item, {String uri}) async {
 		String access = (await jwt).access;
 
 		print(
-			Uri.https(_root, _getSubURL<T>(), {}),
+			uri ?? Uri.https(_root, _getSubURL<T>(), {}),
 		);
+
 		final response = await client.post(
-			Uri.https(_root, _getSubURL<T>(), null),
+			uri ?? Uri.https(_root, _getSubURL<T>(), null),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',

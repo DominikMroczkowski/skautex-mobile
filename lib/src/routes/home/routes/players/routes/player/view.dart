@@ -4,7 +4,9 @@ import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 
 import 'componenets/delete/delete.dart';
 import 'componenets/invitations/invitations.dart';
+import 'componenets/contacts/contacts.dart';
 import 'componenets/add_invitation/add_invitation.dart';
+import 'componenets/add_contact/add_contact.dart';
 import 'componenets/edit.dart';
 
 import 'bloc/bloc.dart';
@@ -32,7 +34,7 @@ class _View extends State<View> with SingleTickerProviderStateMixin {
 	}
 
 	Widget _tabController(BuildContext context, Player player, Bloc bloc) {
-		var tabController = TabController(length: 2, vsync: this);
+		var tabController = TabController(length: 3, vsync: this);
 		tabController.addListener(() {
 			bloc.changeTab(tabController.index);
 		});
@@ -44,23 +46,19 @@ class _View extends State<View> with SingleTickerProviderStateMixin {
 			body: _tabView(context, player, bloc, tabController),
 			appBar: AppBar(
 				title: Text(player.toString()),
-				//leading: bloc.pop != null ?
-					//BackButton(
-						//onPressed: () async {bloc.pop(); return false;}
-					//) :
-					//Container(width: 0.0, height: 0.0),
 				actions: [
 					Delete(player: player),
 					Edit(player: player, updateUpperPage: bloc.reloadUpperPage)
 				],
 				bottom: TabBar(tabs: <Widget>[
-						Tab(icon: Icon(Icons.person)),
+						Tab(icon: Icon(Icons.info_sharp)),
+						Tab(icon: Icon(Icons.contacts)),
 						Tab(icon: Icon(Icons.insert_invitation_rounded))
 					],
 					controller: tabController
 				)
 			),
-			floatingActionButton: _floatingButtonBuilder(bloc),
+			floatingActionButton: _floatingButtonBuilder(bloc, player),
 		);
 	}
 
@@ -69,18 +67,22 @@ class _View extends State<View> with SingleTickerProviderStateMixin {
 			controller: tabController,
 			children: <Widget>[
 				body(context, p),
+				Contacts(player: player, contacts: p.contacts),
 				Invitations(player: player)
 			],
 		);
 	}
 
-	Widget _floatingButtonBuilder(Bloc bloc) {
+	Widget _floatingButtonBuilder(Bloc bloc, Player player) {
 		return StreamBuilder(
 			stream: bloc.tab,
 			builder: (_, snapshot) {
-				if (snapshot.hasData)
+				if (snapshot.hasData) {
 					if (snapshot.data == 1)
+						return AddContact(player: player, reloadContacts: bloc.reloadContacts);
+					if (snapshot.data == 2)
 						return AddInvitation();
+				}
 				return Container(width: 0.0, height: 0.0);
 			}
 		);

@@ -97,8 +97,8 @@ class Repository {
 		return sources[0].updateItem<T>(jwt, item);
 	}
 
-	Future<T> addItem<T>(Future<JWT> jwt, T item) {
-		return sources[0].addItem<T>(jwt, item);
+	Future<T> addItem<T>(Future<JWT> jwt, T item, {String uri}) {
+		return sources[0].addItem<T>(jwt, item, uri: uri);
 	}
 
 	Future<Object> deleteItem(Future<JWT> jwt, String url) {
@@ -145,7 +145,7 @@ abstract class Source {
 	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where});
 	Future<T> fetchItem<T>(Future<JWT> jwt, String uri);
 	Future<T> updateItem<T>(Future<JWT> jwt, T item);
-	Future<T> addItem<T>(Future<JWT> jwt, T item);
+	Future<T> addItem<T>(Future<JWT> jwt, T item, {String uri});
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
 	Future<String> downloadItem(Future<JWT> jwt, String url, File file);
 	Future<String> uploadItem(Future<JWT> jwt, String url, File file);

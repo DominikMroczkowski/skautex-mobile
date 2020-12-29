@@ -22,6 +22,13 @@ class Bloc {
 	}
 
 
+	final _reloadContacts = BehaviorSubject<bool>();
+	reloadContacts() {
+		_reloadContacts.sink.add(true);
+	}
+	Stream get contacts => _reloadContacts.stream;
+
+
 	Bloc({@required Player player, @required this.reloadUpperPage}) {
 		_player.sink.add(player);
 	}

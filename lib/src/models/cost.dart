@@ -10,8 +10,8 @@ class Cost {
 
 	Cost.fromJson(Map<String, dynamic> parsedJson) :
 		uri   = parsedJson['url'] ?? '',
-		name  = parsedJson['name'] ?? 'Night',
-		cost  = parsedJson['money'] ?? 'Train',
+		name  = parsedJson['name'] ?? '',
+		cost  = parsedJson['money'] ?? '',
 		date  = parsedJson['record_date'] ?? '',
 		file  = parsedJson['file'] ?? '';
 
