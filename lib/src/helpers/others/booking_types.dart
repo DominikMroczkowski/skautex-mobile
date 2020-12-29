@@ -7,6 +7,6 @@ getBookingTypeName(String name) {
 		case 'Computer':
 			return 'Komputer';
 		default:
-			return 'Brak tłumaczenia';
+			return name;
 	}
 }

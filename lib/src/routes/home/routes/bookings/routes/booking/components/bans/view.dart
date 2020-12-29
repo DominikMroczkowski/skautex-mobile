@@ -50,7 +50,7 @@ class View extends StatelessWidget {
 	_tile(BookingBlacklist blacklist) {
 		return Container(child: Card(
 			child: ListTile(
-			title: Text(blacklist.uri),
+			title: Text(blacklist.user.toString()),
 			trailing: Delete(blacklist: blacklist)
 		)), padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0));
 	}

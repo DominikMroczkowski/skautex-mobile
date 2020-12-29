@@ -8,7 +8,7 @@ class Bloc {
 	final _added = BehaviorSubject<bool>();
 
 	final _reloadItems = BehaviorSubject<bool>();
-	Function get reloadItems => _reloadItems.sink.add;
+	reloadItems() {_reloadItems.sink.add(true);}
 	Stream get items => _reloadItems.stream;
 
 	final _reloadReservations = BehaviorSubject<bool>();
