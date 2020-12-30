@@ -13,6 +13,7 @@ import 'package:skautex_mobile/src/models/connected_users.dart';
 import 'package:skautex_mobile/src/models/invitation.dart';
 import 'package:skautex_mobile/src/models/invitation_template.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
+import 'package:skautex_mobile/src/models/ranking.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:skautex_mobile/src/models/contact_detail.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -365,7 +366,8 @@ class SkautexApiProvider implements Source {
 			CodeOnMail: '/api/v1/otp/email/send',
 			TOTPDevice: '/api/v1/otp/totp/',
 			Invitation: '/api/v1/invitations/',
-			InvitationTemplate: '/api/v1/invitations_templates/'
+			InvitationTemplate: '/api/v1/invitations_templates/',
+			Ranking: '/api/v1/rankings/top5/',
 		};
 
 	  return _uris[T];
@@ -428,6 +430,7 @@ class SkautexApiProvider implements Source {
 			Invitation: (Map<String, dynamic> parsedJson) => Invitation.fromJson(parsedJson),
 			InvitationTemplate: (Map<String, dynamic> parsedJson) => InvitationTemplate.fromJson(parsedJson),
 			ContactDetail: (Map<String, dynamic> parsedJson) => ContactDetail.fromJson(parsedJson),
+			Ranking: (Map<String, dynamic> parsedJson) => Ranking.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);

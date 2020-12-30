@@ -13,5 +13,4 @@ class Provider extends InheritedWidget {
 	static Bloc of(BuildContext context) {
 		return (context.inheritFromWidgetOfExactType(Provider) as Provider).players;
 	}
-
 }

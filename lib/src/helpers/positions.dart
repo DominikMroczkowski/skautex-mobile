@@ -14,12 +14,12 @@ String getPolishPosition(String position) {
 		return position;
 	final pl = [
 		'Bramkarz',
-		"Pomocnik Boczny"
-		'Pomocnik Środkowy',
-		'Obrońca Boczny',
-		'Środkowy Pomocnik 8',
-		'Środkowy Pomocnik 10',
-		'Boczny Pomocnik 10',
+		"Pomoc Boczna",
+		'Pomoc Środkowa',
+		'Obrona Boczna',
+		'Środkowa Pomoc 8',
+		'Środkowy Pomoc 10',
+		'Boczna Pomoc 10',
 		'Napastnik'
 	];
 	return pl[positions.indexOf(position)];
