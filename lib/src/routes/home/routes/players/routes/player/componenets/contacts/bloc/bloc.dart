@@ -9,12 +9,9 @@ export 'provider.dart';
 class Bloc extends ItemList<ContactDetail> {
 	final Player player;
 	final Stream reload;
+	final Function update;
 
-	reloadContacts() {
-		fetch(uri: player.uri + 'contact_details/');
-	}
-
-	Bloc(BuildContext context, {@required this.player, @required this.reload}) {
+	Bloc(BuildContext context, {@required this.player, @required this.reload, @required this.update}) {
 		otp = context;
 		super.fetch(uri: player.uri + 'contact_details/');
 		reload.listen(

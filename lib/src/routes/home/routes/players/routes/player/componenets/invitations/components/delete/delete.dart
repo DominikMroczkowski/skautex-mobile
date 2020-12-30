@@ -5,14 +5,16 @@ import 'view.dart';
 
 class Delete extends StatelessWidget {
 	final Invitation invitation;
+	final Function update;
 
-	Delete({@required this.invitation});
+	Delete({@required this.invitation, @required this.update});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			context: context,
 			child: View(),
-			invitation: invitation
+			invitation: invitation,
+			update: update
 		);
 	}
 }

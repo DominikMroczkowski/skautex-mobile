@@ -27,7 +27,7 @@ class Bloc {
 	_fetch() {
 		return StreamTransformer<Object, Future<Object>>.fromHandlers(
 			handleData: (Object item, sink) {
-				sink.add(_repository.sendCodeOnEmail(sessionBloc.jwt.value));
+				sink.add(_repository.sendCodeOnEmail(sessionBloc.jwt.trainer));
 			}
 		);
 	}

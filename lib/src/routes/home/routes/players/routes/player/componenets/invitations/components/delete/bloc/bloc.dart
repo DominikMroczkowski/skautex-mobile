@@ -13,6 +13,9 @@ class Bloc extends Delete {
 		otp = context;
 		item.listen(
 			(i) {
+				i.then( (_) =>
+					update()
+				);
 			}
 		);
 	}

@@ -13,7 +13,7 @@ Map<String, MaterialPageRoute> routes(RouteSettings settings) {
 			settings: settings,
 		),
 		_route + '/addInvitation': MaterialPageRoute(
-			builder: (_) =>  AddInvitation(),
+			builder: (_) =>  AddInvitation(player: (settings.arguments as List)[0], updateUpperPage: (settings.arguments as List)[1]),
 			settings: settings
 		),
 		_route + '/addContact': MaterialPageRoute(

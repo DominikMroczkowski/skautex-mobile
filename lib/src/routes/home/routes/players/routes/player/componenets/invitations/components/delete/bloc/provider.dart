@@ -5,8 +5,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final delete;
 
-	Provider({Key key, Widget child, BuildContext context, @required Invitation invitation}) :
-		delete = Bloc(context, invitation: invitation),
+	Provider({Key key, Widget child, BuildContext context, @required Invitation invitation, Function update}) :
+		delete = Bloc(context, invitation: invitation, update: update),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

@@ -5,8 +5,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final invitations;
 
-	Provider({Key key, Widget child, BuildContext context, @required Player player}) :
-		invitations = Bloc(context, player: player),
+	Provider({Key key, Widget child, BuildContext context, @required Player player, @required Stream reload}) :
+		invitations = Bloc(context, player: player, reload: reload),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

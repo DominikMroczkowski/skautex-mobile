@@ -14,24 +14,24 @@ class View extends StatelessWidget {
 			itemsWatcher: bloc.itemsWatcher,
 			requestWatcher: bloc.requestWatcher,
 			scrollable: false,
-			tile: (i) => _tile(i)
+			tile: (i) => _tile(i, bloc)
 		);
 	}
 
-	Widget _tile(Invitation i) {
+	Widget _tile(Invitation i, Bloc bloc) {
 		return Card(
 			child: ListTile(
 				title: Text('Trener ' + i.trainer.toString()),
-				subtitle: Text('Data utworzenia: ' + i.creationDate.toString()),
-				trailing: _popMenu(i)
+				subtitle: Text('Data utworzenia: ' + i.startDate.toString()),
+				trailing: _popMenu(i, bloc)
 			),
 		);
 	}
 
-	Widget _popMenu(Invitation i) {
+	Widget _popMenu(Invitation i, Bloc bloc) {
 		final items = <PopupMenuItem>[
 			PopupMenuItem(child: Download(invitation: i), enabled: false),
-			PopupMenuItem(child: Delete(invitation: i), enabled: false)
+			PopupMenuItem(child: Delete(invitation: i, update: bloc.update), enabled: false)
 		];
 		return PopupMenuButton(
 			itemBuilder:(_) => items

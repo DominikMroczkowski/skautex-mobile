@@ -29,7 +29,7 @@ class View extends StatelessWidget {
 
 	Widget _popMenu(ContactDetail i, Bloc bloc) {
 		final items = <PopupMenuItem>[
-			PopupMenuItem(child: Delete(contactDetail: i, update: bloc.reloadContacts), enabled: false)
+			PopupMenuItem(child: Delete(contactDetail: i, update: bloc.update), enabled: false)
 		];
 		return PopupMenuButton(
 			itemBuilder:(_) => items

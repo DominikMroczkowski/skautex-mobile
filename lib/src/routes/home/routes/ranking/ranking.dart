@@ -14,7 +14,7 @@ class _State extends State<Ranking> {
 			length: 2,
 			child: Scaffold(
 				appBar: AppBar(
-					title: Text('Testy'),
+					title: Text('Ranking zawodników'),
 					bottom: TabBar(tabs: <Widget>[
 						Tab(icon: Icon(Icons.flag)),
 						Tab(icon: Icon(Icons.flag))

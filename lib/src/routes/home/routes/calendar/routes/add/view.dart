@@ -82,11 +82,11 @@ class View extends StatelessWidget {
 
 	Widget _type(bloc) {
 		return StreamBuilder(
-			stream: bloc.type,
+			stream: bloc.template,
 			builder: (_, snapshot) {
 				return TypeDropdown(
 					stream: bloc.types,
-					change: bloc.changeType,
+					change: bloc.changeTemplate,
 					value: snapshot.data
 				);
 			}

@@ -11,6 +11,7 @@ import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/code_on_mail.dart';
 import 'package:skautex_mobile/src/models/connected_users.dart';
 import 'package:skautex_mobile/src/models/invitation.dart';
+import 'package:skautex_mobile/src/models/invitation_template.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
 import 'package:skautex_mobile/src/models/contact_detail.dart';
@@ -363,7 +364,8 @@ class SkautexApiProvider implements Source {
 			EventType: '/api/v1/calendars/events_types/',
 			CodeOnMail: '/api/v1/otp/email/send',
 			TOTPDevice: '/api/v1/otp/totp/',
-			Invitation: '/api/v1/invitations/'
+			Invitation: '/api/v1/invitations/',
+			InvitationTemplate: '/api/v1/invitations_templates/'
 		};
 
 	  return _uris[T];
@@ -424,6 +426,8 @@ class SkautexApiProvider implements Source {
 			ConnectedUser: (Map<String, dynamic> parsedJson) => ConnectedUser.fromJson(parsedJson),
 			TOTPDevice: (Map<String, dynamic> parsedJson) => TOTPDevice.fromJson(parsedJson),
 			Invitation: (Map<String, dynamic> parsedJson) => Invitation.fromJson(parsedJson),
+			InvitationTemplate: (Map<String, dynamic> parsedJson) => InvitationTemplate.fromJson(parsedJson),
+			ContactDetail: (Map<String, dynamic> parsedJson) => ContactDetail.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -514,7 +518,8 @@ class SkautexApiProvider implements Source {
 			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
 			Event: (Event event) => event.toPost(),
 			CodeOnMail: (_) => null,
-			ContactDetail: (ContactDetail detail) => detail.toPost()
+			ContactDetail: (ContactDetail detail) => detail.toPost(),
+			Invitation: (Invitation invitation) => invitation.toPost()
 		};
 
 	  return _objects[T](item);

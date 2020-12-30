@@ -16,7 +16,7 @@ class View extends StatelessWidget {
 						uri: bloc.contactDetail.uri,
 						onTrue: bloc.addItem,
 						title: 'Usuń',
-						ask: 'Czy napewno chcesz usunąć zaproszenie?',
+						ask: 'Czy napewno chcesz usunąć dane kontaktowe?',
 						whileWorking: 'Usuwanie',
 					);
 				}
@@ -25,5 +25,4 @@ class View extends StatelessWidget {
 			minWidth: 40.0
  		);
 	}
-
 }

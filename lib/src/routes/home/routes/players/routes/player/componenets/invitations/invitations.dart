@@ -5,14 +5,16 @@ import 'view.dart';
 
 class Invitations extends StatelessWidget {
 	final Player player;
+	final Stream reload;
 
-	Invitations({@required this.player});
+	Invitations({@required this.player, @required this.reload});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			context: context,
 			child: View(),
-			player: player
+			player: player,
+			reload: reload
 		);
 	}
 }

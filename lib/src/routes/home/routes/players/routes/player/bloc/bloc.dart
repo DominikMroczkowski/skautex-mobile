@@ -20,6 +20,7 @@ class Bloc {
 	reloadInvitations() {
 		_reloadInvitations.sink.add(true);
 	}
+	Stream get invitations => _reloadInvitations.stream;
 
 
 	final _reloadContacts = BehaviorSubject<bool>();

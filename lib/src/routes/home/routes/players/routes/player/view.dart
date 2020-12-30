@@ -5,7 +5,7 @@ import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'componenets/delete/delete.dart';
 import 'componenets/invitations/invitations.dart';
 import 'componenets/contacts/contacts.dart';
-import 'componenets/add_invitation/add_invitation.dart';
+import 'componenets/add_invitation.dart';
 import 'componenets/add_contact/add_contact.dart';
 import 'componenets/edit.dart';
 
@@ -67,8 +67,8 @@ class _View extends State<View> with SingleTickerProviderStateMixin {
 			controller: tabController,
 			children: <Widget>[
 				body(context, p),
-				Contacts(player: player, contacts: p.contacts),
-				Invitations(player: player)
+				Contacts(player: player, contacts: p.contacts, update: p.reloadContacts),
+				Invitations(player: player, reload: p.invitations)
 			],
 		);
 	}
@@ -81,7 +81,7 @@ class _View extends State<View> with SingleTickerProviderStateMixin {
 					if (snapshot.data == 1)
 						return AddContact(player: player, reloadContacts: bloc.reloadContacts);
 					if (snapshot.data == 2)
-						return AddInvitation();
+						return AddInvitation(player: player, update: bloc.reloadInvitations);
 				}
 				return Container(width: 0.0, height: 0.0);
 			}
