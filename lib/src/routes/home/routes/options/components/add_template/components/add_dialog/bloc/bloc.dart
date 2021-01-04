@@ -27,7 +27,7 @@ class Bloc extends Upload<InvitationTemplate> {
 	addTemplate() {
 		uploadItem(
 			InvitationTemplate(
-				name: basename(_file.value),
+				name: _name.value.toString(),
 				templateFile: _file.value
 			)
 		);

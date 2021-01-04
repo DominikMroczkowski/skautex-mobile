@@ -17,7 +17,7 @@ class Bloc extends Download {
 		downloadItem(
 			File(
 				uri: invitation.uri + '/download',
-				file: 'zaproszenie_${invitation.player.toString()}'
+				file: 'zaproszenie_${invitation.player.toString()}.docx'
 			)
 		);
 	}

@@ -637,7 +637,6 @@ class SkautexApiProvider implements Source {
       directory.create();
     }
 
-		print(directory.toString());
 		FlutterDownloader.enqueue(
  		 	url: uri,
 			fileName: basename(file.file),

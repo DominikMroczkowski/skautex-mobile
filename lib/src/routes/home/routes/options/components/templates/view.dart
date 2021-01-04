@@ -15,17 +15,21 @@ class View extends StatelessWidget {
 		return StreamList(
 			itemsWatcher: bloc.itemsWatcher,
 			requestWatcher: bloc.requestWatcher,
-			tile: (i) => _tile(i),
+			tile: (i) => _tile(i, bloc),
 		);
 	}
 
-	_tile(InvitationTemplate template) {
+	_tile(InvitationTemplate template, Bloc bloc) {
 		return Card(
 			child: ListTile(
 				title: Text(template.name),
 				subtitle: Text(basename(template.templateFile)),
+				trailing: _actions(template, bloc),
 			)
 		);
 	}
 
+	Widget _actions(InvitationTemplate template, Bloc bloc) {
+		return Container(width: 0.0, height: 0.0);
+	}
 }
