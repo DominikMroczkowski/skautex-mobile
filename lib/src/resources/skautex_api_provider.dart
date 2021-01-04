@@ -522,7 +522,9 @@ class SkautexApiProvider implements Source {
 			Event: (Event event) => event.toPost(),
 			CodeOnMail: (_) => null,
 			ContactDetail: (ContactDetail detail) => detail.toPost(),
-			Invitation: (Invitation invitation) => invitation.toPost()
+			Invitation: (Invitation invitation) => invitation.toPost(),
+			File: (_) => null,
+			InvitationTemplate: (InvitationTemplate i) => i.toPost()
 		};
 
 	  return _objects[T](item);
@@ -653,10 +655,20 @@ class SkautexApiProvider implements Source {
 		return Future.value('Dodano plik do kolejki pobierań');
 	}
 
-	Future<String> uploadItem(Future<JWT> jwt, String uri, File file) async {
+	Future<String> uploadItem<T>(Future<JWT> jwt, String uri, T item) async {
 		String access = (await jwt).access;
 
-		io.File f = io.File(file.file);
+		_path<T>(T item) {
+			switch (T) {
+				case File:
+					return (item as File).file;
+				case InvitationTemplate:
+					return (item as InvitationTemplate).templateFile;
+			}
+		}
+
+		final itemPath = _path(item);
+		io.File f = io.File(itemPath);
 		var stream = ByteStream(DelegatingStream(f.openRead()));
     var length = await f.length();
 
@@ -667,13 +679,27 @@ class SkautexApiProvider implements Source {
 			"authorization" : 'Bearer $access'
 		};
 
-    var u = Uri.parse(uri);
+		final u = (uri == null) ?
+			Uri.https(_root, _getSubURL<T>()) :
+			Uri.parse(uri);
+		print('URI >>>>>>>>>> $u');
+
+		_getFilefieldName<T>() {
+			final _objects = <Type, String>{
+				InvitationTemplate: 'template',
+				File: 'file'
+			};
+		  return _objects[T];
+		}
+
     var request = new http.MultipartRequest("POST", u);
-    var sing = http.MultipartFile('file', stream, length,
+		final fieldName = _getFilefieldName<T>();
+    var sing = http.MultipartFile(fieldName, stream, length,
         filename: basename(f.path));
 
     request.files.add(sing);
     request.headers.addAll(headers);
+		request.fields.addAll(_toPost<T>(item));
 
     var response = await request.send();
 
@@ -684,10 +710,10 @@ class SkautexApiProvider implements Source {
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<String>
-				.error('Dodawanie pliku $file.file nie powiodło się');
+				.error('Dodawanie pliku ${basename(_path<T>(item))} nie powiodło się');
 		}
 
-		return Future.value('Plik $file.file został wysłany');
+		return Future.value('Plik ${basename(_path<T>(item))} został wysłany');
 	}
 
 }

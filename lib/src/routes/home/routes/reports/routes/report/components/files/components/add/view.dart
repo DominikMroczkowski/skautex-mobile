@@ -83,7 +83,7 @@ class _GetDialog extends StatelessWidget {
 			stream: bloc.path,
 			builder: (_, snapshot) {
 				return FileField(
-					path: snapshot,
+					snapshot: snapshot,
 					change: bloc.changePath
 				);
 			}

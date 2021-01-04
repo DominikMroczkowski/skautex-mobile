@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
+import 'package:path/path.dart';
 
 class FileField extends StatelessWidget{
 	final Function(String) change;
-	final AsyncSnapshot<String> path;
+	final AsyncSnapshot<String> snapshot;
 
-	FileField({@required this.change, this.path});
+	FileField({@required this.change, this.snapshot});
 
 	Widget build(BuildContext context) {
 		return Row(
@@ -34,9 +35,10 @@ class FileField extends StatelessWidget{
 
 	Widget _dateField() {
 		return TextField(
-			controller: TextEditingController(text: path.data ?? ''),
+			controller: TextEditingController(text: snapshot.hasData ? basename(snapshot.data) : ''),
 			decoration: InputDecoration(
-				errorText: path.error
+				labelText: 'Plik',
+				errorText: snapshot?.error
 			)
 		);
 	}

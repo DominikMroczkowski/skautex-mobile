@@ -11,4 +11,10 @@ class InvitationTemplate {
 		templateFile = parsedJson['template'];
 
 	toString() => name;
+
+	toPost() {
+		return {
+			'name': name
+		};
+	}
 }
