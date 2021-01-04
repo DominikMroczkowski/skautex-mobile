@@ -6,6 +6,7 @@ import 'package:skautex_mobile/src/models/invitation_template.dart';
 import 'package:path/path.dart';
 
 import 'bloc/bloc.dart';
+import 'components/delete/delete.dart';
 
 class View extends StatelessWidget {
 
@@ -30,6 +31,12 @@ class View extends StatelessWidget {
 	}
 
 	Widget _actions(InvitationTemplate template, Bloc bloc) {
-		return Container(width: 0.0, height: 0.0);
+		final items = <PopupMenuItem>[
+			PopupMenuItem(child: Delete(template: template, update: bloc.update), enabled: false)
+		];
+		return PopupMenuButton(
+			itemBuilder:(_) => items
+		);
+
 	}
 }
