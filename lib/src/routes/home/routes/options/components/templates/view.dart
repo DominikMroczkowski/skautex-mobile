@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 
 import 'bloc/bloc.dart';
 import 'components/delete/delete.dart';
+import 'components/download/download.dart';
 
 class View extends StatelessWidget {
 
@@ -32,7 +33,8 @@ class View extends StatelessWidget {
 
 	Widget _actions(InvitationTemplate template, Bloc bloc) {
 		final items = <PopupMenuItem>[
-			PopupMenuItem(child: Delete(template: template, update: bloc.update), enabled: false)
+			PopupMenuItem(child: Delete(template: template, update: bloc.update), enabled: false),
+			PopupMenuItem(child: Download(template: template), enabled: false)
 		];
 		return PopupMenuButton(
 			itemBuilder:(_) => items

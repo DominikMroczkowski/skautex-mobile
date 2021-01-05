@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'bloc/bloc.dart';
 import 'components/form.dart' as form;
 
@@ -14,10 +15,11 @@ class View extends StatelessWidget {
 						builder: (_, snapshot) {
 							if (snapshot.connectionState != ConnectionState.done)
 								return AlertDialog(
-									title: Text('Not ready')
+									title: Text('Oczewiwanie'),
+									content: CircularIndicator()
 								);
 							return AlertDialog(
-								title: Text('Ready'));
+								title: Text('dodano'));
 						}
 					);
 				return form.Form(bloc: bloc);
