@@ -150,14 +150,6 @@ class LoginIndicator extends StatelessWidget {
 			stream: stream,
 			builder: (_, snapshot) {
 				if (snapshot.hasData) {
-					snapshot.data.then(
-						(_) {
-							Navigator.of(context).pushNamed('/login/auth_code');
-						},
-						onError: (err) {
-							logErrors(snapshot.error, context);
-						}
-					);
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (_, snapshot) {

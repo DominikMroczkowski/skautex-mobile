@@ -40,6 +40,7 @@ class Bloc {
 			(Future<JWT> i) {
 				i.then(
 					(JWT i) {
+						Navigator.of(context).pushNamed('/login/auth_code');
 						if (i.otpauth != null)
 							showDialog(
 								context: context,
