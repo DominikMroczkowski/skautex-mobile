@@ -1,15 +1,15 @@
 List<String> positions = [
-  "GOALKEEPER 1",
-	"SIDE DEFENDER 2",
-	"SIDE DEFENDER 3",
-  "CENTRAL DEFENDER 4",
-  "CENTRAL DEFENDER 5",
-  "DEFENSIVE HELP 6",
-  "MIDDLE HELP 8",
-  "MIDDLE HELP 10",
-  "SIDE HELP 7",
-  "SIDE HELP 11",
-  "ATTACKER 9"
+  "goalkeeper 1",
+	"side defender 2",
+	"side defender 3",
+  "central defender 4",
+  "central defender 5",
+  "defensive help 6",
+  "middle help 8",
+  "middle help 10",
+  "side help 7",
+  "side help 11",
+  "attacker 9"
 ];
 
 String getPolishPosition(String position) {
@@ -22,7 +22,6 @@ String getPolishPosition(String position) {
 		'Pomoc Środkowa 4',
 		'Pomoc Środkowa 5',
 		'Pomoc Defensywna 6',
-		'Obrona Boczna',
 		'Środkowa Pomoc 8',
 		'Środkowy Pomoc 10',
 		'Boczna Pomoc 7',
