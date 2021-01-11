@@ -8,10 +8,10 @@ import 'package:skautex_mobile/src/helpers/blocs/item_list.dart';
 import 'package:skautex_mobile/src/routes/home/routes/bookings/bloc/bloc.dart' as bookings;
 
 class Bloc extends ItemList<BookingReservation> {
-	Bloc(BuildContext context) {
+	Bloc(BuildContext context) : super(paging: 8) {
 		otp = context;
 
-		bookings.Provider.of(context).reservations.listen((i) {
+		bookings.Provider.of(context).reservations.listen((i)  {
 			super.fetch();
 		});
 	}

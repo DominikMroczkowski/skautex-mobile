@@ -1,14 +1,24 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:io' as io;
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' show Client, ByteStream;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
+import 'package:skautex_mobile/src/models/code_on_mail.dart';
+import 'package:skautex_mobile/src/models/connected_users.dart';
+import 'package:skautex_mobile/src/models/invitation.dart';
+import 'package:skautex_mobile/src/models/invitation_template.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
+import 'package:skautex_mobile/src/models/ranking.dart';
 import 'package:skautex_mobile/src/models/response_list.dart';
+import 'package:skautex_mobile/src/models/contact_detail.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'dart:async';
+import 'package:skautex_mobile/src/models/totp_device.dart';
 
 import 'repository.dart';
 import '../helpers/credentials.dart';
@@ -46,7 +56,7 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		if (json.decode(response.body).toString().contains('detail')) {
+		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<JWT>.error('Logowanie nie powiodło się');
 		}
 
@@ -60,8 +70,6 @@ class SkautexApiProvider implements Source {
 
 		final response = await client.post(
 			Uri.https(_root, '/api/v1/otp/verify/$code/'),
-			body: json.encode(<String, String> {
-			}),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -70,7 +78,7 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		if (json.decode(response.body).toString().contains('detail')) {
+		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<JWT>.error('Logowanie nie powiodło się');
 		}
 
@@ -102,7 +110,7 @@ class SkautexApiProvider implements Source {
 		}
 
 		final parsedJson = json.decode(response.body);
-		print(parsedJson['access']);
+		print(parsedJson);
 		var newJwt = JWT.fromJson(parsedJson);
 		newJwt.refresh = jwtC.refresh;
 		return newJwt;
@@ -183,18 +191,26 @@ class SkautexApiProvider implements Source {
 		return parsedJson['name'];
 	}
 
-	void sendCodeOnEmail(Future<JWT> jwt) async {
-		var j = await jwt;
-		await client.get(
+	Future<Object> sendCodeOnEmail(Future<JWT> jwt) async {
+		String access = (await jwt).access;
+
+		final response = await client.post(
 			Uri.https(_root,  '/api/v1/otp/email/send/'),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
 				"content-type" : 'application/json',
-				"authorization" : 'Bearer ${j.access}'
+				"authorization" : 'Bearer $access'
 			},
 		);
+
+		if (response.statusCode < 200 || response.statusCode > 299) {
+			return Future<Object>.error('Wysłanie kodu na email nie powiodło się');
+		}
+
+		return Future<Object>.value(Object());
 	}
+
 
 	Future<User> fetchUser(Future<JWT> jwt, String uri) async {
 		String access = (await jwt).access;
@@ -330,27 +346,6 @@ class SkautexApiProvider implements Source {
 	}
 
 
-	Future<Player> updatePlayer(Future<JWT> jwt, Player player) async {
-		String access = (await jwt).access;
-
-		final response = await client.put(
-			player.uri,
-			headers: {
-				"api-key" : _API_KEY,
-				"accept" : 'application/json',
-				"content-type" : 'application/json',
-				"authorization" : 'Bearer $access'
-			},
-			body: json.encode(
-				player.toJson()
-			)
-		);
-
-		final parsedJson = json.decode(response.body);
-
-		return Player.fromJson(parsedJson);
-	}
-
 	String _getSubURL<T>() {
 		final _uris = <Type, String>{
 			User: '/api/v1/users/',
@@ -362,7 +357,12 @@ class SkautexApiProvider implements Source {
 			BookingReservation: '/api/v1/booking/reservations/',
 			BookingBlacklist: '/api/v1/booking/blacklist/',
 			Event: '/api/v1/calendars/events/',
-			EventType: '/api/v1/calendars/events_types/'
+			EventType: '/api/v1/calendars/events_types/',
+			CodeOnMail: '/api/v1/otp/email/send',
+			TOTPDevice: '/api/v1/otp/totp/',
+			Invitation: '/api/v1/invitations/',
+			InvitationTemplate: '/api/v1/invitations_templates/',
+			Ranking: '/api/v1/rankings/top5/',
 		};
 
 	  return _uris[T];
@@ -419,6 +419,13 @@ class SkautexApiProvider implements Source {
 			Event: (Map<String, dynamic> parsedJson) => Event.fromJson(parsedJson),
 			EventType: (Map<String, dynamic> parsedJson) => EventType.fromJson(parsedJson),
 			File: (Map<String, dynamic> parsedJson) => File.fromJson(parsedJson),
+			CodeOnMail: (_) => CodeOnMail(),
+			ConnectedUser: (Map<String, dynamic> parsedJson) => ConnectedUser.fromJson(parsedJson),
+			TOTPDevice: (Map<String, dynamic> parsedJson) => TOTPDevice.fromJson(parsedJson),
+			Invitation: (Map<String, dynamic> parsedJson) => Invitation.fromJson(parsedJson),
+			InvitationTemplate: (Map<String, dynamic> parsedJson) => InvitationTemplate.fromJson(parsedJson),
+			ContactDetail: (Map<String, dynamic> parsedJson) => ContactDetail.fromJson(parsedJson),
+			Ranking: (Map<String, dynamic> parsedJson) => Ranking.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -452,6 +459,7 @@ class SkautexApiProvider implements Source {
 		final _objects = <Type, Function>{
 			User : (User user) => user.toJson(),
 			PlayerReport : (PlayerReport report) => report.toJson(),
+			Player : (Player player) => player.toJson(),
 			Cost : (Cost cost) => cost.toJson(),
 			Event : (Event event) => event.toJson(),
 		};
@@ -463,7 +471,6 @@ class SkautexApiProvider implements Source {
 		String access = (await jwt).access;
 
 		var jsonToEncode = _toJson(item);
-		print(jsonToEncode['url']);
 		final response = await client.put(
 			jsonToEncode['url'],
 			headers: {
@@ -477,7 +484,17 @@ class SkautexApiProvider implements Source {
 			)
 		);
 
-		print('Update response ' + response.body.toString());
+		debugPrint('Update >>> ' + jsonToEncode['url'].toString() +
+			'\nheaders: ' + {
+				"api-key" : _API_KEY,
+				"accept" : 'application/json',
+				"content-type" : 'application/json',
+				"authorization" : 'Bearer $access'
+			}.toString() + '\nbody: ' +
+				jsonToEncode.toString()
+		);
+		debugPrint('Update request ' + response.request.toString());
+		debugPrint('Update response ' + response.body.toString());
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie PUT dla URL: ${jsonToEncode['uri']} nie powiodło się');
@@ -493,33 +510,41 @@ class SkautexApiProvider implements Source {
 			User : (User user) => user.toPost(),
 			Report: (Report report) => report.toPost(),
 			Cost: (Cost cost) => cost.toPost(),
+			Player: (Player player) => player.toPost(),
 			Booking: (Booking booking) => booking.toPost(),
 			BookingBlacklist: (BookingBlacklist blacklist) => blacklist.toPost(),
 			BookingReservation: (BookingReservation reservation) => reservation.toPost(),
 			Event: (Event event) => event.toPost(),
+			CodeOnMail: (_) => null,
+			ContactDetail: (ContactDetail detail) => detail.toPost(),
+			Invitation: (Invitation invitation) => invitation.toPost(),
+			File: (_) => null,
+			InvitationTemplate: (InvitationTemplate i) => i.toPost()
 		};
 
 	  return _objects[T](item);
 	}
 
-	Future<T> addItem<T>(Future<JWT> jwt, T item) async {
+	Future<T> addItem<T>(Future<JWT> jwt, T item, {String uri}) async {
 		String access = (await jwt).access;
 
 		print(
-			Uri.https(_root, _getSubURL<T>(), {}),
+			uri ?? Uri.https(_root, _getSubURL<T>(), {}),
 		);
+
 		final response = await client.post(
-			Uri.https(_root, _getSubURL<T>(), null),
+			uri ?? Uri.https(_root, _getSubURL<T>(), null),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
 				"content-type" : 'application/json',
 				"authorization" : 'Bearer $access'
 			},
-			body: json.encode(_toPost(item))
+			body: _toPost(item) != null ? json.encode(_toPost(item)) : null
 		);
 
 		print(response.body);
+
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie POST dla URL: ${_getSubURL<T>()} nie powiodło się');
 		}
@@ -557,12 +582,15 @@ class SkautexApiProvider implements Source {
 
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uriOpt, Map<String, String> where}) async {
 		String access = (await jwt).access;
-
+		String uri;
 		if (uriOpt == null || uriOpt == '')
-			uriOpt = Uri.https(_root, _getSubURL<T>(), where).toString();
+			uri = Uri.https(_root, _getSubURL<T>(), where).toString();
+		else
+			uri = uriOpt;
 
+		print(uri);
 		final response = await client.get(
-			uriOpt,
+			uri,
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -571,7 +599,7 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		debugPrint(response.body);
+		print(response.body);
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<ResponseList<T>>
@@ -593,12 +621,10 @@ class SkautexApiProvider implements Source {
 	}
 
 
-	Future<String> downloadItem(Future<JWT> jwt, String uri) async {
+	Future<String> downloadItem(Future<JWT> jwt, String uri, File file) async {
 		String access = (await jwt).access;
 		WidgetsFlutterBinding.ensureInitialized();
-		await FlutterDownloader.initialize(
-  		debug: true
-		);
+
 		final directory = await getExternalStorageDirectory();
 
     bool hasExisted = await directory.exists();
@@ -606,9 +632,9 @@ class SkautexApiProvider implements Source {
       directory.create();
     }
 
-		print(directory.toString());
 		FlutterDownloader.enqueue(
  		 	url: uri,
+			fileName: basename(file.file),
   		savedDir: directory.path,
   		showNotification: true,
   		openFileFromNotification: true,
@@ -623,31 +649,65 @@ class SkautexApiProvider implements Source {
 		return Future.value('Dodano plik do kolejki pobierań');
 	}
 
-	Future<String> uploadItem(Future<JWT> jwt, String uri, File file) async {
+	Future<String> uploadItem<T>(Future<JWT> jwt, String uri, T item) async {
 		String access = (await jwt).access;
-  	final loaded = await io.File(file.file).readAsBytes();
 
-		final response = await client.post(
-			uri,
-			headers: {
-				"api-key" : _API_KEY,
-				"accept" : 'application/json',
-				"content-type" : 'application/json',
-				"authorization" : 'Bearer $access'
-			},
-			body: jsonEncode({
-				'file': loaded
-			})
-		);
+		_path<T>(T item) {
+			switch (T) {
+				case File:
+					return (item as File).file;
+				case InvitationTemplate:
+					return (item as InvitationTemplate).templateFile;
+			}
+		}
 
-		debugPrint(response.body);
+		final itemPath = _path(item);
+		io.File f = io.File(itemPath);
+		var stream = ByteStream(DelegatingStream(f.openRead()));
+    var length = await f.length();
+
+		Map<String, String> headers = {
+			"api-key" : _API_KEY,
+			"accept" : 'application/json',
+			"content-type" : 'multipart/form-data',
+			"authorization" : 'Bearer $access'
+		};
+
+		final u = (uri == null) ?
+			Uri.https(_root, _getSubURL<T>()) :
+			Uri.parse(uri);
+		print('URI >>>>>>>>>> $u');
+
+		_getFilefieldName<T>() {
+			final _objects = <Type, String>{
+				InvitationTemplate: 'template',
+				File: 'file'
+			};
+		  return _objects[T];
+		}
+
+    var request = new http.MultipartRequest("POST", u);
+		final fieldName = _getFilefieldName<T>();
+    var sing = http.MultipartFile(fieldName, stream, length,
+        filename: basename(f.path));
+
+    request.files.add(sing);
+    request.headers.addAll(headers);
+		request.fields.addAll(_toPost<T>(item));
+
+    var response = await request.send();
+
+		// Debug
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<String>
-				.error('Dodawanie pliku $file.file nie powiodło się');
+				.error('Dodawanie pliku ${basename(_path<T>(item))} nie powiodło się');
 		}
 
-		return Future.value('Plik $file.file został wysłany');
+		return Future.value('Plik ${basename(_path<T>(item))} został wysłany');
 	}
 
 }

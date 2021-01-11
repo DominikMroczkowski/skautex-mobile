@@ -2,81 +2,56 @@ import 'package:flutter/material.dart';
 
 import 'home.dart';
 
-import 'routes/players/players.dart';
+import 'routes/players/router.dart' as players;
 import 'routes/recommended/recommended.dart';
-import 'routes/calendar/calendar.dart';
+import 'routes/calendar/router.dart' as calendar;
 import 'routes/task/task.dart';
 import 'routes/costs/costs.dart';
-import 'routes/bookings/bookings.dart';
-import 'routes/reports/reports.dart';
+import 'routes/bookings/router.dart' as bookings;
+import 'routes/reports/router.dart' as reports;
 import 'routes/test/test.dart';
 import 'routes/ranking/ranking.dart';
-import 'routes/users/users.dart';
+import 'routes/users/router.dart' as users;
 import 'routes/options/options.dart';
 
 const _route = '/home';
 
-class Router {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-		if (_route == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  View(),
-				settings: settings
-			);
-		else if (_route + '/players' == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  Players(),
-				settings: settings
-			);
-		else if (_route + '/recommended' == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  Recommended(),
-				settings: settings
-			);
-		else if (_route + '/calendar' == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) =>  Calendar(),
-				settings: settings
-			);
-		else if (_route + '/task' == settings.name)
-	   	return MaterialPageRoute(
-				builder: (_) =>  Task(),
-				settings: settings
-			);
-		else if (_route + '/expenses' == settings.name)
-	   	return MaterialPageRoute(
-				builder: (_) =>  Costs(),
-				settings: settings
-			);
-		else if (_route + '/bookings' == settings.name)
-	   	return MaterialPageRoute(
-				builder: (_) =>  Bookings(),
-				settings: settings
-			);
-		else if (_route + '/reports' == settings.name)
-   		return MaterialPageRoute(
-				builder: (_) =>  Reports(),
-				settings: settings
-			);
-		else if (_route + '/test' == settings.name)
- 	  	return MaterialPageRoute(
-				builder: (_) =>  Test(),
-				settings: settings
-			);
-		else if (_route + '/rankings' == settings.name)
-	   	return MaterialPageRoute(
-				builder: (_) =>  Ranking(),
-				settings: settings
-			);
-		else if (_route + '/users' == settings.name)
-	   	return MaterialPageRoute(
-				builder: (_) =>  Users(),
-				settings: settings
-			);
-		else if (_route + '/options' == settings.name)
-	   	return MaterialPageRoute(
-				builder: (_) =>  Options(),
-				settings: settings
-			);
-	}
+Map<String, MaterialPageRoute> routes(RouteSettings settings){
+	var routes = {
+		_route: MaterialPageRoute(
+			builder: (_) =>  Home(),
+			settings: settings
+		),
+		_route + '/recommended': MaterialPageRoute(
+			builder: (_) =>  Recommended(),
+			settings: settings
+		),
+		_route + '/task': MaterialPageRoute(
+			builder: (_) =>  Task(),
+			settings: settings
+		),
+		_route + '/expenses': MaterialPageRoute(
+			builder: (_) =>  Costs(),
+			settings: settings
+		),
+		_route + '/test': MaterialPageRoute(
+			builder: (_) =>  Test(),
+			settings: settings
+		),
+		_route + '/rankings': MaterialPageRoute(
+			builder: (_) =>  Ranking(),
+			settings: settings
+		),
+		_route + '/options': MaterialPageRoute(
+			builder: (_) =>  Options(),
+			settings: settings
+		)
+	};
+
+	routes.addAll(reports.routes(settings));
+	routes.addAll(players.routes(settings));
+	routes.addAll(users.routes(settings));
+	routes.addAll(calendar.routes(settings));
+	routes.addAll(bookings.routes(settings));
+	return routes;
 }

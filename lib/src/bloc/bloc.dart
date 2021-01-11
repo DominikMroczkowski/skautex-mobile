@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/helpers/widgets/dialog_info.dart';
+import 'package:skautex_mobile/src/models/permissions.dart';
+import 'package:skautex_mobile/src/models/user.dart';
 import '../helpers/credentials.dart';
 import '../helpers/creds_with_code.dart';
 
+import 'auth_code_dialog.dart';
 
 import 'provider.dart';
 export 'provider.dart';
@@ -34,7 +37,37 @@ class Bloc {
 
 	Bloc({this.context}) {
 		_JWTOutput.listen(
-			(_) {},
+			(Future<JWT> i) {
+				i.then(
+					(JWT i) {
+						Navigator.of(context).pushNamed('/login/auth_code');
+						if (i.otpauth != null)
+							showDialog(
+								context: context,
+								builder: (_) {
+									return AuthCodeDialog(otpauth: i.otpauth);
+								}
+							);
+					},
+					onError: (i) {
+					showDialog(
+					context: context,
+					builder: (_) {
+						return AlertDialog(
+							title: Text("Niepowodzenie"),
+							content: Text("Nie udało się zalować"),
+							actions: [
+								FlatButton(child: Text('Ok'), onPressed: () {
+									Navigator.of(context).pop();
+								},)
+							],
+						);
+					}
+				);
+			}
+
+				);
+			},
 			onError: (i) {
 				showDialog(
 					context: context,
@@ -46,11 +79,28 @@ class Bloc {
 			}
 		);
 		_JWTFetcher.stream.transform(_JWTTransformer()).pipe(_JWTOutput);
+
+		_OTPOutput.listen((i){
+			i.then(
+				(i) {
+					fetchMe();
+				}
+			);
+		});
 		MergeStream<Future<JWT>>([
 			_OTPFetcher.stream.transform(_OTPTransformer()),
 			_refreshTokens.stream,
 			_dbTokenLoader.stream.transform(_dbLoaderTransform())
 		]).pipe(_OTPOutput);
+
+
+
+
+		_teamsFetcher.transform(_fetchTeams()).pipe(_teamsOutput);
+		_leagueFetcher.transform(_fetchLeagues()).pipe(_leagueOutput);
+		_userFetcher.transform(_userTransform()).pipe(_userOutput);
+		_userFetcher.transform(_permsTransform()).pipe(_permsOutput);
+		_userFetcher.transform(_groupTransform()).pipe(_groupsOutput);
 	}
 
 	_JWTTransformer() {
@@ -58,7 +108,7 @@ class Bloc {
 			handleData: (creds, sink) {
 				Future<JWT> jWT =_repository.fetchJWT(creds);
 				sink.add(jWT);
-			}
+			},
 		);
 	}
 
@@ -69,7 +119,7 @@ class Bloc {
 			},
 			handleError: (_, __, ___) {
 				Navigator.of(context, rootNavigator: true)
-					.pushNamedAndRemoveUntil('login', (r) => false);
+					.pushNamedAndRemoveUntil('/login', (r) => false);
 			}
 		);
 	}
@@ -130,6 +180,15 @@ class Bloc {
 		_refreshTokens.close();
 		_dbTokenLoader.close();
 		_clicked.close();
+
+		_teamsOutput.close();
+		_teamsFetcher.close();
+		_leagueFetcher.close();
+		_leagueOutput.close();
+		_userOutput.close();
+		_permsOutput.close();
+		_groupsOutput.close();
+
 	}
 
 	setContext(context) {
@@ -142,4 +201,70 @@ class Bloc {
 	final BehaviorSubject<String> _clicked = BehaviorSubject<String>();
 	get clicked => _clicked.stream;
 	Function(String) get changeClicked => _clicked.sink.add;
+
+
+	final _teamsOutput  = BehaviorSubject<Future<List<List<String>>>>();
+	final _leagueOutput  = BehaviorSubject<Future<List<List<String>>>>();
+
+	final _teamsFetcher = BehaviorSubject<Object>();
+	final _leagueFetcher = BehaviorSubject<Object>();
+
+	final _permsOutput = BehaviorSubject<Future<Permissions>>();
+	final _userOutput  = BehaviorSubject<Future<User>>();
+	final _userFetcher = BehaviorSubject<String>();
+	final _groupsOutput  = BehaviorSubject<Future<List<String>>>();
+
+	get permissions => _permsOutput.stream;
+	Stream<Future<User>> get me => _userOutput.stream;
+	get groups => _groupsOutput.stream;
+
+	Stream<Future<List<List<String>>>> get teams   => _teamsOutput.stream;
+	Stream<Future<List<List<String>>>> get leagues => _leagueOutput.stream;
+
+	Function(Object) get fetchTeams   => _teamsFetcher.sink.add;
+	Function(Object) get fetchLeagues => _leagueFetcher.sink.add;
+
+	_fetchTeams() {
+		return StreamTransformer<Object, Future<List<List<String>>>>.fromHandlers(
+			handleData: (_, sink) {
+				sink.add(_repository.fetchTeams(_OTPOutput.value));
+			}
+		);
+	}
+
+	_fetchLeagues() {
+		return StreamTransformer<Object, Future<List<List<String>>>>.fromHandlers(
+			handleData: (_, sink) {
+				sink.add(_repository.fetchLeagues(_OTPOutput.value));
+			}
+		);
+	}
+
+	fetchMe() {
+		_userFetcher.sink.add('me');
+	}
+
+	_userTransform() {
+		return StreamTransformer<String, Future<User>>.fromHandlers(
+			handleData: (String uri, sink) {
+				sink.add(_repository.fetchUser(_OTPOutput.value, uri));
+			}
+		);
+	}
+
+	_permsTransform() {
+		return StreamTransformer<String, Future<Permissions>>.fromHandlers(
+			handleData: (String uri, sink) {
+				sink.add(_repository.fetchPermissions(_OTPOutput.value, uri));
+			}
+		);
+	}
+
+	_groupTransform() {
+		return StreamTransformer<String, Future<List<String>>>.fromHandlers(
+			handleData: (String uri, sink) {
+				sink.add(_repository.fetchGroups(_OTPOutput.value, uri));
+			}
+		);
+	}
 }

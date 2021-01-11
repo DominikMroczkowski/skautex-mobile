@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/widgets/tile.dart';
 import 'package:skautex_mobile/src/models/report.dart';
+import 'package:skautex_mobile/src/routes/home/routes/reports/bloc/bloc.dart';
 
 class ReportsTile extends StatelessWidget {
 	final Report report;
+	final Bloc bloc;
 
-	ReportsTile({this.report});
+	ReportsTile({this.report, this.bloc});
 
 	Widget build(context) {
 		print(report.uri);
@@ -57,6 +59,6 @@ class ReportsTile extends StatelessWidget {
 	}
 
 	onTileTap(BuildContext context, Report report)	{
-		Navigator.pushNamed(context, '/home/reports/report', arguments: report);
+		Navigator.pushNamed(context, '/home/reports/report', arguments:  [report, bloc.reloadReports]);
 	}
 }

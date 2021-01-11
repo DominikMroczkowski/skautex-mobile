@@ -1,59 +1,41 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:skautex_mobile/src/models/jwt.dart';
-import 'package:skautex_mobile/src/helpers/blocs/delete.dart';
-import 'package:skautex_mobile/src/resources/repository.dart';
 import 'package:skautex_mobile/src/models/player.dart';
-import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 
 import 'provider.dart';
 export 'provider.dart';
 
 class Bloc {
-	final _repository    = Repository();
-	final _playerOutput  = BehaviorSubject<Future<Player>>();
-	final _playerFetcher = PublishSubject<Object>();
-	final _deactivate    = Delete();
+	final Function reloadUpperPage;
 
-	BehaviorSubject<String> _clicked;
-	BehaviorSubject<Future<JWT>> _access;
+	final _player = BehaviorSubject<Player>();
+	final _tab = BehaviorSubject<int>();
+	get tab => _tab.stream;
+	get changeTab => _tab.sink.add;
 
-	get player => _playerOutput.stream;
-	get deactivateOutput => _deactivate.item;
+	get player => _player.stream;
 
-	Function(Object) get fetchPlayer => _playerFetcher.sink.add;
-
-	Bloc(context) {
-		_access = session.Provider.of(context).otp;
-		_clicked = session.Provider.of(context).clicked;
-		_deactivate.otp = context;
-		_playerFetcher.transform(_playerTransfor()).pipe(_playerOutput);
+	final _reloadInvitations = BehaviorSubject<bool>();
+	reloadInvitations() {
+		_reloadInvitations.sink.add(true);
 	}
+	Stream get invitations => _reloadInvitations.stream;
 
-	_playerTransfor() {
-		return StreamTransformer<Object, Future<Player>>.fromHandlers(
-			handleData: (_, sink) {
-				final uri = _clicked.value;
-				if (uri == null) {
-					print("Uri is equal null");
-				}
-				sink.add(_repository.fetchPlayer(_access.value, uri));
-			}
-		);
+
+	final _reloadContacts = BehaviorSubject<bool>();
+	reloadContacts() {
+		_reloadContacts.sink.add(true);
 	}
+	Stream get contacts => _reloadContacts.stream;
 
-	deactivate() async {
-		player.listen(
-			(future) async {
-				Player _val = await future;
-				_deactivate.addItem(_val.uri);
-			}
-		);
+
+	Bloc({@required Player player, @required this.reloadUpperPage}) {
+		_player.sink.add(player);
 	}
-
 
 	dispose() {
-  	_playerOutput.close();
-		_playerFetcher.close();
+		_player.close();
+		_tab.close();
 	}
 }

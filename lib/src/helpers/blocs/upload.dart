@@ -1,26 +1,26 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
-import 'package:skautex_mobile/src/models/file.dart';
 import 'package:skautex_mobile/src/resources/repository.dart';
 import 'access.dart';
 
-class Upload with Access {
+class Upload<T> with Access {
+	final String uri;
 	final _repository = Repository();
 
 	final _output = PublishSubject<Future<String>>();
-	final _input = PublishSubject<File>();
+	final _input = PublishSubject<T>();
 
-	Function(File) get uploadItem => _input.sink.add;
+	Function(T) get uploadItem => _input.sink.add;
 	Stream<Future<String>> get item => _output.stream;
 
-	Upload() {
+	Upload({this.uri}) {
 		_input.transform(_fetch()).pipe(_output);
 	}
 
 	_fetch() {
-		return StreamTransformer<File, Future<String>>.fromHandlers(
-			handleData: (File file, sink) {
-				sink.add(_repository.uploadItem(otp, file.postUri, file));
+		return StreamTransformer<T, Future<String>>.fromHandlers(
+			handleData: (T file, sink) {
+				sink.add(_repository.uploadItem<T>(otp, uri, file));
 			}
 		);
 	}

@@ -9,23 +9,24 @@ class Add<T> with Access {
 
 	final _output = PublishSubject<Future<T>>();
 	final _input  = PublishSubject<T>();
+	final String uri;
 
 	var context;
-	Function(T) get addItem    => _input.sink.add;
+	Function(T) get addItem => _input.sink.add;
 	Stream<Future<T>> get item => _output.stream;
 
 	setContext(BuildContext context) {
 		this.context = context;
 	}
 
-	Add() {
+	Add({this.uri}) {
 		_input.transform(_fetch()).pipe(_output);
 	}
 
 	_fetch() {
 		return StreamTransformer<T, Future<T>>.fromHandlers(
 			handleData: (T item, sink) {
-				sink.add(_repository.addItem<T>(otp, item));
+				sink.add(_repository.addItem<T>(otp, item, uri: uri));
 			}
 		);
 	}

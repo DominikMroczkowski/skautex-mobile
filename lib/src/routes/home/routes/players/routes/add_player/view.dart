@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/helpers/positions.dart';
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'package:date_format/date_format.dart';
 
-import 'bloc/bloc.dart' as addPlayer;
+import 'bloc/bloc.dart';
 
 class View extends StatelessWidget {
 	Widget build(context) {
@@ -18,37 +17,31 @@ class View extends StatelessWidget {
 			appBar: AppBar(
 				title: Text('Dodaj użytkownika')
 			),
-			drawer: HomeDrawer(),
 		);
 	}
 
 	Widget body(BuildContext context) {
-		return Container(
-			child: Card(
-				child: SingleChildScrollView(
-					child: Container(
-						child: Column (children: <Widget>[
-							_goldenRow('Imię', _nameField(context)),
-							_goldenRow('Nazwisko', _surnameField(context)),
-        	  	_goldenRow('Data urodzenia', _birthDateField(context)),
-        	  	_goldenRow('Kraj', _countryField(context)),
-        	  	_goldenRow('Miasto', _cityField(context)),
-          		_goldenRow('Drużyna', _withAdding(_teamField(context), '/home/team/add', context)),
-          		_goldenRow('Liga', _withAdding(_leagueField(context), '/home/league/add', context)),
-							_goldenRow('Pozycja', _positionField(context)),
-							Container(
-								constraints: BoxConstraints(
-									maxHeight: 50.0
-								),
-							),
-							_submitButton(context)
-							],
+		return SingleChildScrollView(
+			child: Container(
+				child: Column (children: <Widget>[
+					 _nameField(context),
+					_surnameField(context),
+    	  	_birthDateField(context),
+    	  	_countryField(context),
+    	  	_cityField(context),
+      		_withAdding(_teamField(context), '/home/team/add', context),
+      		_withAdding(_leagueField(context), '/home/league/add', context),
+					_positionField(context),
+					Container(
+						constraints: BoxConstraints(
+							maxHeight: 50.0
 						),
-						padding: EdgeInsets.all(15.0),
 					),
-				)
+					_submitButton(context)
+					],
+				),
+				padding: EdgeInsets.all(15.0),
 			),
-			margin: EdgeInsets.all(15.0),
 		);
 	}
 
@@ -75,48 +68,16 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _goldenRow(String name, Widget field) {
-		return Container(
-			height: 50.0,
-			child: Row(
-				children: <Widget>[
-					Expanded(
-						flex: 21,
-						child: _header(name),
-					),
-					Container(
-						padding: EdgeInsets.only(left: 10)
-					),
-					Expanded(
-						flex: 34,
-						child: field,
-					)
-				],
-			)
-		);
-	}
-
-	Widget _header(String name) {
-		return Align(
-			alignment: Alignment.centerRight,
-			child: Text(
-				name,
-				style: TextStyle(
-						fontSize: 16
-				)
-			)
-		);
-	}
-
 	Widget _nameField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.name,
 			builder: (context, snapshot) {
-				return TextField(
+				return TextFormField(
 					onChanged: p.changeName,
 					decoration: InputDecoration(
+						labelText: 'Imię',
 						errorText: snapshot.error
 					)
 				);
@@ -125,14 +86,15 @@ class View extends StatelessWidget {
 	}
 
 	Widget _surnameField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.surname,
 			builder: (context, snapshot) {
-				return TextField(
+				return TextFormField(
 					onChanged: p.changeSurname,
 					decoration: InputDecoration(
+						labelText: 'Nazwisko',
 						errorText: snapshot.error
 					)
 				);
@@ -141,41 +103,35 @@ class View extends StatelessWidget {
 	}
 
 	Widget _positionField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
-		List<DropdownMenuItem> items = positionInterface.map<DropdownMenuItem<String>>(
-							(i) {
-								return DropdownMenuItem(
-									value: i,
-									child: SizedBox(child: Text(i, overflow: TextOverflow.ellipsis)),
-								);
-							}
-						).toList();
+		List<DropdownMenuItem> items = positions.map<DropdownMenuItem<String>>(
+			(i) {
+				return DropdownMenuItem(
+					value: i,
+					child: SizedBox(child: Text(i, overflow: TextOverflow.ellipsis)),
+				);
+			}
+		).toList();
 
 		return StreamBuilder(
 			stream: p.position,
 			builder: (context, snapshot) {
-				String value;
-				if (snapshot.hasData) {
-					value = positionInterface[positionRequest.indexOf(snapshot.data)];
-				}
-				return DropdownButton<String>(
-						value: value,
-						items: items,
-						isExpanded: true,
-						onChanged: (String i) { p.changePosition(positionRequest[positionInterface.indexOf(i)]);},
-						underline:
-								Container(
-        					height: 2,
-        					color: Colors.grey[300],
-      					)
-					);
+				return DropdownButtonFormField<String>(
+					value: snapshot.data,
+					items: items,
+					isExpanded: true,
+					onChanged: (String i) { p.changePosition(i);},
+					decoration: InputDecoration(
+						labelText: 'Pozycja'
+					)
+				);
 			}
 		);
 	}
 
 	Widget _birthDateField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.birthData,
@@ -195,7 +151,7 @@ class View extends StatelessWidget {
 	}
 
 	Widget _dateField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.birthData,
@@ -205,12 +161,14 @@ class View extends StatelessWidget {
 					return TextField(
 						controller: controller,
 						decoration: InputDecoration(
+							labelText: 'Data urodzenia',
 							errorText: snapshot.error
 						)
 					);
 				}
-				return TextField(
+				return TextFormField(
 					decoration: InputDecoration(
+						labelText: 'Data urodzenia',
 						errorText: snapshot.error
 					)
 				);
@@ -219,7 +177,7 @@ class View extends StatelessWidget {
 	}
 
 	Widget _countryField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.country,
@@ -227,6 +185,7 @@ class View extends StatelessWidget {
 				return TextField(
 					onChanged: p.changeCountry,
 					decoration: InputDecoration(
+						labelText: 'Kraj',
 						errorText: snapshot.error
 					)
 				);
@@ -235,7 +194,7 @@ class View extends StatelessWidget {
 	}
 
 	Widget _cityField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.city,
@@ -243,6 +202,7 @@ class View extends StatelessWidget {
 				return TextField(
 					onChanged: p.changeCity,
 					decoration: InputDecoration(
+						labelText: 'Miasto',
 						errorText: snapshot.error
 					)
 				);
@@ -252,7 +212,7 @@ class View extends StatelessWidget {
 
 
 	Widget _teamField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 		final i = info.Provider.of(context);
 		return StreamBuilder(
 			stream: p.team,
@@ -280,22 +240,20 @@ class View extends StatelessWidget {
 										if (choosen.hasData)
 											index = items.indexWhere((i) => i.value[0] == choosen.data[0] && i.value[1] == choosen.data[1]);
 
-										return DropdownButton<List<String>>(
+										return DropdownButtonFormField<List<String>>(
 											value: choosen.hasData ? items[index].value : null,
 											items: items,
 											onChanged: (List<String> name) {p.changeTeam(name);},
-											underline:
-											Container(
-        								height: 1,
-        								color: Colors.grey[300],
-      								)
+											decoration: InputDecoration(
+												labelText: 'Drużyna'
+											),
 										);
 									}
-									return Text('Czekam na response');
+									return Text('Czekam');
 								}
 							);
 						}
-						return Text('Czekam na request');
+						return Text('Czekam');
 					}
 				);
 			}
@@ -304,7 +262,7 @@ class View extends StatelessWidget {
 
 
 	Widget _leagueField(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 		final i = info.Provider.of(context);
 		return StreamBuilder(
 			stream: p.league,
@@ -330,15 +288,13 @@ class View extends StatelessWidget {
 										if (choosen.hasData)
 											index = items.indexWhere((i) => i.value[0] == choosen.data[0] && i.value[1] == choosen.data[1]);
 
-										return DropdownButton<List<String>>(
+										return DropdownButtonFormField<List<String>>(
 											value: choosen.hasData ? items[index].value : null,
 											items: items,
 											onChanged: (List<String> name) {p.changeLeague(name);},
-											underline:
-											Container(
-        								height: 1,
-        								color: Colors.grey[300],
-      								)
+											decoration: InputDecoration(
+												labelText: 'Liga'
+											),
 										);
 									}
 									return Text('Czekam na odpowiedź');
@@ -353,13 +309,13 @@ class View extends StatelessWidget {
 	}
 
 	Widget _submitButton(context) {
-		final p = addPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.submitValid,
 			builder: (context, snapshot) {
 				return RaisedButton(
-					onPressed: () {p.submitPlayer(context);},
+					onPressed: p.addPlayer,
 					child: _indicator(p),
 					color: Colors.blue,
 				);
@@ -367,9 +323,9 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _indicator(p) {
+	Widget _indicator(Bloc p) {
 		return  StreamBuilder(
-			stream: p.response,
+			stream: p.item,
 			builder: (context, snapshot) {
 				if (snapshot.hasData) {
 					return FutureBuilder(

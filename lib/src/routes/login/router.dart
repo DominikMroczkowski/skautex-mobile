@@ -6,17 +6,15 @@ import 'routes/auth_code/bloc/bloc.dart' as auth_code;
 
 const _route = '/login';
 
-class Router {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-		if (_route == settings.name)
-    	return MaterialPageRoute(
-				builder: (_) => View(),
-				settings: settings
-			);
-		else if (_route + '/auth_code' == settings.name)
-			return MaterialPageRoute(
-				builder: (_) => auth_code.Provider(child: AuthCode()),
-				settings: settings
-			);
-	}
+Map<String, MaterialPageRoute> routes(RouteSettings settings){
+	return {
+		_route: MaterialPageRoute(
+			builder: (_) => Login(),
+			settings: settings
+		),
+		_route + '/auth_code': MaterialPageRoute(
+			builder: (_) => auth_code.Provider(child: AuthCode()),
+			settings: settings
+		)
+	};
 }

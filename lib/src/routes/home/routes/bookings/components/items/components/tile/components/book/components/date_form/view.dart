@@ -36,7 +36,7 @@ class View extends StatelessWidget{
 
 	Widget _endDate(reservations) {
 		return StreamBuilder(
-			stream: bloc.endDate,
+			stream: bloc.score,
 			builder: (context, snapshot) {
 				return DateField(
 					change: bloc.changeEndDate,

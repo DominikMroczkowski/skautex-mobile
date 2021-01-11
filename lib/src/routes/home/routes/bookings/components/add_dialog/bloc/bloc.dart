@@ -40,7 +40,10 @@ class Bloc extends Add<Booking> {
 
 		item.listen(
 			(Future<Booking> i) {
-				i.then((_) {bookingBloc.reloadItems(true);});
+				i.then((i) {
+					bookingBloc.reloadItems();
+					Navigator.of(context).pushNamed('/home/bookings/booking', arguments: i);
+				});
 			});
 	}
 

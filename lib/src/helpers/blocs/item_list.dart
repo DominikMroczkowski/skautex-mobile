@@ -62,7 +62,6 @@ class ItemList<T> with Access {
 				rl.results.forEach(
 					(i) => cache.add(i)
 				);
-				print(cache.length);
 				return cache;
 			},
 			[]

@@ -8,7 +8,7 @@ import 'package:skautex_mobile/src/routes/home/routes/reports/routes/report/bloc
 import 'provider.dart';
 export 'provider.dart';
 
-class Bloc extends Upload {
+class Bloc extends Upload<File> {
 	final Report report;
 
 	final _path = BehaviorSubject<String>();
@@ -20,13 +20,13 @@ class Bloc extends Upload {
 	uploadFile() {
 		final file = File(
 			file: _path.value,
-			postUri: report.uri + 'files/'
 		);
 
 		uploadItem(file);
 	}
 
-	Bloc(BuildContext context, {@required this.report}) {
+	Bloc(BuildContext context, {@required this.report}) :
+		super(uri: report.uri + 'files/') {
 		otp = context;
 
 		final _bookingBloc = bookingBloc.Provider.of(context);

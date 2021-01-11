@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/models/booking.dart';
 import 'view.dart';
 
 class DateField extends StatelessWidget{

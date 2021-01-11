@@ -8,11 +8,12 @@ class Delete with Access {
 
 	final _output     = PublishSubject<Future<Object>>();
 	final _input      = PublishSubject<String>();
+	final Function onSuccess;
 
 	Function(String) get addItem    => _input.sink.add;
 	Stream<Future<Object>> get item => _output.stream;
 
-	Delete() {
+	Delete({this.onSuccess}) {
 		_input.transform(_fetch()).pipe(_output);
 	}
 

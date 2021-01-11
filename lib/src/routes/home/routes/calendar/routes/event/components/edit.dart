@@ -15,7 +15,7 @@ class Edit extends StatelessWidget {
 				color: Colors.white
 			),
 			onPressed: () {
-				navigator.currentState.pushNamed("/home/calendar/event/edit", arguments: [event, eventBloc]);
+				Navigator.of(context).pushNamed("/home/calendar/event/edit", arguments: [event, eventBloc]);
 			},
 			shape: CircleBorder(),
 			minWidth: 10.0

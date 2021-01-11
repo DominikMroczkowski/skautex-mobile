@@ -4,13 +4,10 @@ import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 import 'package:skautex_mobile/src/routes/login/bloc/bloc.dart' as login;
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 
-import 'router.dart' as login;
-
 class Login extends StatelessWidget {
-Widget build(BuildContext context) {
-		return Navigator(
-			initialRoute: '/login',
-			onGenerateRoute: login.Router.generateRoute
+	Widget build(BuildContext context) {
+		return login.Provider(
+			child: View()
 		);
 	}
 }
@@ -144,15 +141,10 @@ class View extends StatelessWidget {
 	}
 
 	Widget forgetPassword(BuildContext c) {
-		return InkWell(
-  			onTap: () {
-				Navigator.pushNamed(c, '/change_password');
-     			},
-     			child: new Text(
-				"ZAPOMNIAŁEŚ HASŁA?",
-				style: TextStyle(color: Colors.blue)
-			)
- 		);
+		return Container(
+			height: 0.0,
+			width: 0.0
+		);
 	}
 }
 
@@ -165,14 +157,6 @@ class LoginIndicator extends StatelessWidget {
 			stream: stream,
 			builder: (_, snapshot) {
 				if (snapshot.hasData) {
-					snapshot.data.then(
-						(_) {
-							Navigator.of(context).pushNamed('/login/auth_code');
-						},
-						onError: (err) {
-							logErrors(snapshot.error, context);
-						}
-					);
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (_, snapshot) {

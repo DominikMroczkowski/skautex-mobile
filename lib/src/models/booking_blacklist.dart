@@ -11,6 +11,7 @@ class BookingBlacklist {
 
 	BookingBlacklist.fromJson(Map<String, dynamic> parsedJson) :
 		uri   = parsedJson['url'],
+		user = User.fromJson(parsedJson['user']),
 		description = parsedJson['description'] ?? '';
 
 	Map<String, dynamic> toJson() {

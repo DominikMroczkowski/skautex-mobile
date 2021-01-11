@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/models/event.dart';
 import 'package:skautex_mobile/src/models/user.dart';
 import 'bloc/bloc.dart';
@@ -10,7 +9,6 @@ import 'components/users_dropdown.dart';
 import 'components/users_chip.dart';
 import 'components/color_dropdown.dart';
 import 'components/indicator.dart';
-import 'package:skautex_mobile/src/routes/home/routes/calendar/bloc/bloc.dart' as calendarBloc;
 
 class View extends StatelessWidget {
 	final Event event;
@@ -34,7 +32,7 @@ class View extends StatelessWidget {
 				builder: (_) =>
 					Indicator(
 						item: item,
-						popOnSuccess: calendarBloc.Provider.of(context).navigator.currentState.pop
+						popOnSuccess: Navigator.of(context).pop
 					)
 				)
 		);

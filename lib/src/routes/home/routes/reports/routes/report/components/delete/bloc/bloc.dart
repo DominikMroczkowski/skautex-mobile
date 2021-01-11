@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/blocs/delete.dart';
 import 'package:skautex_mobile/src/models/report.dart';
-import 'package:skautex_mobile/src/routes/home/routes/reports/bloc/bloc.dart' as reports;
+import 'package:skautex_mobile/src/routes/home/routes/reports/routes/report/bloc/bloc.dart' as page;
 
 import 'provider.dart';
 export 'provider.dart';
@@ -11,13 +11,14 @@ class Bloc extends Delete {
 
 	Bloc(BuildContext context, {this.report}) {
 		otp = context;
-		final reportsBloc = reports.Provider.of(context);
+		final reportBloc = page.Provider.of(context);
 
 		item.listen(
 			(Future i) {
 				i.then((_) {
-					reportsBloc.reloadReports();
-					reportsBloc.navigator.currentState.pop();
+					reportBloc.updateUpperPage != null ? reportBloc.updateUpperPage(): null;
+					Navigator.of(context).pop();
+					Navigator.of(context).pop();
 				}
 				);
 			}

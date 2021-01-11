@@ -6,8 +6,9 @@ import './components/delete/delete.dart';
 
 class ItemTile extends StatelessWidget {
 	final Booking booking;
+	final Function update;
 
-	ItemTile({this.booking});
+	ItemTile({this.booking, this.update});
 
 	Widget build(context) {
 		return Container(
@@ -25,7 +26,7 @@ class ItemTile extends StatelessWidget {
 					trailing: PopupMenuButton(
 						itemBuilder: (BuildContext context) => <PopupMenuEntry>[
 							PopupMenuItem(
-								child: Delete(booking: booking),
+								child: Delete(booking: booking, update: update),
 								enabled: false
 							),
 							PopupMenuItem(
@@ -36,10 +37,10 @@ class ItemTile extends StatelessWidget {
 					),
 				),
 				onTap: () {
-					//bookings.Provider.of(context).navigator.currentState.pushNamed(
 					Navigator.of(context).pushNamed(
 						'/home/bookings/booking',
-						arguments: booking);
+						arguments: booking
+					);
 				},
 			),
 		);

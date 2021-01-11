@@ -58,9 +58,9 @@ class User {
   }
 
   @override
-  String toString() => username + ' - ' + firstName + ' ' + lastName;
+  String toString() => username ?? '' + ' - ' + firstName ?? '' + ' ' + lastName ?? '';
 
 	String nameString() {
-		return firstName + ' ' + lastName + ' - #' +username;
+		return toString();
 	}
 }

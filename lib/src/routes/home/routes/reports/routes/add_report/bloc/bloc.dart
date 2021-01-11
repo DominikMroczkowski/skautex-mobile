@@ -7,7 +7,6 @@ import 'package:skautex_mobile/src/models/report.dart';
 import 'package:skautex_mobile/src/helpers/blocs/add.dart';
 import 'package:skautex_mobile/src/helpers/blocs/validate.dart';
 import 'players.dart';
-import 'package:skautex_mobile/src/routes/home/routes/reports/bloc/bloc.dart' as reportsBloc;
 
 import 'provider.dart';
 export 'provider.dart';
@@ -20,7 +19,7 @@ class Bloc extends Add<Report> with Validate {
 	final _playerDelete = BehaviorSubject<Player>();
 	final _event        = BehaviorSubject<String>();
 	final _type         = BehaviorSubject<String>();
-	final reportsBloc.Bloc _reportsBloc;
+	final Function updateUpperPage;
 	final Players players;
 
 	Stream<String> get title => _title.stream.transform(hasOneSymbol);
@@ -34,12 +33,11 @@ class Bloc extends Add<Report> with Validate {
 	Function(Player) get addPlayer         => _playerAdd.sink.add;
 	Function(Player) get deletePlayer      => _playerDelete.sink.add;
 	Function(String) get changeEvent       => _event.sink.add;
-	Stream<bool>     get submitValid       => Rx.combineLatest2(title, description, (t, d) => true);
+	Stream<bool>     get submitValid       => Rx.combineLatest4(title, description, choosenPlayers, type, (t, d, p, _) => true);
 	Function(String) get changeType => _type.sink.add;
 
-	Bloc(BuildContext context) :
-		players  = Players(context: context),
-		_reportsBloc = reportsBloc.Provider.of(context) {
+	Bloc(BuildContext context, {@required this.updateUpperPage}) :
+		players  = Players(context: context) {
 		otp = context;
 		players.otp = context;
 		setContext(context);
@@ -49,24 +47,35 @@ class Bloc extends Add<Report> with Validate {
 			_playerDelete.transform(_toStreamedPlayer(true))
 		]).transform(_toPlayer()).pipe(_players);
 		item.listen(
-			(i) {
-				showDialog(
-					context: context,
-					builder: (_) {
-						return DialogInfo(
-							future: i,
-							title: 'Dodawanie Raportu',
-							runAfter: _popAndUpdate,
-						);
-					}
+			(Future<Report> i) {
+				i.then(
+				 (i) {_update(i);},
+				 onError: (_) {
+					showDialog(
+						context: context,
+						builder: (context) {
+							return AlertDialog(
+								title: Text('Niepowodzenie'),
+								actions: [
+									FlatButton(
+										child: Text('Ok'),
+										onPressed: () {
+											Navigator.of(context).pop();
+										}
+									)
+								],
+							);
+						}
+					);
+				 }
 				);
 			}
 		);
 	}
 
-	_popAndUpdate() async {
-		_reportsBloc.reloadReports();
-		_reportsBloc.navigator.currentState.pop();
+	_update(report) async {
+		updateUpperPage();
+		Navigator.of(context).pushNamed('/home/reports/report', arguments: [report , updateUpperPage]);
 	}
 
 	_toStreamedPlayer(bool delete) {

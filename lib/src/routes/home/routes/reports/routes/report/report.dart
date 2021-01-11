@@ -6,14 +6,16 @@ import 'view.dart';
 
 class Report extends StatelessWidget {
 	final models.Report report;
+	final Function updateUpperPage;
 
-	Report({@required this.report});
+	Report({@required this.report, @required this.updateUpperPage});
 
 	Widget build(BuildContext context) {
 		return Provider(
 			child: View(),
 			context: context,
-			report: this.report
+			report: this.report,
+			updateUpperPage: updateUpperPage
 		);
 	}
 }

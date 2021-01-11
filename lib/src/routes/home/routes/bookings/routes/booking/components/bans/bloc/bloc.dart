@@ -13,7 +13,9 @@ class Bloc extends ItemList<BookingBlacklist>{
 	final Booking booking;
 
 	_fetch() {
-		super.fetch(where: {'limit': 'none', 'booking_object': booking.uri.split('/').last});
+		var splited = booking.uri.split('/');
+		splited.removeLast();
+		super.fetch(where: {'limit': 'none', 'booking_object': splited.last});
 	}
 
 	Bloc(BuildContext context, {this.booking}) {

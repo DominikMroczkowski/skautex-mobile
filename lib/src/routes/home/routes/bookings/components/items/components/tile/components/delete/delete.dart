@@ -5,8 +5,9 @@ import 'bloc/bloc.dart';
 
 class Delete extends StatelessWidget {
 	final Booking booking;
+	final Function update;
 
-	Delete({@required this.booking});
+	Delete({@required this.booking, @required this.update});
 
 	Widget build(BuildContext context) {
 		return Provider(
@@ -25,12 +26,15 @@ class _View extends StatelessWidget {
 		final Function deactivate = Provider.of(context).addItem;
 
 		return FlatButton(
-			textColor: Colors.red,
+			textColor: Colors.black,
 			child: Text('Usuń'),
 			onPressed: () {
 				showDialog(
 					context: context,
 					child: DeleteDialog(
+						ask: 'Czy napewno chcesz usunąć zasób?',
+						title: 'Usuwanie',
+						whileWorking: 'Usuwanie',
 						stream: stream,
 						onTrue: deactivate,
 						uri: booking.uri

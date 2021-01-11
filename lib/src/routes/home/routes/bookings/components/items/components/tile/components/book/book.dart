@@ -28,7 +28,7 @@ class _View extends StatelessWidget {
 		Bloc bloc = Provider.of(context);
 
 		return FlatButton(
-			textColor: Colors.blue,
+			textColor: Colors.black,
 			child: Text('Rezerwuj'),
 			onPressed: () {
 				showDialog(

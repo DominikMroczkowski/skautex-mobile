@@ -1,55 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/helpers/positions.dart';
-import 'package:skautex_mobile/src/helpers/widgets/homeDrawer.dart';
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'package:date_format/date_format.dart';
 
-import 'bloc/bloc.dart' as editPlayer;
-
+import 'bloc/bloc.dart';
 
 class View extends StatelessWidget {
-	@override
-	Widget build(BuildContext context) {
+	Widget build(context) {
 		final i = info.Provider.of(context);
 		i.fetchTeams(Object());
 		i.fetchLeagues(Object());
+
 		return Scaffold(
 			body: body(context),
 			appBar: AppBar(
-				title: Text('Edytuj Zawodnika')
+				title: Text('Edytuj użytkownika')
 			),
-			drawer: HomeDrawer(),
 		);
 	}
 
 	Widget body(BuildContext context) {
-	return Container(
-			child: Card(
-				child: SingleChildScrollView(
-					child: Container(
-						child: Column (children: <Widget>[
-							_goldenRow('Imię', _nameField(context)),
-							_goldenRow('Nazwisko', _surnameField(context)),
-        	  	_goldenRow('Data urodzenia', _birthDateField(context)),
-        	  	_goldenRow('Kraj', _countryField(context)),
-        	  	_goldenRow('Miasto', _cityField(context)),
-          		_goldenRow('Drużyna', _withAdding(_teamField(context), '/home/team/add', context)),
-          		_goldenRow('Liga', _withAdding(_leagueField(context), '/home/league/add', context)),
-							_goldenRow('Pozycja', _positionField(context)),
-							Container(
-								constraints: BoxConstraints(
-									maxHeight: 50.0
-								),
-							),
-							_submitButton(context)
-							],
+		return SingleChildScrollView(
+			child: Container(
+				child: Column (children: <Widget>[
+					 _nameField(context),
+					_surnameField(context),
+    	  	_birthDateField(context),
+    	  	_countryField(context),
+    	  	_cityField(context),
+      		_withAdding(_teamField(context), '/home/team/add', context),
+      		_withAdding(_leagueField(context), '/home/league/add', context),
+					_positionField(context),
+					Container(
+						constraints: BoxConstraints(
+							maxHeight: 50.0
 						),
-						padding: EdgeInsets.all(15.0),
 					),
-				)
+					_submitButton(context)
+					],
+				),
+				padding: EdgeInsets.all(15.0),
 			),
-			margin: EdgeInsets.all(15.0),
 		);
 	}
 
@@ -76,51 +68,20 @@ class View extends StatelessWidget {
 		);
 	}
 
-	Widget _goldenRow(String name, Widget field) {
-		return Container(
-			height: 50.0,
-			child: Row(
-				children: <Widget>[
-					Expanded(
-						flex: 21,
-						child: _header(name),
-					),
-					Container(
-						padding: EdgeInsets.only(left: 10)
-					),
-					Expanded(
-						flex: 34,
-						child: field,
-					)
-				],
-			)
-		);
-	}
-
-	Widget _header(String name) {
-		return Align(
-			alignment: Alignment.centerRight,
-			child: Text(
-				name,
-				style: TextStyle(
-						fontSize: 16
-				)
-			)
-		);
-	}
-
 	Widget _nameField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.name,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData)
-					return CircularIndicator.color(Colors.blue);
+					return _loadingField('Imię');
+
 				return TextFormField(
-					initialValue: snapshot.data,
 					onChanged: p.changeName,
+					initialValue: snapshot.data ?? '',
 					decoration: InputDecoration(
+						labelText: 'Imię',
 						errorText: snapshot.error
 					)
 				);
@@ -129,17 +90,19 @@ class View extends StatelessWidget {
 	}
 
 	Widget _surnameField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.surname,
 			builder: (context, snapshot) {
-				if (snapshot.data == null)
-					return CircularIndicator.color(Colors.blue);
+				if (!snapshot.hasData)
+					return _loadingField('Nazwisko');
+
 				return TextFormField(
-					initialValue: snapshot.data,
 					onChanged: p.changeSurname,
+					initialValue: snapshot.data ?? '',
 					decoration: InputDecoration(
+						labelText: 'Nazwisko',
 						errorText: snapshot.error
 					)
 				);
@@ -148,91 +111,97 @@ class View extends StatelessWidget {
 	}
 
 	Widget _positionField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
-		List<DropdownMenuItem> items = positionInterface.map<DropdownMenuItem<String>>(
-							(i) {
-								return DropdownMenuItem(
-									value: i,
-									child: Text(i)
-								);
-							}
-						).toList();
+		List<DropdownMenuItem> items = positions.map<DropdownMenuItem<String>>(
+			(i) {
+				return DropdownMenuItem<String>(
+					value: i,
+					child: SizedBox(child: Text(i, overflow: TextOverflow.ellipsis)),
+				);
+			}
+		).toList();
 
 		return StreamBuilder(
 			stream: p.position,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData)
-					return CircularIndicator.color(Colors.blue);
+					return _loadingField('Pozycja');
 
-				return DropdownButton<String>(
-					value: positionInterface[positionRequest.indexOf(snapshot.data)],
+				if (!positions.contains(snapshot.data))
+					items.add(
+						DropdownMenuItem<String>(
+							value: snapshot.data,
+							child: SizedBox(child: Text(snapshot.data, overflow: TextOverflow.ellipsis)),
+						)
+					);
+
+				return DropdownButtonFormField<String>(
+					value: snapshot.data,
 					items: items,
-					onChanged: (String i) { p.changePosition(positionRequest[positionInterface.indexOf(i)]);},
-					underline:
-						Container(
-       				height: 1,
-       				color: Colors.grey[300],
-      		)
-				);
-			}
-		);
-	}
-
-	Widget _birthDateField(context) {
-		final p = editPlayer.Provider.of(context);
-
-		return StreamBuilder(
-			stream: p.birthData,
-			builder: (context, snapshot) {
-				if (!snapshot.hasData)
-					return CircularIndicator.color(Colors.blue);
-				return GestureDetector(
-				  onTap: () async {
-						DateTime date = await showDatePicker(context: context, firstDate: DateTime.utc(1970, 1, 1), lastDate: DateTime.now(), initialDate: DateTime.utc(2000, 1, 1));
-						if (date != null)
-							p.changeBithDate(formatDate(date, [yyyy, '-', mm, '-', dd]));
-					},
-  				child: AbsorbPointer(
-    				child: _dateField(context)
-  				)
-				);
-			}
-		);
-	}
-
-	Widget _dateField(context) {
-		final p = editPlayer.Provider.of(context);
-
-		return StreamBuilder(
-			stream: p.birthData,
-			builder: (context, snapshot) {
-				if (!snapshot.hasData)
-					return CircularIndicator.color(Colors.blue);
-				var controller = TextEditingController(text: snapshot.data.toString());
-				return TextField(
-					controller: controller,
+					isExpanded: true,
+					onChanged: (String i) { p.changePosition(i);},
 					decoration: InputDecoration(
-						errorText: snapshot.error
+						labelText: 'Pozycja'
 					)
 				);
 			}
 		);
 	}
 
+	Widget _birthDateField(context) {
+		final p = Provider.of(context);
+
+		return StreamBuilder(
+			stream: p.birthData,
+			builder: (context, snapshot) {
+				if (!snapshot.hasData)
+					return _loadingField('Data urodzenia');
+
+				return GestureDetector(
+				  onTap: () async {
+						DateTime date = await showDatePicker(
+							context: context,
+							firstDate: DateTime.utc(1970, 1, 1),
+							lastDate: DateTime.now(),
+							initialDate: DateTime.utc(2000, 1, 1)
+						);
+						if (date != null)
+							p.changeBithDate(formatDate(date, [yyyy, '-', mm, '-', dd]));
+					},
+  				child: AbsorbPointer(
+    				child: _dateField(snapshot)
+  				)
+				);
+			}
+		);
+	}
+
+	Widget _dateField(snapshot) {
+		var controller = TextEditingController(text: snapshot.data.toString());
+		return TextFormField(
+			controller: controller,
+			decoration: InputDecoration(
+				labelText: 'Data urodzenia',
+				errorText: snapshot.error
+			)
+		);
+	}
+
 	Widget _countryField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.country,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData)
-					return CircularIndicator.color(Colors.blue);
+					return _loadingField('Kraj');
 
 				return TextFormField(
-					initialValue: snapshot.data,
 					onChanged: p.changeCountry,
+					initialValue: snapshot.data ?? '',
 					decoration: InputDecoration(
+						labelText: 'Kraj',
 						errorText: snapshot.error
 					)
 				);
@@ -241,18 +210,19 @@ class View extends StatelessWidget {
 	}
 
 	Widget _cityField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.city,
 			builder: (context, snapshot) {
 				if (!snapshot.hasData)
-					return CircularIndicator.color(Colors.blue);
+					return _loadingField('Miasto');
 
 				return TextFormField(
-					initialValue: snapshot.data,
 					onChanged: p.changeCity,
+					initialValue: snapshot.data ?? '',
 					decoration: InputDecoration(
+						labelText: 'Miasto',
 						errorText: snapshot.error
 					)
 				);
@@ -262,50 +232,49 @@ class View extends StatelessWidget {
 
 
 	Widget _teamField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 		final i = info.Provider.of(context);
 		return StreamBuilder(
 			stream: p.team,
 			builder: (context, choosen) {
 				if (!choosen.hasData)
-					return CircularIndicator.color(Colors.blue);
+					return _loadingField('Drużyna');
 
 				return StreamBuilder(
 					stream: i.teams,
 					builder: (context, future) {
-						if (!future.hasData)
-							return CircularIndicator.color(Colors.blue);
+						if (future.hasData) {
+							return FutureBuilder(
+								future: future.data,
+								builder: (context, snapshot) {
+									if (snapshot.hasData) {
+										List<DropdownMenuItem> items = snapshot.data.map<DropdownMenuItem<List<String>>>(
+												(List<String> i) {
+													return DropdownMenuItem<List<String>>(
+														value: i,
+														child: Text(i[0])
+													);
+												}
+										).toList();
 
-						return FutureBuilder(
-							future: future.data,
-							builder: (context, snapshot) {
-								if (!snapshot.hasData)
-									return CircularIndicator.color(Colors.blue);
+										int index;
+										if (choosen.hasData)
+											index = items.indexWhere((i) => i.value[0] == choosen.data[0] && i.value[1] == choosen.data[1]);
 
-								List<DropdownMenuItem> items = snapshot.data.map<DropdownMenuItem<List<String>>>(
-										(List<String> i) {
-											return DropdownMenuItem<List<String>>(
-												value: i,
-												child: Text(i[0])
-											);
-										}
-								).toList();
-
-								final index = items.indexWhere((i) => i.value[0] == choosen.data[0] && i.value[1] == choosen.data[1]);
-
-								return DropdownButton<List<String>>(
-									value: items[index].value,
-									items: items,
-									onChanged: (List<String> i) {p.changeTeam(i);},
-									underline:
-									Container(
-        						height: 1,
-        						color: Colors.grey[300],
-      						)
-								);
-							}
-						);
-
+										return DropdownButtonFormField<List<String>>(
+											value: choosen.hasData ? items[index].value : null,
+											items: items,
+											onChanged: (List<String> name) {p.changeTeam(name);},
+											decoration: InputDecoration(
+												labelText: 'Drużyna'
+											),
+										);
+									}
+									return Text('Czekam');
+								}
+							);
+						}
+						return Text('Czekam');
 					}
 				);
 			}
@@ -314,50 +283,53 @@ class View extends StatelessWidget {
 
 
 	Widget _leagueField(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 		final i = info.Provider.of(context);
-
 		return StreamBuilder(
 			stream: p.league,
 			builder: (context, choosen) {
 				if (!choosen.hasData)
-					return CircularIndicator.color(Colors.blue);
+					return _loadingField('Liga');
 
 				return StreamBuilder(
 					stream: i.leagues,
 					builder: (context, future) {
 						if (!future.hasData)
-							return CircularIndicator.color(Colors.blue);
+							return _loadingField('Liga');
 
-						return FutureBuilder(
-							future: future.data,
-							builder: (context, snapshot) {
-								if (!snapshot.hasData)
-									return CircularIndicator.color(Colors.blue);
 
-								List<DropdownMenuItem<List<String>>> items = snapshot.data.map<DropdownMenuItem<List<String>>>(
-										(List<String> i) {
-											return DropdownMenuItem<List<String>>(
-												value: i,
-												child: Text(i[0])
-											);
-										}
-								).toList();
+						if (future.hasData) {
+							return FutureBuilder(
+								future: future.data,
+								builder: (context, snapshot) {
+									if (snapshot.hasData) {
+										List<DropdownMenuItem> items = snapshot.data.map<DropdownMenuItem<List<String>>>(
+												(List<String> i) {
+													return DropdownMenuItem<List<String>>(
+														value: i,
+														child: Text(i[0])
+													);
+												}
+										).toList();
 
-								final index = items.indexWhere((i) => i.value[0] == choosen.data[0] && i.value[1] == choosen.data[1]);
+										int index;
+										if (choosen.hasData)
+											index = items.indexWhere((i) => i.value[0] == choosen.data[0] && i.value[1] == choosen.data[1]);
 
-								return DropdownButton<List<String>>(
-									value: items[index].value,
-									items: items,
-									onChanged: (List<String> name) {p.changeLeague(name);},
-									underline:
-									Container(
-        						height: 1,
-        						color: Colors.grey[300],
-      						)
-								);
-							}
-						);
+										return DropdownButtonFormField<List<String>>(
+											value: choosen.hasData ? items[index].value : null,
+											items: items,
+											onChanged: (List<String> name) {p.changeLeague(name);},
+											decoration: InputDecoration(
+												labelText: 'Liga'
+											),
+										);
+									}
+									return Text('Czekam na odpowiedź');
+								}
+							);
+						}
+						return Text('Wykonuję zapytanie');
 					}
 				);
 			}
@@ -365,42 +337,50 @@ class View extends StatelessWidget {
 	}
 
 	Widget _submitButton(context) {
-		final p = editPlayer.Provider.of(context);
+		final p = Provider.of(context);
 
 		return StreamBuilder(
 			stream: p.submitValid,
 			builder: (context, snapshot) {
-				return Row(
-					children: [
-						Expanded(child: Container()),
-						RaisedButton(
-							onPressed: () { p.updatePlayer(context); },
-							child: _indicator(p),
-							color: Colors.blue,
-						),
-						Expanded(child: Container())
-					]
+				return RaisedButton(
+					onPressed: p.updatePlayer,
+					child: _indicator(p),
+					color: Colors.blue,
 				);
 			}
 		);
 	}
 
-	Widget _indicator(editPlayer.Bloc p) {
+	Widget _indicator(Bloc p) {
 		return  StreamBuilder(
-			stream: p.updatePlayerOutput,
+			stream: p.item,
 			builder: (context, snapshot) {
-				if (!snapshot.hasData)
-					return Text('Edytuj');
-
-				return FutureBuilder(
-					future: snapshot.data,
-					builder: (context, futureSnap) {
-						if (futureSnap.connectionState == ConnectionState.waiting)
-							return CircularIndicator();
-						return Text('Edytuj');
-					}
-				);
+				if (snapshot.hasData) {
+					return FutureBuilder(
+						future: snapshot.data,
+						builder: (context, future) {
+							if (future.connectionState == ConnectionState.waiting)
+								return CircularIndicator();
+							return Text('Dodaj');
+						}
+					);
+				}
+				return Text('Dodaj');
 			}
+		);
+	}
+
+	_loadingField(String label) {
+		return Column(
+			children: [
+				TextFormField(
+					enabled: false,
+					decoration: InputDecoration(
+						labelText: label,
+					)
+				),
+				LinearProgressIndicator()
+			]
 		);
 	}
 }

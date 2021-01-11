@@ -3,7 +3,7 @@ import 'package:skautex_mobile/src/models/user.dart' as models;
 import 'package:skautex_mobile/src/models/permissions.dart' as models;
 
 import 'bloc/bloc.dart' as user;
-import 'package:skautex_mobile/src/routes/home/bloc/bloc.dart' as info;
+import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'package:skautex_mobile/src/helpers/widgets/view_item_list.dart';

@@ -55,7 +55,7 @@ class DeleteDialog extends StatelessWidget {
 							return AlertDialog(
 								title: Text("Powodzenie"),
 								actions: [
-									FlatButton(child: Text('Ok'), onPressed:() {Navigator.of(context).popUntil((route) { return '/home' == route.settings.name;});})
+									FlatButton(child: Text('Ok'), onPressed:() {Navigator.of(context).pop();})
 								]
 							);
 						}

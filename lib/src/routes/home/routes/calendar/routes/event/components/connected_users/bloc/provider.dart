@@ -6,7 +6,7 @@ class Provider extends InheritedWidget {
 	final event;
 
 	Provider({Key key, Widget child, BuildContext context, GlobalKey<NavigatorState> navigator, Event event}) :
-		event = Bloc(event: event),
+		event = Bloc(context, event: event),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

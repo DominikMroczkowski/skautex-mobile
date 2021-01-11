@@ -72,12 +72,13 @@ class AddView extends StatelessWidget {
 				if (snapshot.hasError)
 					return Text('Error');
 
-				List<DropdownMenuItem<BookingType>> items = snapshot.data.map((i) {
-					return DropdownMenuItem(
+				List<DropdownMenuItem<BookingType>> items = [];
+				snapshot.data.forEach((i) {
+					items.add(DropdownMenuItem(
 						child: Text(getBookingTypeName(i.name)),
 						value: i
-					);
-				}).toList();
+					));
+				});
 				return _dropDown(bloc, items);
 			}
 		);
@@ -87,14 +88,9 @@ class AddView extends StatelessWidget {
 		return StreamBuilder(
 			stream: bloc.type,
 			builder: (context, AsyncSnapshot<BookingType> snapshot) {
-				return DropdownButton(
+				return DropdownButtonFormField<BookingType>(
 					items: items,
 					onChanged: bloc.changeType,
-					underline:
-						Container(
-       				height: 1,
-       				color: Colors.grey[300],
-      		),
 					value: snapshot.data
 				);
 			}

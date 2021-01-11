@@ -11,6 +11,7 @@ class View extends StatelessWidget {
 
 		return StreamList(
 			itemsWatcher: calendar.Provider.of(context).itemsWatcher,
+			requestWatcher: calendar.Provider.of(context).requestWatcher,
 			tile: (event) => _Tile(event: event),
 			controller: bloc.controller
 		);
@@ -36,7 +37,6 @@ class _Tile extends StatelessWidget {
 			dense: true,
 			enabled: true,
 			onTap: () {
-				print('xd');
 				Navigator.of(context).pushNamed('/home/calendar/event', arguments: event);
 			}
 		);

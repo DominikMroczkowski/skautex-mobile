@@ -11,6 +11,7 @@ class View extends StatelessWidget {
 
 		return StreamList(
 			itemsWatcher: bloc.itemsWatcher,
+			requestWatcher: bloc.requestWatcher,
 			tile: (reservation) => Tile(reservation: reservation)
 		);
 	}

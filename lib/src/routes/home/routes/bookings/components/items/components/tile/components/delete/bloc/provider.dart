@@ -4,8 +4,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final deleteButton;
 
-	Provider({Key key, Widget child, BuildContext context}) :
-		deleteButton = Bloc(context),
+	Provider({Key key, Widget child, BuildContext context, Function update}) :
+		deleteButton = Bloc(context, update: update),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

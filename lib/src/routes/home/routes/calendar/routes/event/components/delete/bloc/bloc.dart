@@ -8,13 +8,12 @@ export 'provider.dart';
 
 class Bloc extends Delete {
 	final Event event;
-	final GlobalKey<NavigatorState> navigator;
 
 	delete() {
 		addItem(event.uri);
 	}
 
-	Bloc(context, {this.event, this.navigator}) {
+	Bloc(context, {this.event}) {
 		otp = context;
 	}
 }

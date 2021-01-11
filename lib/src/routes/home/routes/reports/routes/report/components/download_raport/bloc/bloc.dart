@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/helpers/blocs/download.dart';
+import 'package:skautex_mobile/src/models/file.dart';
 import 'package:skautex_mobile/src/models/report.dart';
 
 import 'provider.dart';
@@ -12,8 +13,13 @@ class Bloc extends Download {
 		otp = context;
 	}
 
-	startDownload() {
-		downloadItem(report.uri + '/download');
+	download() {
+		downloadItem(
+			File(
+				uri: report.uri + '/download',
+				file: 'report_${report.title}'
+			)
+		);
 	}
 
 	dispose() {

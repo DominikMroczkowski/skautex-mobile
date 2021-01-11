@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skautex_mobile/src/bloc/bloc.dart' as session;
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
+import 'package:skautex_mobile/src/routes/login/routes/auth_code/components/code_on_mail/code_on_mail.dart';
 
 import 'bloc/bloc.dart' as auth_code;
 
@@ -34,7 +35,7 @@ class AuthCode extends StatelessWidget {
 						),
 						Row(
 							children: [
-								noDevice(s),
+								CodeOnMail(),
 								Expanded( child: Container()),
 								submitButton(a, s),
 							]
@@ -101,17 +102,4 @@ class AuthCode extends StatelessWidget {
 			}
 		);
 	}
-
-	Widget noDevice(session.Bloc s) {
-		return FlatButton(
-     			onPressed: () {
-				s.sendCodeOnEmail();
-			},
-     			child: new Text(
-				"Nie mam urządzenia",
-				style: TextStyle(color: Colors.blue)
-			)
- 		);
-	}
-
 }

@@ -41,11 +41,9 @@ class Repository {
 		return skautexDbProvider.clear();
 	}
 
-	void sendCodeOnEmail(Future<JWT> jwt) {
+	Future<Object> sendCodeOnEmail(Future<JWT> jwt) {
 		return sources[0].sendCodeOnEmail(jwt);
 	}
-
-
 
 
 	Future<List<String>> fetchTopPlayersUris(Future<JWT> access) {
@@ -86,10 +84,6 @@ class Repository {
 
 
 
-	Future<Player> updatePlayer(Future<JWT> jwt, Player player) {
-		return sources[0].updatePlayer(jwt, player);
-	}
-
 
 	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where}) {
 		return sources[0].fetchUris<T>(jwt, where: where);
@@ -103,20 +97,20 @@ class Repository {
 		return sources[0].updateItem<T>(jwt, item);
 	}
 
-	Future<T> addItem<T>(Future<JWT> jwt, T item) {
-		return sources[0].addItem<T>(jwt, item);
+	Future<T> addItem<T>(Future<JWT> jwt, T item, {String uri}) {
+		return sources[0].addItem<T>(jwt, item, uri: uri);
 	}
 
 	Future<Object> deleteItem(Future<JWT> jwt, String url) {
 		return sources[0].deleteItem(jwt, url);
 	}
 
-	Future<String> downloadItem(Future<JWT> jwt, String url) {
-		return sources[0].downloadItem(jwt, url);
+	Future<String> downloadItem(Future<JWT> jwt, String url, File file) {
+		return sources[0].downloadItem(jwt, url, file);
 	}
 
-	Future<String> uploadItem(Future<JWT> jwt, String url, File file) {
-		return sources[0].uploadItem(jwt, url, file);
+	Future<String> uploadItem<T>(Future<JWT> jwt, String url, T item) {
+		return sources[0].uploadItem<T>(jwt, url, item);
 	}
 
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {String uri, Map<String, String> where}) {
@@ -134,7 +128,7 @@ abstract class Source {
 	Future<JWT> fetchJWT(Credentials creds);
 	Future<JWT> fetchJWT2(Future<JWT> jwt, String code);
 	Future<JWT> refetchJWT2(Future<JWT> jwt);
-	void sendCodeOnEmail(Future<JWT> jwt);
+	Future<Object> sendCodeOnEmail(Future<JWT> jwt);
 
 	Future<Player> fetchPlayer(Future<JWT> access, String uri);
 	Future<List<String>> fetchTopPlayersUris(Future<JWT> access);
@@ -151,13 +145,12 @@ abstract class Source {
 	Future<List<String>> fetchUris<T>(Future<JWT> jwt, {Map<String, String> where});
 	Future<T> fetchItem<T>(Future<JWT> jwt, String uri);
 	Future<T> updateItem<T>(Future<JWT> jwt, T item);
-	Future<T> addItem<T>(Future<JWT> jwt, T item);
+	Future<T> addItem<T>(Future<JWT> jwt, T item, {String uri});
 	Future<Object> deleteItem(Future<JWT> jwt, String url);
-	Future<String> downloadItem(Future<JWT> jwt, String url);
-	Future<String> uploadItem(Future<JWT> jwt, String url, File file);
+	Future<String> downloadItem(Future<JWT> jwt, String url, File file);
+	Future<String> uploadItem<T>(Future<JWT> jwt, String url, T item);
 
 	Future<ResponseList<T>> fetchItems<T>(Future<JWT> jwt, {Map<String, String> where, String uriOpt});
-	Future<Player> updatePlayer(Future<JWT> jwt, Player player);
 }
 
 abstract class Cache {
