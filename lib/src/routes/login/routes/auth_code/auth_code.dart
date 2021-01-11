@@ -35,7 +35,7 @@ class AuthCode extends StatelessWidget {
 						),
 						Row(
 							children: [
-								CodeOnMail(sessionBloc: s),
+								CodeOnMail(),
 								Expanded( child: Container()),
 								submitButton(a, s),
 							]

@@ -3,7 +3,6 @@ import 'package:skautex_mobile/src/helpers/widgets/delete_dialog.dart';
 import 'bloc/bloc.dart';
 
 class View extends StatelessWidget {
-
 	Widget build(BuildContext context) {
 		final bloc = Provider.of(context);
 

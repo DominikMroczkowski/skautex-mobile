@@ -48,7 +48,24 @@ class Bloc {
 									return AuthCodeDialog(otpauth: i.otpauth);
 								}
 							);
+					},
+					onError: (i) {
+					showDialog(
+					context: context,
+					builder: (_) {
+						return AlertDialog(
+							title: Text("Niepowodzenie"),
+							content: Text("Nie udało się zalować"),
+							actions: [
+								FlatButton(child: Text('Ok'), onPressed: () {
+									Navigator.of(context).pop();
+								},)
+							],
+						);
 					}
+				);
+			}
+
 				);
 			},
 			onError: (i) {
@@ -91,7 +108,7 @@ class Bloc {
 			handleData: (creds, sink) {
 				Future<JWT> jWT =_repository.fetchJWT(creds);
 				sink.add(jWT);
-			}
+			},
 		);
 	}
 
@@ -102,7 +119,7 @@ class Bloc {
 			},
 			handleError: (_, __, ___) {
 				Navigator.of(context, rootNavigator: true)
-					.pushNamedAndRemoveUntil('login', (r) => false);
+					.pushNamedAndRemoveUntil('/login', (r) => false);
 			}
 		);
 	}

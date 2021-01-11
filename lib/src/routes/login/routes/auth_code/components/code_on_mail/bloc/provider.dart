@@ -4,8 +4,8 @@ import 'bloc.dart';
 class Provider extends InheritedWidget {
 	final codeOnMail;
 
-	Provider({Key key, Widget child, @required sessionBloc}):
-		codeOnMail = Bloc(sessionBloc: sessionBloc),
+	Provider({Key key, Widget child, BuildContext context}):
+		codeOnMail = Bloc(context: context),
 		super(key: key, child: child);
 
 	bool updateShouldNotify(_) => true;

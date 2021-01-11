@@ -61,7 +61,6 @@ class SkautexApiProvider implements Source {
 		}
 
 		final parsedJson = json.decode(response.body);
-		print(parsedJson);
 		return JWT.fromJson(parsedJson);
 	}
 
@@ -71,8 +70,6 @@ class SkautexApiProvider implements Source {
 
 		final response = await client.post(
 			Uri.https(_root, '/api/v1/otp/verify/$code/'),
-			body: json.encode(<String, String> {
-			}),
 			headers: {
 				"api-key" : _API_KEY,
 				"accept" : 'application/json',
@@ -81,13 +78,11 @@ class SkautexApiProvider implements Source {
 			},
 		);
 
-		debugPrint(response.body);
-		final parsedJson = json.decode(response.body);
-		print(parsedJson);
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<JWT>.error('Logowanie nie powiodło się');
 		}
 
+		final parsedJson = json.decode(response.body);
 		return JWT.fromJson(parsedJson);
 	}
 
