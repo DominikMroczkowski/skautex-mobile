@@ -75,3 +75,5 @@ class Player {
 		return name ?? '' + ' ' + surname ?? '';
 	}
 }
+
+final playerStatus = ['observation', 'inappropriate', 'test'];
