@@ -5,7 +5,7 @@ class PlayerReport {
 	String uri;
 	String reportUri;
 	Player player;
-	int rating;
+	double rating;
 	String description;
 	String status;
 	List<NestedProfile> profiles;
@@ -22,7 +22,7 @@ class PlayerReport {
 		uri = parsedJson['url'] ?? '',
     reportUri = parsedJson['report'] ?? '',
 		player = Player.fromJson(parsedJson['player']) ?? Player(),
-   	rating = parsedJson['rating'] ?? 0,
+   	rating = parsedJson['score'] ?? 0,
    	description = parsedJson['description'] ?? '',
    	status = parsedJson['status'] ?? ''  {
 			profiles = _jsonToProfileList(parsedJson['profiles']);

@@ -586,7 +586,7 @@ class SkautexApiProvider implements Source {
 		if (uriOpt == null || uriOpt == '')
 			uri = Uri.https(_root, _getSubURL<T>(), where).toString();
 		else
-			uri = uriOpt;
+			uri = uriOpt + '?' + Uri(queryParameters: where).query;
 
 		print(uri);
 		final response = await client.get(

@@ -4,6 +4,7 @@ import 'package:skautex_mobile/src/helpers/widgets/home_drawer.dart';
 import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
 import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/models/permissions.dart';
+import 'package:skautex_mobile/src/helpers/widgets/search_bar/search_bar.dart';
 
 import 'componenets/player_tile.dart';
 
@@ -18,7 +19,7 @@ class View extends StatelessWidget {
 		return Scaffold(
 			body: _playerList(bloc),
 			appBar: AppBar(
-				title: Text('Skautex')
+				title: SearchBar(change: null, title: 'Zawodnicy')
 			),
 			drawer: HomeDrawer(),
 			floatingActionButton: _addButton(infoBloc, bloc),

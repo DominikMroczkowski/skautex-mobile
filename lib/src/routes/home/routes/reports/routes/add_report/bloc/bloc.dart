@@ -74,7 +74,7 @@ class Bloc extends Add<Report> with Validate {
 	}
 
 	_update(report) async {
-		updateUpperPage();
+		updateUpperPage != null ? updateUpperPage() : null;
 		Navigator.of(context).pushNamed('/home/reports/report', arguments: [report , updateUpperPage]);
 	}
 
