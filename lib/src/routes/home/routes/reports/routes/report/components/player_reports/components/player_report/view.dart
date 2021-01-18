@@ -6,6 +6,10 @@ import 'bloc/bloc.dart';
 import 'components/statistic_field.dart';
 
 class View extends StatelessWidget {
+	final bool enableEdit;
+
+	View({this.enableEdit = true});
+
   Widget build(BuildContext context) {
 		final bloc = Provider.of(context);
 		return _padding(
@@ -57,7 +61,7 @@ class View extends StatelessWidget {
 	}
 
 	Widget _editButton(Bloc bloc, bool isEditable) {
-		if (!isEditable)
+		if (!isEditable && enableEdit)
 			return _padding(
 				FlatButton(
 					child: Text("Edytuj"),

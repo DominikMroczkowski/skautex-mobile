@@ -3,6 +3,7 @@ import 'package:skautex_mobile/src/bloc/bloc.dart' as info;
 import 'package:skautex_mobile/src/helpers/positions.dart';
 import 'package:skautex_mobile/src/helpers/widgets/circular_indicator.dart';
 import 'package:date_format/date_format.dart';
+import 'package:skautex_mobile/src/models/player.dart';
 
 import 'bloc/bloc.dart';
 
@@ -32,6 +33,7 @@ class View extends StatelessWidget {
       		_withAdding(_teamField(context), '/home/team/add', context),
       		_withAdding(_leagueField(context), '/home/league/add', context),
 					_positionField(context),
+					_status(context),
 					Container(
 						constraints: BoxConstraints(
 							maxHeight: 50.0
@@ -331,6 +333,33 @@ class View extends StatelessWidget {
 						}
 						return Text('Wykonuję zapytanie');
 					}
+				);
+			}
+		);
+	}
+
+
+	Widget _status(context) {
+		final p = Provider.of(context);
+		return StreamBuilder(
+			stream: p.status,
+			builder: (context, snapshot) {
+				List<DropdownMenuItem> items = playerStatus.map<DropdownMenuItem<String>>(
+					(String i) {
+						return DropdownMenuItem<String>(
+							value: i,
+							child: Text(i)
+						);
+					}
+				).toList();
+
+				return DropdownButtonFormField<String>(
+					value: snapshot.data ?? items[0].value,
+					items: items,
+					onChanged: (String name) {p.changeStatus(name);},
+					decoration: InputDecoration(
+						labelText: 'Status'
+					),
 				);
 			}
 		);

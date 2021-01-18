@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skautex_mobile/src/helpers/blocs/update.dart';
 import 'package:skautex_mobile/src/models/player.dart';
@@ -20,6 +20,7 @@ class Bloc extends Update<Player> {
 	final _city      = BehaviorSubject<String>();
 	final _team      = BehaviorSubject<List<String>>();
 	final _league    = BehaviorSubject<List<String>>();
+	final _status = BehaviorSubject<String>();
 
 	Bloc(BuildContext context, {@required Player player, @required this.updateUpperPage}):
 		_uri = player.uri {
@@ -39,7 +40,25 @@ class Bloc extends Update<Player> {
 						updateUpperPage != null ? updateUpperPage() : null;
 						Navigator.of(context).pop();
 						Navigator.of(context).pushReplacementNamed('/home/players/player', arguments: [i, null]);
-					}
+					},
+					onError: (_) {
+					showDialog(
+						context: context,
+						builder: (_) {
+							return AlertDialog(
+								title: Text('Niepowodzenie'),
+								actions: [
+									FlatButton(
+										child: Text('Ok'),
+										onPressed: () {
+											Navigator.of(context).pop();
+										},
+									)
+								],
+							);
+						}
+					);
+				},
 				);
 			}
 		);
@@ -53,6 +72,7 @@ class Bloc extends Update<Player> {
 	Stream<String> get city         => _city.stream;
 	Stream<List<String>> get team   => _team.stream;
 	Stream<List<String>> get league => _league.stream;
+	Stream<String> get status => _status.stream;
 
 	Function(String) get changeName => _name.sink.add;
 	Function(String) get changeSurname => _surname.sink.add;
@@ -62,6 +82,7 @@ class Bloc extends Update<Player> {
 	Function(String) get changeCity => _city.sink.add;
 	Function(List<String>) get changeTeam => _team.sink.add;
 	Function(List<String>) get changeLeague => _league.sink.add;
+	Function(String) get changeStatus => _status.sink.add;
 
 	Stream<bool>   get submitValid  => Rx.combineLatest([name, surname, position, birthData, country, city, team, league], (List<Object> _) { return true;});
 
@@ -76,7 +97,8 @@ class Bloc extends Update<Player> {
 				country: _country.value,
 				city: _city.value,
 				team: _team.value,
-				league: _league.value
+				league: _league.value,
+				status: _status.value
 			)
 		);
 	}
@@ -92,5 +114,6 @@ class Bloc extends Update<Player> {
 		_city.close();
 		_team.close();
 		_league.close();
+		_status.close();
 	}
 }

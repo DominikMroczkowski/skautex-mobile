@@ -5,18 +5,18 @@ import 'bloc/bloc.dart';
 import 'view.dart';
 
 class PlayerReport extends StatelessWidget {
+	final Function updateUpperPage;
 	final models.PlayerReport playerReport;
-	final Function updateReport;
-	final bool enableEdit;
 
-	PlayerReport({this.playerReport, this.updateReport, this.enableEdit});
+	PlayerReport({@required this.updateUpperPage, @required this.playerReport});
 
 	Widget build(BuildContext context) {
 		return Provider(
-			child: View(enableEdit: enableEdit),
 			context: context,
-			playerReport: playerReport,
-			updateReport: updateReport
+			child: View(),
+			update: updateUpperPage,
+			report: playerReport
 		);
 	}
 }
+
