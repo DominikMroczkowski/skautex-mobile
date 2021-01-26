@@ -10,6 +10,7 @@ import 'package:http/http.dart' show Client, ByteStream;
 import 'package:skautex_mobile/src/models/booking_blacklist.dart';
 import 'package:skautex_mobile/src/models/code_on_mail.dart';
 import 'package:skautex_mobile/src/models/connected_users.dart';
+import 'package:skautex_mobile/src/models/fcm_device.dart';
 import 'package:skautex_mobile/src/models/invitation.dart';
 import 'package:skautex_mobile/src/models/invitation_template.dart';
 import 'package:skautex_mobile/src/models/player_report.dart';
@@ -36,8 +37,8 @@ import '../models/event.dart';
 import '../models/event_type.dart';
 import '../models/file.dart';
 
-final _root = 'skautex-development.azurewebsites.net';
-const _API_KEY = 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
+final _root = 'skautex-production.azurewebsites.net'; // 'skautex-development.azurewebsites.net';
+const _API_KEY = 'phQeWrRf.aO1N3cRc0HKVDco8DoZ0G9HVLBObiPZq'; // 'XaQI1rON.0lMFeVgWRc7Ocb61urTzsaPWCl5bEAx1';
 
 class SkautexApiProvider implements Source {
 	Client client = Client();
@@ -363,6 +364,7 @@ class SkautexApiProvider implements Source {
 			Invitation: '/api/v1/invitations/',
 			InvitationTemplate: '/api/v1/invitations_templates/',
 			Ranking: '/api/v1/rankings/top5/',
+			FCMDevice: '/api/v1/notifications/devices/'
 		};
 
 	  return _uris[T];
@@ -426,6 +428,7 @@ class SkautexApiProvider implements Source {
 			InvitationTemplate: (Map<String, dynamic> parsedJson) => InvitationTemplate.fromJson(parsedJson),
 			ContactDetail: (Map<String, dynamic> parsedJson) => ContactDetail.fromJson(parsedJson),
 			Ranking: (Map<String, dynamic> parsedJson) => Ranking.fromJson(parsedJson),
+			FCMDevice: (Map<String, dynamic> parsedJson) => FCMDevice.fromJson(parsedJson),
 		};
 
 	  return _objects[T](parsedJson);
@@ -519,7 +522,8 @@ class SkautexApiProvider implements Source {
 			ContactDetail: (ContactDetail detail) => detail.toPost(),
 			Invitation: (Invitation invitation) => invitation.toPost(),
 			File: (_) => null,
-			InvitationTemplate: (InvitationTemplate i) => i.toPost()
+			InvitationTemplate: (InvitationTemplate i) => i.toPost(),
+			FCMDevice: (FCMDevice i) => i.toPost()
 		};
 
 	  return _objects[T](item);
@@ -543,7 +547,7 @@ class SkautexApiProvider implements Source {
 			body: _toPost(item) != null ? json.encode(_toPost(item)) : null
 		);
 
-		print(response.body);
+		debugPrint(response.body);
 
 		if (response.statusCode < 200 || response.statusCode > 299) {
 			return Future<T>.error('Zapytanie POST dla URL: ${_getSubURL<T>()} nie powiodło się');
