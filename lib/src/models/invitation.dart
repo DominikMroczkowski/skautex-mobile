@@ -11,6 +11,7 @@ class Invitation {
 	Player player;
 	String startDate;
 	String endDate;
+	String creationDate;
 	File invitation;
 
 	Invitation({this.uri, this.trainer, this.owner, this.template, this.player, this.startDate, this.endDate, this.invitation});
@@ -19,6 +20,7 @@ class Invitation {
 		uri = parsedJson['url'],
 		startDate = parsedJson['start_date'],
 		endDate = parsedJson['end_date'],
+		creationDate = parsedJson['creation_date'],
 		trainer = User.fromJson(parsedJson['trainer']),
 		owner = User.fromJson(parsedJson['owner']),
 		player = Player.fromJson(parsedJson['player']),

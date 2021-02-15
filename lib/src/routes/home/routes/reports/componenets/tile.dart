@@ -10,7 +10,6 @@ class ReportsTile extends StatelessWidget {
 	ReportsTile({this.report, this.bloc});
 
 	Widget build(context) {
-		print(report.uri);
 		return Container(
 			child: buildTile(context, report),
 			padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),

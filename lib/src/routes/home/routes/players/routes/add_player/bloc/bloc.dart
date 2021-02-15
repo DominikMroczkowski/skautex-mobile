@@ -26,7 +26,7 @@ class Bloc extends Add<Player> with Validate {
 		item.listen(
 			(Future<Player> i) {
 				i.then(
-				 (i) {_update(i);},
+				 (i) {_update(i, c);},
 				 onError: (_) {
 					showDialog(
 						context: context,
@@ -50,7 +50,7 @@ class Bloc extends Add<Player> with Validate {
 		);
 	}
 
-	_update(Player player) async {
+	_update(Player player, BuildContext context) async {
 		updateUpperPage != null ? updateUpperPage() : null;
 		Navigator.of(context).pushNamed('/home/players/player', arguments: [player, updateUpperPage]);
 	}
