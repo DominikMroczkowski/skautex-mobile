@@ -53,7 +53,7 @@ class Bloc extends Add<Player> with Validate {
 		);
 	}
 
-	_update(Player player) async {
+	_update(Player player, BuildContext context) async {
 		updateUpperPage != null ? updateUpperPage() : null;
 		Navigator.of(context).pushNamed('/home/players/player', arguments: [player, updateUpperPage]);
 	}

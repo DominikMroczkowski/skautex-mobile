@@ -43,7 +43,7 @@ class View extends StatelessWidget {
 					return FutureBuilder(
 						future: snapshot.data,
 						builder: (context, futureSnap) {
-							if (!futureSnap.hasData || !(futureSnap.data as Permissions).addUser) {
+							if (!futureSnap.hasData || !(futureSnap.data as Permissions).addPlayer) {
 								return Container();
 							}
 

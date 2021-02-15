@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:skautex_mobile/src/models/player.dart';
 import 'package:skautex_mobile/src/helpers/others/player_statuses.dart';
+import 'package:skautex_mobile/src/helpers/positions.dart';
 
 class PlayerTile extends StatelessWidget {
 	final Player player;
@@ -42,7 +43,7 @@ class PlayerTile extends StatelessWidget {
 								),
 								Expanded(child: Container()),
 								Text(
-									player.position ?? 'Brak',
+									player.position == null ? 'Brak' : getPolishPosition(player.position),
 									style: TextStyle(
 										color: Colors.grey[700],
 									)

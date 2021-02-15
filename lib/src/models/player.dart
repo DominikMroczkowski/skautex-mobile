@@ -1,3 +1,6 @@
+import 'package:skautex_mobile/src/helpers/others/player_statuses.dart';
+import 'package:skautex_mobile/src/helpers/positions.dart';
+
 class Player {
 	String uri;
 	String name;
@@ -61,11 +64,11 @@ class Player {
 		return [
 			['Imię', name],
 			['Nazwisko', surname],
-			['Pozycja', position],
+			['Pozycja', getPolishPosition(position)],
 			['Data urodzenia', birthDate],
 			['Kraj', country],
 			['Miasto', city],
-			['Status', status],
+			['Status', getPlayerStatusName(status)],
 			['Drużyna', team[0]],
 			['Liga', league[0]]
 		];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:skautex_mobile/src/helpers/widgets/stream_list.dart';
 import 'package:skautex_mobile/src/models/invitation.dart';
 import 'bloc/bloc.dart';
@@ -22,7 +23,7 @@ class View extends StatelessWidget {
 		return Card(
 			child: ListTile(
 				title: Text('Trener ' + i.trainer.toString()),
-				subtitle: Text('Data utworzenia: ' + i.startDate.toString()),
+				subtitle: Text('Data utworzenia: ' + format(DateTime.parse(i.creationDate))),
 				trailing: _popMenu(i, bloc)
 			),
 		);
@@ -38,4 +39,8 @@ class View extends StatelessWidget {
 		);
 
 	}
+}
+
+String format(DateTime time) {
+	return DateFormat('dd-MM-yyyy – kk:mm').format(time);
 }
