@@ -13,6 +13,7 @@ description: Application for a skauting division in "Lech Poznań" academia.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+14
 
+
 environment:
   sdk: ">=2.1.0 <3.0.0"
 

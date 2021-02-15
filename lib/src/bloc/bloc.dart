@@ -55,7 +55,7 @@ class Bloc {
 					builder: (_) {
 						return AlertDialog(
 							title: Text("Niepowodzenie"),
-							content: Text("Nie udało się zalować"),
+							content: Text("Nie udało się zalogować"),
 							actions: [
 								FlatButton(child: Text('Ok'), onPressed: () {
 									Navigator.of(context).pop();
@@ -92,9 +92,6 @@ class Bloc {
 			_refreshTokens.stream,
 			_dbTokenLoader.stream.transform(_dbLoaderTransform())
 		]).pipe(_OTPOutput);
-
-
-
 
 		_teamsFetcher.transform(_fetchTeams()).pipe(_teamsOutput);
 		_leagueFetcher.transform(_fetchLeagues()).pipe(_leagueOutput);

@@ -20,13 +20,16 @@ class Bloc extends Add<Player> with Validate {
 	final _league    = BehaviorSubject<List<String>>();
 	final Function updateUpperPage;
 
-	Bloc(BuildContext c, {@required this.updateUpperPage}) {
-		otp = c;
+	Bloc(BuildContext context, {@required this.updateUpperPage}) {
+		otp = context;
 
 		item.listen(
 			(Future<Player> i) {
 				i.then(
-				 (i) {_update(i, c);},
+				 (i) {
+						_update(i);
+						Navigator.of(context).pushNamed('/home/players/player', arguments: [i, null]);
+				 },
 				 onError: (_) {
 					showDialog(
 						context: context,
